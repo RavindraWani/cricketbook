@@ -72,30 +72,43 @@
     /* Navigation */
     .nav {
       text-align: center;
-      margin-bottom: 20px;
+      margin-bottom: 15px;
+      padding: 0 10px;
     }
     
     .nav a {
       display: inline-block;
       color: white;
       text-decoration: none;
-      padding: 8px 16px;
-      margin: 0 6px;
-      border-radius: 10px;
+      padding: 6px 12px;
+      margin: 4px 4px;
+      border-radius: 8px;
       background: rgba(255, 255, 255, 0.15);
       backdrop-filter: blur(10px);
       font-weight: 600;
       font-size: 13px;
       transition: all 0.2s;
+      white-space: nowrap;
     }
     
     .nav a:hover {
       background: rgba(255, 255, 255, 0.25);
-      transform: translateY(-2px);
+      transform: translateY(-1px);
     }
     
     .nav a.active {
       background: rgba(255, 255, 255, 0.3);
+    }
+    
+    @media (max-width: 768px) {
+      .nav {
+        margin-bottom: 12px;
+      }
+      .nav a {
+        padding: 5px 10px;
+        margin: 3px 2px;
+        font-size: 12px;
+      }
     }
     
     .live-badge {
