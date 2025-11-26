@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Record cricket scores effortlessly. Share live match updates with your team instantly.">
+  <title>CricketBook - Real-time Cricket Scoring</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      color: #1f2937;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px 20px;
+    }
+    
+    /* Hero Section */
+    .hero {
+      text-align: center;
+      color: white;
+      margin-bottom: 60px;
+      padding: 40px 20px;
+    }
+    
+    .hero h1 {
+      font-size: 56px;
+      font-weight: 900;
+      margin-bottom: 16px;
+      text-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    }
+    
+    .hero p {
+      font-size: 24px;
+      font-weight: 400;
+      opacity: 0.95;
+      max-width: 700px;
+      margin: 0 auto;
+      line-height: 1.5;
+    }
+    
+    @media (max-width: 768px) {
+      .hero h1 {
+        font-size: 36px;
+      }
+      .hero p {
+        font-size: 18px;
+      }
+    }
+    
+    /* Cards Grid */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-bottom: 40px;
+    }
+    
+    @media (max-width: 968px) {
+      .cards-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    .card {
+      background: white;
+      border-radius: 20px;
+      padding: 32px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.15), 0 2px 8px rgba(0,0,0,0.1);
+      transition: all 0.3s ease;
+      text-decoration: none;
+      color: inherit;
+      display: block;
+    }
+    
+    .card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.2), 0 4px 16px rgba(0,0,0,0.15);
+    }
+    
+    .card-icon {
+      font-size: 48px;
+      margin-bottom: 20px;
+      display: block;
+    }
+    
+    .card h2 {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      color: #1f2937;
+    }
+    
+    .card p {
+      font-size: 16px;
+      color: #6b7280;
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+    
+    .card-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      color: #8b5cf6;
+      transition: all 0.2s;
+    }
+    
+    .card:hover .card-link {
+      color: #7c3aed;
+      gap: 12px;
+    }
+    
+    /* Footer */
+    .footer {
+      text-align: center;
+      color: white;
+      padding: 20px;
+      opacity: 0.9;
+    }
+    
+    .footer p {
+      font-size: 14px;
+    }
+    
+    /* Navigation */
+    .nav {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    
+    .nav a {
+      display: inline-block;
+      color: white;
+      text-decoration: none;
+      padding: 10px 20px;
+      margin: 0 8px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(10px);
+      font-weight: 600;
+      font-size: 14px;
+      transition: all 0.2s;
+    }
+    
+    .nav a:hover {
+      background: rgba(255, 255, 255, 0.25);
+      transform: translateY(-2px);
+    }
+    
+    .nav a.active {
+      background: rgba(255, 255, 255, 0.3);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Navigation -->
+    <nav class="nav">
+      <a href="index.html" class="active">🏠 Home</a>
+      <a href="LiveScore.html">📺 Live Score</a>
+      <a href="Matches.html">📋 Matches</a>
+      <a href="about.html">ℹ️ About</a>
+    </nav>
+    
+    <!-- Hero Section -->
+    <div class="hero">
+      <h1>🏏 CricketBook</h1>
+      <p>Real-time Cricket Scoring for Local Matches & Tournaments</p>
+    </div>
+    
+    <!-- Cards Grid -->
+    <div class="cards-grid">
+      <!-- Live Score Card -->
+      <a href="LiveScore.html" class="card">
+        <span class="card-icon">📺</span>
+        <h2>Live Score</h2>
+        <p>Watch real-time cricket scores with ball-by-ball updates. Auto-detects and displays ongoing matches.</p>
+        <span class="card-link">Watch Live →</span>
+      </a>
+      
+      <!-- All Matches Card -->
+      <a href="Matches.html" class="card">
+        <span class="card-icon">📋</span>
+        <h2>All Matches</h2>
+        <p>View match history, completed games, and ongoing tournaments. Track all your cricket matches in one place.</p>
+        <span class="card-link">View Matches →</span>
+      </a>
+      
+      <!-- About Card -->
+      <a href="about.html" class="card">
+        <span class="card-icon">ℹ️</span>
+        <h2>About</h2>
+        <p>Learn more about CricketBook and how it helps you score and share cricket matches effortlessly.</p>
+        <span class="card-link">Learn More →</span>
+      </a>
+    </div>
+    
+    <!-- Footer -->
+    <div class="footer">
+      <p>Made with ❤️ for local cricket matches.</p>
+      <p>© 2025 CricketBook — Realtime Cricket Scoring Tool</p>
+    </div>
+  </div>
+</body>
+</html>

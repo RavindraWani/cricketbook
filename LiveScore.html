@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Live Cricket Score - Real-time cricket match updates">
+  <title id="pageTitle">Live Cricket Score</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 18px;
+      color: #1f2937;
+    }
+    
+    .container {
+      max-width: 480px;
+      margin: 0 auto;
+    }
+    
+    .card {
+      background: #ffffff;
+      border: 1px solid rgba(148,163,184,.2);
+      border-radius: 20px;
+      padding: 24px;
+      box-shadow: 0 10px 40px rgba(0,0,0,.12), 0 2px 8px rgba(0,0,0,.08);
+      position: relative;
+      color: #1f2937;
+    }
+    
+    .result-banner {
+      background: linear-gradient(135deg, #10b981 0%, #3b82f6 100%);
+      color: white;
+      border-radius: 12px;
+      padding: 16px;
+      text-align: center;
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      box-shadow: 0 4px 12px rgba(16,185,129,0.3);
+      display: none;
+    }
+    
+    .result-banner.show {
+      display: block;
+    }
+    
+    .loading {
+      text-align: center;
+      color: white;
+      font-size: 18px;
+      padding: 40px;
+    }
+    
+    .error {
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      color: #991b1b;
+      padding: 16px;
+      border-radius: 12px;
+      text-align: center;
+      margin-top: 20px;
+    }
+    
+    /* Navigation */
+    .nav {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    
+    .nav a {
+      display: inline-block;
+      color: white;
+      text-decoration: none;
+      padding: 8px 16px;
+      margin: 0 6px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(10px);
+      font-weight: 600;
+      font-size: 13px;
+      transition: all 0.2s;
+    }
+    
+    .nav a:hover {
+      background: rgba(255, 255, 255, 0.25);
+      transform: translateY(-2px);
+    }
+    
+    .nav a.active {
+      background: rgba(255, 255, 255, 0.3);
+    }
+    
+    .live-badge {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+      color: white;
+      padding: 6px 12px;
+      border-radius: 16px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+      animation: livePulse 2s infinite;
+      margin: 0 12px;
+    }
+    
+    @keyframes livePulse {
+      0%, 100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+      50% {
+        opacity: 0.85;
+        transform: scale(1.05);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Navigation -->
+    <nav class="nav">
+      <a href="index.html">🏠 Home</a>
+      <a href="LiveScore.html" class="active">📺 Live Score</a>
+      <a href="Matches.html">📋 Matches</a>
+      <a href="about.html">ℹ️ About</a>
+    </nav>
+    
+    <div class="loading" id="loading">Loading match data...</div>
+    
+    <div id="content" style="display:none">
+      <div class="card">
+        <!-- Tournament Header -->
+        <div style="text-align:center;margin-bottom:16px;padding:10px 16px;background:linear-gradient(135deg, #667eea 0%, #764ba2 100%);border-radius:12px;color:#ffffff;font-size:14px;font-weight:700;letter-spacing:1px;box-shadow:0 2px 8px rgba(102,126,234,0.3);">
+          🏆 Sariput Nagar Premier League (SNPL) 2025 🏆
+        </div>
+        
+        <!-- 📊 Scoreboard Header -->
+        <div class="scoreboard">
+          <!-- Team Name & Score Display (Two Column Layout) -->
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px;padding-bottom:12px;border-bottom:2px solid #e5e7eb;gap:12px;">
+            <!-- Team A -->
+            <div style="flex:1;text-align:left;">
+              <div style="font-size:18px;font-weight:800;background:linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:4px;" id="teamAName">Team A</div>
+              <div style="font-size:48px;font-weight:900;color:#3b82f6;line-height:1;margin-bottom:4px;" id="scoreA">0/0</div>
+              <div style="font-size:13px;color:#6b7280;font-weight:600;" id="teamAOvers">(0.0 overs)</div>
+            </div>
+            
+            <!-- LIVE NOW Badge -->
+            <div id="liveBadge" class="live-badge" style="display:none;">
+              🔴 LIVE NOW
+            </div>
+            
+            <!-- Team B -->
+            <div style="flex:1;text-align:right;">
+              <div style="font-size:18px;font-weight:800;background:linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:4px;" id="teamBName">Team B</div>
+              <div style="font-size:48px;font-weight:900;color:#8b5cf6;line-height:1;margin-bottom:4px;" id="scoreB">0/0</div>
+              <div style="font-size:13px;color:#6b7280;font-weight:600;" id="teamBOvers">(0.0 overs)</div>
+            </div>
+          </div>
+
+          <!-- Result Display -->
+          <div id="result" class="result-banner"></div>
+
+          <!-- Overs Info -->
+          <div id="oversExtrasInfo" style="text-align:center;margin-bottom:12px;padding:10px 16px;background:linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);border:1px solid #cbd5e1;border-radius:12px;font-size:13px;font-weight:600;color:#475569;box-shadow:0 2px 4px rgba(0,0,0,0.05);"></div>
+
+          <!-- Live Over Display -->
+          <div id="liveOverDisplay" style="margin-bottom:12px;padding:8px 10px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;"></div>
+
+          <!-- First Innings Info Banner -->
+          <div id="firstInningsInfo" style="display:none;text-align:center;margin-bottom:12px;padding:12px 16px;border-radius:12px;background:linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);color:#ffffff;font-size:14px;font-weight:700;box-shadow:0 4px 12px rgba(59,130,246,0.3);letter-spacing:0.3px;"></div>
+        </div>
+
+        <!-- Match Summary (shown from start, updates in real-time) -->
+        <div id="matchSummary" style="margin-top:20px;">
+          <div style="font-size:16px;font-weight:700;color:#1f2937;margin-bottom:16px;text-align:center;">
+            📊 MATCH SUMMARY
+          </div>
+          
+          <!-- First Innings Overs -->
+          <div id="firstInningsSummary" style="margin-bottom:20px;">
+            <div style="font-size:14px;font-weight:700;color:#3b82f6;margin-bottom:8px;" id="firstInningsTitle"></div>
+            <div id="firstInningsOvers"></div>
+          </div>
+          
+          <!-- Second Innings Overs -->
+          <div id="secondInningsSummary" style="display:none;">
+            <div style="font-size:14px;font-weight:700;color:#8b5cf6;margin-bottom:8px;" id="secondInningsTitle"></div>
+            <div id="secondInningsOvers"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+
+  <script>
+    // Firebase Configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyAFfwgHq761oFMg4CVqmZezGR_WK6ZGvAY",
+      authDomain: "cricketbook-35725.firebaseapp.com",
+      databaseURL: "https://cricketbook-35725-default-rtdb.firebaseio.com",
+      projectId: "cricketbook-35725",
+      storageBucket: "cricketbook-35725.firebasestorage.app",
+      messagingSenderId: "128747950424",
+      appId: "1:128747950424:web:dce02e8420c353f1acd52d"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const database = firebase.database();
+
+    // Get match ID from URL or localStorage
+    let matchId = new URLSearchParams(window.location.search).get('matchId');
+    if (matchId) {
+      localStorage.setItem('lastMatchId', matchId);
+      loadMatch(matchId);
+    } else {
+      // Always try to find live match first
+      findAndLoadLiveMatch();
+    }
+
+    function findAndLoadLiveMatch() {
+      console.log('🔍 Auto-detecting live match...');
+      document.getElementById('loading').innerHTML = '<div class="loading">🔍 Finding live match...</div>';
+      
+      const matchesRef = database.ref('matches');
+      // Use on('value') instead of once() to listen for new matches in real-time
+      matchesRef.on('value', (snapshot) => {
+        const allMatches = snapshot.val();
+        
+        if (!allMatches) {
+          document.getElementById('loading').innerHTML = '<div class="error">No matches found. Waiting for match to start...</div>';
+          return;
+        }
+        
+        // Convert to array and sort by lastUpdated (newest first)
+        const matchesArray = Object.keys(allMatches).map(id => ({
+          matchId: id,
+          ...allMatches[id]
+        })).sort((a, b) => (b.lastUpdated || 0) - (a.lastUpdated || 0));
+        
+        console.log('📋 All matches:', matchesArray);
+        
+        // Find first live match (not completed)
+        const liveMatch = matchesArray.find(match => {
+          if (match.matchCompleted) return false;
+          if (match.resultText && match.resultText.trim() !== '') return false;
+          
+          const firstDone = match.first?.done || false;
+          const secondDone = match.second?.done || false;
+          const inSecond = match.inSecond || false;
+          
+          return (!inSecond && !firstDone) || (inSecond && !secondDone);
+        });
+        
+        if (liveMatch) {
+          console.log('⚡ Found live match:', liveMatch.matchId);
+          // Only load if it's a different match than currently loaded
+          if (matchId !== liveMatch.matchId) {
+            matchId = liveMatch.matchId;
+            localStorage.setItem('lastMatchId', matchId);
+            // Stop listening to old match and load new one
+            loadMatch(matchId);
+          }
+        } else {
+          // No live match, show most recent match
+          if (matchesArray.length > 0) {
+            console.log('📊 No live match, showing most recent');
+            if (matchId !== matchesArray[0].matchId) {
+              matchId = matchesArray[0].matchId;
+              localStorage.setItem('lastMatchId', matchId);
+              loadMatch(matchId);
+            }
+          } else {
+            document.getElementById('loading').innerHTML = '<div class="error">No matches available.</div>';
+          }
+        }
+      }, (error) => {
+        console.error('❌ Error finding match:', error);
+        document.getElementById('loading').innerHTML = '<div class="error">Error finding match: ' + error.message + '</div>';
+      });
+    }
+
+    function loadMatch(id) {
+      console.log('🔗 Loading match:', id);
+      if (!id) {
+        console.error('❌ No match ID provided');
+        document.getElementById('loading').innerHTML = '<div class="error">No match ID provided.</div>';
+        return;
+      }
+      
+      // Listen to Firebase changes
+      const matchRef = database.ref('matches/' + id);
+      matchRef.on('value', (snapshot) => {
+        const data = snapshot.val();
+        console.log('📡 Received update from Firebase for match', id, ':', data);
+        if (data) {
+          updateUI(data);
+          document.getElementById('loading').style.display = 'none';
+          document.getElementById('content').style.display = 'block';
+        } else {
+          console.warn('⚠️ Match not found:', id);
+          document.getElementById('loading').innerHTML = '<div class="error">Match ID "' + id + '" not found in Firebase. <br><br>Try refreshing or start a new match.</div>';
+        }
+      }, (error) => {
+        console.error('❌ Firebase error:', error);
+        document.getElementById('loading').innerHTML = '<div class="error">Error loading match: ' + error.message + '</div>';
+      });
+    }
+
+    // Update UI with match data
+    function updateUI(data) {
+      console.log('🎨 Updating UI with data:', data);
+      const inn = data.inSecond ? data.second : data.first;
+      const isBattingFirst = !data.inSecond;
+      
+      // Update page title with team names
+      if (data.teamA && data.teamB) {
+        document.getElementById('pageTitle').textContent = `${data.teamA} vs ${data.teamB} - Live Score`;
+        // Update meta description
+        const metaDesc = document.querySelector('meta[name="description"]');
+        if (metaDesc) {
+          metaDesc.content = `Live cricket score: ${data.teamA} vs ${data.teamB}`;
+        }
+      }
+      
+      // Team A & B Header Display
+      document.getElementById('teamAName').textContent = data.teamA || 'Team A';
+      document.getElementById('teamBName').textContent = data.teamB || 'Team B';
+      
+      // Show/Hide LIVE badge based on match completion
+      const liveBadge = document.getElementById('liveBadge');
+      if (data.matchCompleted || (data.resultText && data.resultText.trim() !== '')) {
+        liveBadge.style.display = 'none';
+      } else {
+        liveBadge.style.display = 'flex';
+      }
+      
+      const firstScore = `${data.first?.runs || 0}/${data.first?.wkts || 0}`;
+      const firstOvers = calculateOvers(data.first?.legalBalls || 0);
+      document.getElementById('scoreA').textContent = firstScore;
+      document.getElementById('teamAOvers').textContent = `(${firstOvers} overs)`;
+      
+      const secondScore = `${data.second?.runs || 0}/${data.second?.wkts || 0}`;
+      const secondOvers = calculateOvers(data.second?.legalBalls || 0);
+      document.getElementById('scoreB').textContent = secondScore;
+      document.getElementById('teamBOvers').textContent = `(${secondOvers} overs)`;
+      
+      // Highlight currently batting team with larger score and gradient text
+      const teamAScore = document.getElementById('scoreA');
+      const teamBScore = document.getElementById('scoreB');
+      const teamAName = document.getElementById('teamAName');
+      const teamBName = document.getElementById('teamBName');
+      
+      if (isBattingFirst) {
+        // Team A batting
+        teamAScore.style.fontSize = '48px';
+        teamBScore.style.fontSize = '28px';
+        teamAScore.style.color = '#3b82f6';
+        teamBScore.style.color = '#cbd5e1';
+        teamAName.style.background = 'linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%)';
+        teamAName.style.webkitBackgroundClip = 'text';
+        teamAName.style.webkitTextFillColor = 'transparent';
+        teamAName.style.backgroundClip = 'text';
+        teamBName.style.background = 'none';
+        teamBName.style.webkitBackgroundClip = 'unset';
+        teamBName.style.webkitTextFillColor = 'unset';
+        teamBName.style.backgroundClip = 'unset';
+        teamBName.style.color = '#94a3b8';
+      } else {
+        // Team B batting
+        teamAScore.style.fontSize = '28px';
+        teamBScore.style.fontSize = '48px';
+        teamAScore.style.color = '#cbd5e1';
+        teamBScore.style.color = '#8b5cf6';
+        teamAName.style.background = 'none';
+        teamAName.style.webkitBackgroundClip = 'unset';
+        teamAName.style.webkitTextFillColor = 'unset';
+        teamAName.style.backgroundClip = 'unset';
+        teamAName.style.color = '#94a3b8';
+        teamBName.style.background = 'linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%)';
+        teamBName.style.webkitBackgroundClip = 'text';
+        teamBName.style.webkitTextFillColor = 'transparent';
+        teamBName.style.backgroundClip = 'text';
+      }
+      
+      // Result
+      if (data.resultText) {
+        document.getElementById('result').textContent = data.resultText;
+        document.getElementById('result').classList.add('show');
+        // Hide live match elements when result is displayed
+        document.getElementById('oversExtrasInfo').style.display = 'none';
+        document.getElementById('liveOverDisplay').style.display = 'none';
+        document.getElementById('firstInningsInfo').style.display = 'none';
+      } else {
+        document.getElementById('result').classList.remove('show');
+        // Show live match elements during active match
+        document.getElementById('oversExtrasInfo').style.display = 'block';
+        document.getElementById('liveOverDisplay').style.display = 'block';
+        
+        // Overs & Extras Info
+        const overs = calculateOvers(inn.legalBalls || 0);
+        const extras = calculateExtras(inn);
+        const rr = inn.legalBalls > 0 ? ((inn.runs || 0) * 6 / inn.legalBalls).toFixed(2) : '0.00';
+        document.getElementById('oversExtrasInfo').innerHTML = `Overs: <strong>${overs}</strong> | RR: <strong>${rr}</strong> | Extras: <strong>${extras}</strong>`;
+        
+        // Live Over Display
+        updateLiveOver(inn);
+        
+        // First Innings Info (when in 2nd innings)
+        if (data.inSecond && data.first && data.target && data.oversLimit) {
+          const need = data.target - (inn.runs || 0);
+          const ballsLeft = (data.oversLimit * 6) - (inn.legalBalls || 0);
+          const reqRR = need > 0 && ballsLeft > 0 ? (need * 6 / ballsLeft).toFixed(2) : '0.00';
+          document.getElementById('firstInningsInfo').textContent = `Need ${need} runs in ${ballsLeft} balls | RRR: ${reqRR}`;
+          document.getElementById('firstInningsInfo').style.display = 'block';
+        } else {
+          document.getElementById('firstInningsInfo').style.display = 'none';
+        }
+      }
+      
+      // Update Match Summary in real-time
+      showMatchSummary(data);
+    }
+
+    // Calculate overs from legal balls
+    function calculateOvers(legalBalls) {
+      if (!legalBalls || legalBalls === 0) return '0.0';
+      const overs = Math.floor(legalBalls / 6);
+      const balls = legalBalls % 6;
+      return `${overs}.${balls}`;
+    }
+
+    // Calculate extras from innings data
+    function calculateExtras(inn) {
+      let extras = 0;
+      
+      // Check completed overs
+      if (inn.overs && inn.overs.length > 0) {
+        inn.overs.forEach(over => {
+          if (over && over.length > 0) {
+            over.forEach(ball => {
+              if (typeof ball === 'string') {
+                if (/^WD/.test(ball)) {
+                  const match = ball.match(/^WD\+?(\d+)?/);
+                  extras += 1;
+                  if (match && match[1]) extras += parseInt(match[1]);
+                }
+                else if (/^NB/.test(ball)) {
+                  const match = ball.match(/^NB\+?(\d+)?/);
+                  extras += 1;
+                  if (match && match[1]) extras += parseInt(match[1]);
+                }
+                else if (/^B\+/.test(ball)) {
+                  const match = ball.match(/^B\+(\d+)/);
+                  if (match && match[1]) extras += parseInt(match[1]);
+                }
+                else if (/^LB\+/.test(ball)) {
+                  const match = ball.match(/^LB\+(\d+)/);
+                  if (match && match[1]) extras += parseInt(match[1]);
+                }
+              }
+            });
+          }
+        });
+      }
+      
+      // Check current over
+      if (inn.curOver && inn.curOver.length > 0) {
+        inn.curOver.forEach(ball => {
+          if (typeof ball === 'string') {
+            if (/^WD/.test(ball)) {
+              const match = ball.match(/^WD\+?(\d+)?/);
+              extras += 1;
+              if (match && match[1]) extras += parseInt(match[1]);
+            }
+            else if (/^NB/.test(ball)) {
+              const match = ball.match(/^NB\+?(\d+)?/);
+              extras += 1;
+              if (match && match[1]) extras += parseInt(match[1]);
+            }
+            else if (/^B\+/.test(ball)) {
+              const match = ball.match(/^B\+(\d+)/);
+              if (match && match[1]) extras += parseInt(match[1]);
+            }
+            else if (/^LB\+/.test(ball)) {
+              const match = ball.match(/^LB\+(\d+)/);
+              if (match && match[1]) extras += parseInt(match[1]);
+            }
+          }
+        });
+      }
+      
+      return extras;
+    }
+
+    // Update live over display
+    function updateLiveOver(inn) {
+      const container = document.getElementById('liveOverDisplay');
+      
+      // Show current over if it exists
+      if (inn.curOver && inn.curOver.length > 0) {
+        const ballsHtml = inn.curOver.map(sym => {
+          const isWicket = /W$/.test(sym) || /\+W$/.test(sym);
+          let bgColor = '#3b82f6';
+          if (isWicket) bgColor = '#e31d1d';
+          else if (sym === 6) bgColor = '#f59e0b';
+          else if (sym === 4) bgColor = '#10b981';
+          else if (sym === 0) bgColor = '#94a3b8';
+          else if (typeof sym === 'string' && (sym.includes('WD') || sym.includes('NB') || sym.includes('B+') || sym.includes('LB+'))) bgColor = '#f59e0b';
+          return `<span style="display:inline-block;margin:2px;padding:4px 8px;border-radius:6px;background:${bgColor};color:#fff;font-weight:700;font-size:13px">${sym}</span>`;
+        }).join('');
+        container.innerHTML = ballsHtml || '<span style="color:#94a3b8">Waiting for first ball...</span>';
+      }
+      // Show last completed over if no current over
+      else if (inn.overs && inn.overs.length > 0) {
+        const lastOver = inn.overs[inn.overs.length - 1];
+        if (lastOver && lastOver.length > 0) {
+          const ballsHtml = lastOver.map(sym => {
+            const isWicket = /W$/.test(sym) || /\+W$/.test(sym);
+            let bgColor = '#10b981';
+            if (isWicket) bgColor = '#e31d1d';
+            else if (sym === 6) bgColor = '#f59e0b';
+            else if (sym === 4) bgColor = '#10b981';
+            else if (sym === 0) bgColor = '#94a3b8';
+            else if (typeof sym === 'string' && (sym.includes('WD') || sym.includes('NB') || sym.includes('B+') || sym.includes('LB+'))) bgColor = '#f59e0b';
+            return `<span style="display:inline-block;margin:2px;padding:4px 8px;border-radius:6px;background:${bgColor};color:#fff;font-weight:700;font-size:13px">${sym}</span>`;
+          }).join('');
+          container.innerHTML = ballsHtml;
+        } else {
+          container.innerHTML = '<span style="color:#94a3b8">Waiting for first ball...</span>';
+        }
+      }
+      else {
+        container.innerHTML = '<span style="color:#94a3b8">Waiting for first ball...</span>';
+      }
+    }
+
+    // Show match summary with ball-by-ball details
+    function showMatchSummary(data) {
+      const matchFinished = data.resultText ? true : false;
+      
+      // First Innings
+      const firstInnings = data.first;
+      if (firstInnings) {
+        const allOvers = [...(firstInnings.overs || [])];
+        // Add current over only if match is finished
+        if (matchFinished && firstInnings.curOver && firstInnings.curOver.length > 0) {
+          allOvers.push(firstInnings.curOver);
+        }
+        
+        if (allOvers.length > 0) {
+          const extras = calculateExtras(firstInnings);
+          const rr = firstInnings.legalBalls > 0 ? ((firstInnings.runs || 0) * 6 / firstInnings.legalBalls).toFixed(2) : '0.00';
+          document.getElementById('firstInningsTitle').textContent = `${data.teamA || 'Team A'} - ${firstInnings.runs || 0}/${firstInnings.wkts || 0} (${calculateOvers(firstInnings.legalBalls || 0)}) | RR: ${rr} | Exts: ${extras}`;
+          document.getElementById('firstInningsOvers').innerHTML = renderOvers(allOvers);
+        } else {
+          document.getElementById('firstInningsTitle').textContent = `${data.teamA || 'Team A'} - 0/0 (0.0)`;
+          document.getElementById('firstInningsOvers').innerHTML = '<div style="text-align:center;color:#94a3b8;padding:12px;font-size:13px;">No completed overs yet</div>';
+        }
+      }
+      
+      // Second Innings
+      const secondInnings = data.second;
+      if (data.inSecond && secondInnings) {
+        const allOvers = [...(secondInnings.overs || [])];
+        // Add current over only if match is finished
+        if (matchFinished && secondInnings.curOver && secondInnings.curOver.length > 0) {
+          allOvers.push(secondInnings.curOver);
+        }
+        
+        document.getElementById('secondInningsSummary').style.display = 'block';
+        
+        if (allOvers.length > 0) {
+          const extras = calculateExtras(secondInnings);
+          const rr = secondInnings.legalBalls > 0 ? ((secondInnings.runs || 0) * 6 / secondInnings.legalBalls).toFixed(2) : '0.00';
+          document.getElementById('secondInningsTitle').textContent = `${data.teamB || 'Team B'} - ${secondInnings.runs || 0}/${secondInnings.wkts || 0} (${calculateOvers(secondInnings.legalBalls || 0)}) | RR: ${rr} | Exts: ${extras}`;
+          document.getElementById('secondInningsOvers').innerHTML = renderOvers(allOvers);
+        } else {
+          document.getElementById('secondInningsTitle').textContent = `${data.teamB || 'Team B'} - 0/0 (0.0)`;
+          document.getElementById('secondInningsOvers').innerHTML = '<div style="text-align:center;color:#94a3b8;padding:12px;font-size:13px;">No completed overs yet</div>';
+        }
+      } else {
+        // Hide second innings summary if not started yet
+        document.getElementById('secondInningsSummary').style.display = 'none';
+      }
+    }
+
+    // Render overs for match summary
+    function renderOvers(overs) {
+      return overs.map((over, idx) => {
+        if (!over || over.length === 0) return '';
+        
+        const ballsHtml = over.map(sym => {
+          const isWicket = /W$/.test(sym) || /\+W$/.test(sym);
+          let bgColor = '#3b82f6';
+          if (isWicket) bgColor = '#e31d1d';
+          else if (sym === 6) bgColor = '#f59e0b';
+          else if (sym === 4) bgColor = '#10b981';
+          else if (sym === 0) bgColor = '#94a3b8';
+          else if (typeof sym === 'string' && (sym.includes('WD') || sym.includes('NB') || sym.includes('B+') || sym.includes('LB+'))) bgColor = '#f59e0b';
+          return `<span style="display:inline-block;margin:2px;padding:4px 8px;border-radius:6px;background:${bgColor};color:#fff;font-weight:700;font-size:12px">${sym}</span>`;
+        }).join('');
+        
+        return `
+          <div style="margin-bottom:8px;padding:8px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;">
+            <span style="font-size:11px;font-weight:700;color:#6b7280;margin-right:8px;">Over ${idx + 1}:</span>${ballsHtml}
+          </div>
+        `;
+      }).join('');
+    }
+  </script>
+
+  <!-- Footer -->
+  <footer style="text-align:center;padding:24px 0;color:#ffffff;font-size:14px;margin-top:24px;">
+    <p style="margin:0 0 8px;">Made with ❤️ for local cricket matches.</p>
+    <p style="margin:0;opacity:0.9;">© 2025 CricketBook — Realtime Cricket Scoring Tool</p>
+  </footer>
+
+</body>
+</html>

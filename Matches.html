@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="View all cricket matches - Recent and ongoing matches">
+  <title>CricketBook - All Matches</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 18px;
+      color: #1f2937;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    .matches-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+    
+    @media (max-width: 768px) {
+      .matches-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    .header {
+      text-align: center;
+      margin-bottom: 16px;
+      color: white;
+    }
+    
+    .header h1 {
+      font-size: 28px;
+      font-weight: 800;
+      margin-bottom: 4px;
+    }
+    
+    .header p {
+      font-size: 14px;
+      opacity: 0.9;
+    }
+    
+    .section {
+      margin-bottom: 16px;
+    }
+    
+    .section-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: white;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .card {
+      background: #ffffff;
+      border: 1px solid rgba(148,163,184,.2);
+      border-radius: 16px;
+      padding: 16px;
+      box-shadow: 0 10px 40px rgba(0,0,0,.12), 0 2px 8px rgba(0,0,0,.08);
+      margin-bottom: 10px;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    
+    .card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 15px 50px rgba(0,0,0,.15), 0 4px 12px rgba(0,0,0,.1);
+    }
+    
+    .ongoing-card {
+      background: linear-gradient(135deg, #10b981 0%, #3b82f6 100%);
+      color: white;
+      border: none;
+    }
+    
+    .ongoing-card .match-title {
+      color: white;
+    }
+    
+    .ongoing-card .match-score {
+      color: rgba(255,255,255,0.95);
+    }
+    
+    .ongoing-badge {
+      display: inline-block;
+      background: rgba(255,255,255,0.3);
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+      margin-bottom: 6px;
+      animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
+    
+    .match-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: #1f2937;
+      margin-bottom: 6px;
+    }
+    
+    .match-score {
+      font-size: 13px;
+      color: #6b7280;
+      margin-bottom: 10px;
+      line-height: 1.5;
+    }
+    
+    .match-meta {
+      font-size: 11px;
+      color: #9ca3af;
+      margin-bottom: 10px;
+    }
+    
+    .btn {
+      display: inline-block;
+      padding: 8px 16px;
+      background: #8b5cf6;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    
+    .btn:hover {
+      background: #7c3aed;
+      transform: scale(1.05);
+    }
+    
+    .btn-primary {
+      background: white;
+      color: #10b981;
+    }
+    
+    .btn-primary:hover {
+      background: rgba(255,255,255,0.9);
+      color: #059669;
+    }
+    
+    .loading {
+      text-align: center;
+      color: white;
+      font-size: 18px;
+      padding: 40px;
+    }
+    
+    .empty-state {
+      background: white;
+      border-radius: 16px;
+      padding: 40px 20px;
+      text-align: center;
+      color: #6b7280;
+    }
+    
+    .empty-state-icon {
+      font-size: 48px;
+      margin-bottom: 12px;
+      opacity: 0.5;
+    }
+    
+    .error {
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      color: #991b1b;
+      padding: 16px;
+      border-radius: 12px;
+      text-align: center;
+      margin-top: 20px;
+    }
+    
+    /* Navigation */
+    .nav {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    
+    .nav a {
+      display: inline-block;
+      color: white;
+      text-decoration: none;
+      padding: 8px 16px;
+      margin: 0 6px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(10px);
+      font-weight: 600;
+      font-size: 13px;
+      transition: all 0.2s;
+    }
+    
+    .nav a:hover {
+      background: rgba(255, 255, 255, 0.25);
+      transform: translateY(-2px);
+    }
+    
+    .nav a.active {
+      background: rgba(255, 255, 255, 0.3);
+    }
+    
+    .new-match-btn {
+      background: #10b981;
+      width: 100%;
+      text-align: center;
+      margin-top: 12px;
+      display: block;
+      padding: 10px 16px;
+    }
+    
+    .new-match-btn:hover {
+      background: #059669;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Navigation -->
+    <nav class="nav">
+      <a href="index.html">🏠 Home</a>
+      <a href="LiveScore.html">📺 Live Score</a>
+      <a href="Matches.html" class="active">📋 Matches</a>
+      <a href="about.html">ℹ️ About</a>
+    </nav>
+    
+    <div class="header">
+      <h1>🏏 CricketBook</h1>
+      <p>All Matches</p>
+    </div>
+    
+    <div class="loading" id="loading">Loading matches...</div>
+    
+    <div id="content" style="display:none">
+      <!-- Ongoing Match Section -->
+      <div id="ongoingSection" class="section" style="display:none">
+        <div class="section-title">
+          ⚡ Live Match
+        </div>
+        <div id="ongoingMatch"></div>
+      </div>
+      
+      <!-- Recent Matches Section -->
+      <div id="recentSection" class="section">
+        <div class="section-title">
+          📋 Recent Matches
+        </div>
+        <div id="recentMatches" class="matches-grid"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+
+  <script>
+    // Firebase Configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyAFfwgHq761oFMg4CVqmZezGR_WK6ZGvAY",
+      authDomain: "cricketbook-35725.firebaseapp.com",
+      databaseURL: "https://cricketbook-35725-default-rtdb.firebaseio.com",
+      projectId: "cricketbook-35725",
+      storageBucket: "cricketbook-35725.firebasestorage.app",
+      messagingSenderId: "128747950424",
+      appId: "1:128747950424:web:dce02e8420c353f1acd52d"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const database = firebase.database();
+
+    // Load all matches with real-time sync
+    const matchesRef = database.ref('matches');
+    
+    matchesRef.on('value', (snapshot) => {
+      const allMatches = snapshot.val();
+      
+      console.log('📊 Loaded matches from Firebase:', allMatches); // Debug log
+      
+      if (!allMatches) {
+        document.getElementById('loading').innerHTML = '<div class="empty-state"><div class="empty-state-icon">🏏</div><div style="font-size:18px;font-weight:600;margin-bottom:8px;">No matches yet</div><div>Start your first match to see it here!</div></div>';
+        document.getElementById('loading').style.display = 'block';
+        document.getElementById('content').style.display = 'none';
+        return;
+      }
+      
+      // Convert to array and sort by lastUpdated timestamp (newest first)
+      const matchesArray = Object.keys(allMatches).map(matchId => ({
+        matchId: matchId,
+        ...allMatches[matchId]
+      })).sort((a, b) => {
+        // Use lastUpdated (numeric timestamp) for sorting, fallback to 0
+        const timeA = a.lastUpdated || 0;
+        const timeB = b.lastUpdated || 0;
+        return timeB - timeA;
+      });
+      
+      console.log('📋 Sorted matches array:', matchesArray); // Debug log
+      
+      // Detect ongoing match (most recent match that's not completed)
+      const ongoingMatch = matchesArray.find(match => {
+        // Check if match has been explicitly marked as completed
+        if (match.matchCompleted) {
+          return false; // Skip completed matches
+        }
+        
+        // Also check if there's a result text (means match is completed)
+        if (match.resultText && match.resultText.trim() !== '') {
+          return false; // Skip matches with results
+        }
+        
+        // Check if match is still in progress (not both innings done)
+        const firstDone = match.first?.done || false;
+        const secondDone = match.second?.done || false;
+        const inSecond = match.inSecond || false;
+        
+        // If in first innings and not done, or in second innings and not done
+        return (!inSecond && !firstDone) || (inSecond && !secondDone);
+      });
+      
+      console.log('⚡ Ongoing match:', ongoingMatch); // Debug log
+      
+      // Display ongoing match
+      if (ongoingMatch) {
+        displayOngoingMatch(ongoingMatch);
+        document.getElementById('ongoingSection').style.display = 'block';
+      } else {
+        document.getElementById('ongoingSection').style.display = 'none';
+      }
+      
+      // Display recent 20 matches
+      const recentMatches = matchesArray.slice(0, 20);
+      displayRecentMatches(recentMatches);
+      
+      document.getElementById('loading').style.display = 'none';
+      document.getElementById('content').style.display = 'block';
+      
+    }, (error) => {
+      console.error('❌ Firebase error:', error); // Debug log
+      document.getElementById('loading').innerHTML = '<div class="error">Error loading matches: ' + error.message + '</div>';
+    });
+    
+    function displayOngoingMatch(match) {
+      const section = document.getElementById('ongoingSection');
+      const container = document.getElementById('ongoingMatch');
+      
+      const firstScore = `${match.first?.runs || 0}/${match.first?.wkts || 0}`;
+      const firstOvers = calculateOvers(match.first?.legalBalls || 0);
+      const secondScore = `${match.second?.runs || 0}/${match.second?.wkts || 0}`;
+      const secondOvers = calculateOvers(match.second?.legalBalls || 0);
+      
+      const isBattingFirst = !match.inSecond;
+      
+      container.innerHTML = `
+        <div class="card ongoing-card">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 12px;">
+            <div style="flex: 1; min-width: 0;">
+              <div class="ongoing-badge">🔴 LIVE NOW</div>
+              <div class="match-title">${match.teamA || 'Team A'} vs ${match.teamB || 'Team B'}</div>
+              <div class="match-score">
+                <strong>${match.teamA || 'Team A'}:</strong> ${firstScore} (${firstOvers})<br>
+                <strong>${match.teamB || 'Team B'}:</strong> ${secondScore} (${secondOvers})
+                ${isBattingFirst ? '<br>🏏 Batting: ' + (match.teamA || 'Team A') : '<br>🏏 Batting: ' + (match.teamB || 'Team B')}
+              </div>
+            </div>
+            <div style="flex-shrink: 0;">
+              <a href="LiveScore.html?matchId=${match.matchId}" class="btn btn-primary">
+                👁️ Watch
+              </a>
+            </div>
+          </div>
+        </div>
+      `;
+      
+      section.style.display = 'block';
+    }
+    
+    function displayRecentMatches(matches) {
+      const container = document.getElementById('recentMatches');
+      
+      if (matches.length === 0) {
+        container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">🏏</div><div>No matches to display</div></div>';
+        return;
+      }
+      
+      container.innerHTML = matches.map(match => {
+        const firstScore = `${match.first?.runs || 0}/${match.first?.wkts || 0}`;
+        const firstOvers = calculateOvers(match.first?.legalBalls || 0);
+        const secondScore = `${match.second?.runs || 0}/${match.second?.wkts || 0}`;
+        const secondOvers = calculateOvers(match.second?.legalBalls || 0);
+        
+        const hasResult = match.resultText && match.resultText.trim() !== '';
+        const isComplete = match.first?.done && match.second?.done;
+        
+        let statusBadge = '';
+        if (hasResult) {
+          statusBadge = '<span style="display:inline-block;background:#10b981;color:white;padding:3px 10px;border-radius:20px;font-size:10px;font-weight:600;margin-left:8px;">✅ Completed</span>';
+        } else if (match.inSecond) {
+          statusBadge = '<span style="display:inline-block;background:#f59e0b;color:white;padding:3px 10px;border-radius:20px;font-size:10px;font-weight:600;margin-left:8px;">🏏 LIVE</span>';
+        }
+        
+        const dateStr = match.timestamp ? new Date(match.timestamp).toLocaleDateString('en-US', { 
+          month: 'short', 
+          day: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit'
+        }) : '';
+        
+        return `
+          <div class="card">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 12px;">
+              <div style="flex: 1; min-width: 0;">
+                <div class="match-title">
+                  ${match.teamA || 'Team A'} vs ${match.teamB || 'Team B'}
+                  ${statusBadge}
+                </div>
+                <div class="match-score">
+                  <strong>${match.teamA || 'Team A'}:</strong> ${firstScore} (${firstOvers})<br>
+                  <strong>${match.teamB || 'Team B'}:</strong> ${secondScore} (${secondOvers})
+                  ${hasResult ? '<br><span style="color:#10b981;font-weight:600;">🏆 ' + match.resultText + '</span>' : ''}
+                </div>
+                ${dateStr ? `<div class="match-meta">📅 ${dateStr}</div>` : ''}
+              </div>
+              <div style="flex-shrink: 0;">
+                <a href="LiveScore.html?matchId=${match.matchId}" class="btn">
+                  👁️ View
+                </a>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+    
+    function calculateOvers(legalBalls) {
+      if (!legalBalls) return '0.0';
+      const overs = Math.floor(legalBalls / 6);
+      const balls = legalBalls % 6;
+      return `${overs}.${balls}`;
+    }
+  </script>
+
+  <!-- Footer -->
+  <footer style="text-align:center;padding:24px 0;color:#ffffff;font-size:14px;margin-top:24px;">
+    <p style="margin:0 0 8px;">Made with ❤️ for local cricket matches.</p>
+    <p style="margin:0;opacity:0.9;">© 2025 CricketBook — Realtime Cricket Scoring Tool</p>
+  </footer>
+
+</body>
+</html>
