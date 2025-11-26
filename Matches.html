@@ -395,9 +395,17 @@
               <div class="ongoing-badge">🔴 LIVE NOW</div>
               <div class="match-title">${match.teamA || 'Team A'} vs ${match.teamB || 'Team B'}</div>
               <div class="match-score">
-                <strong>${match.teamA || 'Team A'}:</strong> ${firstScore} (${firstOvers})<br>
-                <strong>${match.teamB || 'Team B'}:</strong> ${secondScore} (${secondOvers})
-                ${isBattingFirst ? '<br>🏏 Batting: ' + (match.teamA || 'Team A') : '<br>🏏 Batting: ' + (match.teamB || 'Team B')}
+                <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                  <span><strong>${match.teamA || 'Team A'}:</strong></span>
+                  <span style="font-weight: 600;">${firstScore} (${firstOvers})</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                  <span><strong>${match.teamB || 'Team B'}:</strong></span>
+                  <span style="font-weight: 600;">${secondScore} (${secondOvers})</span>
+                </div>
+                <div style="margin-top: 6px;">
+                  ${isBattingFirst ? '🏏 Batting: ' + (match.teamA || 'Team A') : '🏏 Batting: ' + (match.teamB || 'Team B')}
+                </div>
               </div>
             </div>
             <div style="flex-shrink: 0;">
