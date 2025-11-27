@@ -242,6 +242,10 @@
     firebase.initializeApp(firebaseConfig);
     const database = firebase.database();
 
+    // Track active listeners for cleanup
+    let currentMatchRef = null;
+    let matchesListenerRef = null;
+
     // Get match ID from URL or localStorage
     let matchId = new URLSearchParams(window.location.search).get('matchId');
     if (matchId) {
@@ -256,9 +260,14 @@
       console.log('🔍 Auto-detecting live match...');
       document.getElementById('loading').innerHTML = '<div class="loading">🔍 Finding live match...</div>';
       
-      const matchesRef = database.ref('matches');
+      // Clean up previous matches listener if exists
+      if (matchesListenerRef) {
+        matchesListenerRef.off();
+      }
+      
+      matchesListenerRef = database.ref('matches');
       // Use on('value') instead of once() to listen for new matches in real-time
-      matchesRef.on('value', (snapshot) => {
+      matchesListenerRef.on('value', (snapshot) => {
         const allMatches = snapshot.val();
         
         if (!allMatches) {
@@ -322,12 +331,17 @@
         return;
       }
       
+      // Clean up previous match listener if exists
+      if (currentMatchRef) {
+        currentMatchRef.off();
+      }
+      
       // Setup viewer tracking
       setupViewerTracking(id);
       
       // Listen to Firebase changes
-      const matchRef = database.ref('matches/' + id);
-      matchRef.on('value', (snapshot) => {
+      currentMatchRef = database.ref('matches/' + id);
+      currentMatchRef.on('value', (snapshot) => {
         const data = snapshot.val();
         console.log('📡 Received update from Firebase for match', id, ':', data);
         if (data) {
@@ -600,6 +614,11 @@
     function updateLiveOver(inn) {
       const container = document.getElementById('liveOverDisplay');
       
+      if (!inn) {
+        container.innerHTML = '<span style="color:#94a3b8">Waiting for first ball...</span>';
+        return;
+      }
+      
       // Show current over if it exists
       if (inn.curOver && inn.curOver.length > 0) {
         const ballsHtml = inn.curOver.map(sym => {
@@ -620,7 +639,7 @@
         if (lastOver && lastOver.length > 0) {
           const ballsHtml = lastOver.map(sym => {
             const isWicket = /W$/.test(sym) || /\+W$/.test(sym);
-            let bgColor = '#10b981';
+            let bgColor = '#3b82f6';
             if (isWicket) bgColor = '#e31d1d';
             else if (sym === 6) bgColor = '#f59e0b';
             else if (sym === 4) bgColor = '#10b981';
@@ -640,7 +659,9 @@
 
     // Show match summary with ball-by-ball details
     function showMatchSummary(data) {
-      const matchFinished = data.resultText ? true : false;
+      if (!data) return;
+      
+      const matchFinished = data.resultText && data.resultText.trim() !== '';
       
       // First Innings
       const firstInnings = data.first;
@@ -721,3 +742,4 @@
 
 </body>
 </html>
+
