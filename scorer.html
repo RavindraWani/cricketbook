@@ -1383,7 +1383,7 @@ function shareViewerLink() {
   const matchType = document.getElementById('matchType')?.value || '';
   const badgeName = matchType ? `${tournamentName} - ${matchType}` : tournamentName;
   
-  // WhatsApp-specific message (link will be added automatically by WhatsApp)
+  // WhatsApp-specific message
   const whatsappMessage = `🏏 *${badgeName}* is LIVE!\n\nNo need to ask "score kya hai?" every 5 minutes 😄\n\nCheck the live score anytime right here 👇\n\n${link}`;
   const whatsappLink = `https://wa.me/?text=${encodeURIComponent(whatsappMessage)}`;
   
@@ -1394,8 +1394,7 @@ function shareViewerLink() {
   if (navigator.share) {
     navigator.share({
       title: shareTitle,
-      text: whatsappMessage,
-      url: link
+      text: whatsappMessage
     }).then(() => {
       console.log('Share successful');
     }).catch((error) => {
@@ -1473,8 +1472,7 @@ function shareTournamentLink() {
   if (navigator.share) {
     navigator.share({
       title: shareTitle,
-      text: `🏆 ${tournamentName} - View all matches`,
-      url: link
+      text: shareMessage
     }).then(() => {
       console.log('Tournament share successful');
     }).catch((error) => {
