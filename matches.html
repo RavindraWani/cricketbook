@@ -257,6 +257,24 @@
     .new-match-btn:hover {
       background: #059669;
     }
+    
+    .export-btn {
+      background: #10b981;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+      margin-top: 12px;
+    }
+    
+    .export-btn:hover {
+      background: #059669;
+      transform: scale(1.05);
+    }
   </style>
 </head>
 <body>
@@ -287,8 +305,11 @@
       
       <!-- Recent Matches Section -->
       <div id="recentSection" class="section">
-        <div class="section-title">
-          📋 Recent Matches
+        <div class="section-title" style="display:flex;justify-content:space-between;align-items:center;">
+          <span>📋 Recent Matches</span>
+          <a id="exportCsvBtn" href="javascript:void(0);" onclick="exportToCSV()" style="display:none;color:white;text-decoration:none;font-size:13px;opacity:0.9;font-weight:400;">
+            Export CSV →
+          </a>
         </div>
         <div id="recentMatches" class="matches-grid"></div>
       </div>
@@ -314,6 +335,9 @@
     // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
     const database = firebase.database();
+
+    // Global variable to store matches for export
+    let allMatchesData = [];
 
     // Check if org parameter is in URL (from share link)
     const urlParams = new URLSearchParams(window.location.search);
@@ -369,6 +393,14 @@
       });
       
       console.log('📋 Sorted matches array:', matchesArray); // Debug log
+      
+      // Store matches globally for export
+      allMatchesData = matchesArray;
+      
+      // Show export button if there are matches
+      if (matchesArray.length > 0) {
+        document.getElementById('exportCsvBtn').style.display = 'inline-block';
+      }
       
       // Detect ongoing match (most recent match that's not completed)
       const ongoingMatch = matchesArray.find(match => {
@@ -538,6 +570,109 @@
       const overs = Math.floor(legalBalls / 6);
       const balls = legalBalls % 6;
       return `${overs}.${balls}`;
+    }
+    
+    function exportToCSV() {
+      if (!allMatchesData || allMatchesData.length === 0) {
+        alert('No matches to export!');
+        return;
+      }
+      
+      // CSV Headers
+      const headers = [
+        'Match ID',
+        'Tournament Name',
+        'Match Type',
+        'Date & Time',
+        'Team A',
+        'Team A Runs',
+        'Team A Wickets',
+        'Team A Overs',
+        'Team B',
+        'Team B Runs',
+        'Team B Wickets',
+        'Team B Overs',
+        'Result',
+        'Status',
+        'Overs Limit'
+      ];
+      
+      // Convert matches to CSV rows
+      const rows = allMatchesData.map(match => {
+        const firstScore = match.first?.runs || 0;
+        const firstWkts = match.first?.wkts || 0;
+        const firstOvers = calculateOvers(match.first?.legalBalls || 0);
+        
+        const secondScore = match.second?.runs || 0;
+        const secondWkts = match.second?.wkts || 0;
+        const secondOvers = calculateOvers(match.second?.legalBalls || 0);
+        
+        const dateStr = match.timestamp ? new Date(match.timestamp).toLocaleString('en-US', { 
+          year: 'numeric',
+          month: 'short', 
+          day: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit'
+        }) : '';
+        
+        const hasResult = match.resultText && match.resultText.trim() !== '';
+        let status = 'In Progress';
+        if (hasResult) {
+          status = 'Completed';
+        } else if (match.matchCompleted) {
+          status = 'Completed';
+        }
+        
+        return [
+          match.matchId || '',
+          match.tournamentName || '',
+          match.matchType || '',
+          dateStr,
+          match.teamA || 'Team A',
+          firstScore,
+          firstWkts,
+          firstOvers,
+          match.teamB || 'Team B',
+          secondScore,
+          secondWkts,
+          secondOvers,
+          match.resultText || '',
+          status,
+          match.oversLimit || 20
+        ];
+      });
+      
+      // Combine headers and rows
+      const csvContent = [
+        headers.join(','),
+        ...rows.map(row => row.map(cell => {
+          // Escape cells with commas or quotes
+          const cellStr = String(cell);
+          if (cellStr.includes(',') || cellStr.includes('"') || cellStr.includes('\n')) {
+            return `"${cellStr.replace(/"/g, '""')}"`;
+          }
+          return cellStr;
+        }).join(','))
+      ].join('\n');
+      
+      // Create download link
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      const url = URL.createObjectURL(blob);
+      
+      // Generate filename with tournament name and date
+      const tournamentName = allMatchesData[0]?.tournamentName || 'CricketBook';
+      const date = new Date().toISOString().split('T')[0];
+      const filename = `${tournamentName.replace(/[^a-z0-9]/gi, '_')}_matches_${date}.csv`;
+      
+      link.setAttribute('href', url);
+      link.setAttribute('download', filename);
+      link.style.visibility = 'hidden';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      
+      console.log('✅ Exported ' + allMatchesData.length + ' matches to CSV');
     }
   </script>
 
