@@ -1100,7 +1100,7 @@ function updateUI(){
     const overStats = overRunsAndWkts(inn.curOver);
     const ballCount = countLegalBalls(inn.curOver);
     liveOverDiv.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center;">
-      <div style="color:#1f2937;font-weight:700;font-size:14px;">Ov ${inn.overs.length + 1} (${ballCount}): ${ballsChips}</div>
+      <div style="color:#1f2937;font-weight:700;font-size:14px;">Ov ${inn.overs.length + 1}.${ballCount}: ${ballsChips}</div>
       <div style="color:#1f2937;font-weight:700;font-size:14px;">${overStats.runs}/${overStats.wkts}</div>
     </div>`;
     liveOverDiv.style.display = 'block';
@@ -1117,18 +1117,18 @@ function updateUI(){
     const overStats = overRunsAndWkts(lastOver);
     const ballCount = countLegalBalls(lastOver);
     liveOverDiv.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center;">
-      <div style="color:#1f2937;font-weight:700;font-size:14px;">Ov ${inn.overs.length} (${ballCount}): ${ballsChips}</div>
+      <div style="color:#1f2937;font-weight:700;font-size:14px;">Ov ${inn.overs.length}.${ballCount}: ${ballsChips}</div>
       <div style="color:#1f2937;font-weight:700;font-size:14px;">${overStats.runs}/${overStats.wkts}</div>
     </div>`;
     liveOverDiv.style.display = 'block';
   } else {
-    liveOverDiv.innerHTML = `<div style="color:#94a3b8;font-size:13px;font-weight:600;">Ov 1 (0): No balls bowled yet</div>`;
+    liveOverDiv.innerHTML = `<div style="color:#94a3b8;font-size:13px;font-weight:600;">Ov 1.0: No balls bowled yet</div>`;
     liveOverDiv.style.display = 'block';
   }
 
   // --- First Innings Info (for second innings only) ---
   const firstInfoDiv = document.getElementById("firstInningsInfo");
-  if (inSecond) {
+  if (inSecond && !resultText) {
     const need = Math.max(first.runs + 1 - second.runs, 0);
     const ballsLeft = (oversLimit * 6) - second.legalBalls;
     const reqRR = ballsLeft > 0 ? (need * 6 / ballsLeft).toFixed(2) : '0.00';
@@ -1223,7 +1223,7 @@ function updateUI(){
   thisOverWkts = thisOver.wkts;
   
   // Display consolidated Overs/RR/Extras in chip banner
-  document.getElementById("oversExtrasInfo").innerHTML = `Overs: <b>(${overs}.${ballsInOver}/${oversLimit})</b> | RR: <b>${rr}</b> | Extras: <b>${extras}</b>`;
+  document.getElementById("oversExtrasInfo").innerHTML = `Overs: <b>(${overs}.${ballsInOver}/${oversLimit})</b> | RR: <b>${rr}</b> | Ext: <b>${extras}</b>`;
 
   // Update page title with team names
   if (teamA && teamB) {
