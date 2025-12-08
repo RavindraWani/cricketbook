@@ -198,13 +198,13 @@
     display: inline-block;
     color: white;
     text-decoration: none;
-    padding: 5px 8px;
-    margin: 3px 2px;
-    border-radius: 6px;
+    padding: 8px 14px;
+    margin: 3px 3px;
+    border-radius: 8px;
     background: rgba(255, 255, 255, 0.15);
     backdrop-filter: blur(10px);
     font-weight: 600;
-    font-size: 11px;
+    font-size: 13px;
     transition: all 0.2s;
     white-space: nowrap;
   }
@@ -221,13 +221,27 @@
   @media (max-width: 768px) {
     .nav {
       margin-bottom: 12px;
-      padding: 0 3px;
+      padding: 0 2px;
     }
     .nav a {
-      padding: 4px 6px;
-      margin: 2px 1px;
-      font-size: 10px;
+      padding: 7px 10px;
+      margin: 2px 2px;
+      font-size: 11px;
     }
+  }
+  
+  /* Saved Matches Section */
+  #savedMatchesSection code {
+    background: #f1f5f9;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-family: 'Courier New', monospace;
+    color: #334155;
+  }
+  
+  #savedMatchesList {
+    min-height: 50px;
   }
 </style>
 
@@ -353,10 +367,42 @@
         editToken: editToken,
         teamA: teamA,
         teamB: teamB,
-        timestamp: Date.now()
+        timestamp: Date.now(),
+        matchCompleted: matchCompleted,
+        resultText: resultText
       };
-      localStorage.setItem('cricketbook_current_session', JSON.stringify(session));
-      console.log('💾 Saved current match session to localStorage');
+      
+      // Get existing match history
+      let matchHistory = [];
+      const historyJson = localStorage.getItem('cricketbook_match_history');
+      if (historyJson) {
+        matchHistory = JSON.parse(historyJson);
+      }
+      
+      // Remove any existing entry for this match
+      matchHistory = matchHistory.filter(m => m.matchId !== matchId);
+      
+      // Only add to history if match is NOT completed
+      if (!matchCompleted) {
+        // Add current session to the beginning
+        matchHistory.unshift(session);
+        
+        // Keep only last 10 matches
+        if (matchHistory.length > 10) {
+          matchHistory = matchHistory.slice(0, 10);
+        }
+      }
+      
+      // Save to localStorage
+      localStorage.setItem('cricketbook_match_history', JSON.stringify(matchHistory));
+      
+      // Also keep the old single session for backward compatibility (only if not completed)
+      if (!matchCompleted) {
+        localStorage.setItem('cricketbook_current_session', JSON.stringify(session));
+      } else {
+        localStorage.removeItem('cricketbook_current_session');
+      }
+      console.log('💾 Saved match session to localStorage');
     } catch (error) {
       console.error('❌ Failed to save session:', error);
     }
@@ -383,6 +429,34 @@
     } catch (error) {
       console.error('❌ Failed to load session:', error);
       return null;
+    }
+  }
+  
+  // Load all match sessions from localStorage history
+  function loadAllMatchSessions() {
+    try {
+      const historyJson = localStorage.getItem('cricketbook_match_history');
+      if (!historyJson) return [];
+      
+      const matchHistory = JSON.parse(historyJson);
+      
+      // Filter out expired sessions (older than 7 days) and completed matches
+      const sevenDaysAgo = Date.now() - (7 * 24 * 60 * 60 * 1000);
+      const validMatches = matchHistory.filter(session => {
+        const notExpired = session.timestamp > sevenDaysAgo;
+        const notCompleted = !session.matchCompleted;
+        return notExpired && notCompleted;
+      });
+      
+      // Update localStorage if we filtered any
+      if (validMatches.length !== matchHistory.length) {
+        localStorage.setItem('cricketbook_match_history', JSON.stringify(validMatches));
+      }
+      
+      return validMatches;
+    } catch (error) {
+      console.error('❌ Failed to load match history:', error);
+      return [];
     }
   }
   
@@ -491,6 +565,23 @@
           console.log("🔒 No valid edit token - read-only mode");
           console.log("  - URL token:", urlEditToken);
           console.log("  - Match token:", matchData.editToken);
+          
+          // Check if this match is in localStorage with outdated token
+          const allMatches = loadAllMatchSessions();
+          const savedMatch = allMatches.find(m => m.matchId === matchId);
+          if (savedMatch && savedMatch.editToken !== matchData.editToken) {
+            console.log("🔄 Updating localStorage with correct editToken");
+            // Update the token in localStorage
+            savedMatch.editToken = matchData.editToken;
+            updateMatchInHistory(savedMatch);
+            
+            // Redirect with correct token
+            const correctUrl = `scorer.html?org=${organizationId}&match=${matchId}&edit=${matchData.editToken}`;
+            console.log("↪️ Redirecting with correct token:", correctUrl);
+            window.location.href = correctUrl;
+            return;
+          }
+          
           canEditMatch = false;
         }
       } else {
@@ -507,6 +598,21 @@
     } catch (error) {
       console.error("❌ Error checking edit permission:", error);
       canEditMatch = false;
+    }
+  }
+  
+  // Helper function to update a match in history
+  function updateMatchInHistory(updatedMatch) {
+    try {
+      let matchHistory = loadAllMatchSessions();
+      const index = matchHistory.findIndex(m => m.matchId === updatedMatch.matchId);
+      if (index >= 0) {
+        matchHistory[index] = updatedMatch;
+        localStorage.setItem('cricketbook_match_history', JSON.stringify(matchHistory));
+        console.log('✅ Updated match in history');
+      }
+    } catch (error) {
+      console.error('❌ Failed to update match in history:', error);
     }
   }
   
@@ -613,6 +719,17 @@
     <a href="about.html">ℹ️ About</a>
   </nav>
 
+  <!-- Saved Matches Section -->
+  <div id="savedMatchesSection" class="container" style="margin-bottom:14px;display:none;">
+    <div class="card" style="background:#ffffff;color:#1f2937;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+        <h2 style="margin:0;font-size:20px;font-weight:700;color:#1f2937;">💾 Saved Matches</h2>
+        <button class="btn" onclick="refreshSavedMatches()" style="padding:8px 16px;background:#10b981;font-size:13px;width:auto;min-width:80px;">🔄 Refresh</button>
+      </div>
+      <div id="savedMatchesList"></div>
+    </div>
+  </div>
+
   <!-- Setup -->
   <div id="setup" class="card" style="margin-bottom:14px;background:#ffffff;color:#1f2937;max-width:520px;margin:0 auto 14px;">
   <div style="text-align:center;margin-bottom:20px;">
@@ -623,19 +740,22 @@
   
   <div style="background:linear-gradient(135deg, #667eea15 0%, #764ba215 100%);padding:20px;border-radius:16px;margin-bottom:20px;">
     <div style="margin-bottom:16px;">
-      <label style="display:block;color:#1f2937;font-weight:600;font-size:14px;margin-bottom:6px;">🏆 Tournament Name</label>
-      <input id="tournamentName" list="tournamentsList" placeholder="e.g., Indian Premier League" style="background:#ffffff;color:#1f2937;border:2px solid #e2e8f0;padding:12px 14px;border-radius:12px;width:100%;margin-bottom:10px;font-size:15px;transition:border 0.2s;" onfocus="this.style.borderColor='#f59e0b'" onblur="this.style.borderColor='#e2e8f0'" />
+      <label style="display:block;color:#1f2937;font-weight:600;font-size:14px;margin-bottom:4px;">🏆 Tournament Name</label>
+      <p style="color:#64748b;font-size:12px;margin:0 0 8px 0;line-height:1.4;">Optional: Name of your tournament or league (e.g., Summer League 2025)</p>
+      <input id="tournamentName" list="tournamentsList" placeholder="e.g., Indian Premier League" style="background:#ffffff;color:#1f2937;border:2px solid #e2e8f0;padding:12px 14px;border-radius:12px;width:100%;font-size:15px;transition:border 0.2s;" onfocus="this.style.borderColor='#f59e0b'" onblur="this.style.borderColor='#e2e8f0'" />
       <datalist id="tournamentsList"></datalist>
     </div>
     
     <div style="margin-bottom:16px;">
-      <label style="display:block;color:#1f2937;font-weight:600;font-size:14px;margin-bottom:6px;">⚔️ Team Names</label>
-      <input id="teamA" placeholder="🏏 Batting Side (e.g., Team A)" style="background:#ffffff;color:#1f2937;border:2px solid #e2e8f0;padding:12px 14px;border-radius:12px;width:100%;margin-bottom:10px;font-size:15px;transition:border 0.2s;" onfocus="this.style.borderColor='#3b82f6'" onblur="this.style.borderColor='#e2e8f0'" />
-      <input id="teamB" placeholder="🎯 Bowling Side (e.g., Team B)" style="background:#ffffff;color:#1f2937;border:2px solid #e2e8f0;padding:12px 14px;border-radius:12px;width:100%;font-size:15px;transition:border 0.2s;" onfocus="this.style.borderColor='#3b82f6'" onblur="this.style.borderColor='#e2e8f0'" />
+      <label style="display:block;color:#1f2937;font-weight:600;font-size:14px;margin-bottom:4px;">⚔️ Team Names</label>
+      <p style="color:#64748b;font-size:12px;margin:0 0 8px 0;line-height:1.4;">Enter the names of both teams. First team will bat first.</p>
+      <input id="teamA" placeholder="🏏 Batting First (e.g., Mumbai Indians)" style="background:#ffffff;color:#1f2937;border:2px solid #e2e8f0;padding:12px 14px;border-radius:12px;width:100%;margin-bottom:10px;font-size:15px;transition:border 0.2s;" onfocus="this.style.borderColor='#3b82f6'" onblur="this.style.borderColor='#e2e8f0'" />
+      <input id="teamB" placeholder="🎯 Bowling First (e.g., Chennai Super Kings)" style="background:#ffffff;color:#1f2937;border:2px solid #e2e8f0;padding:12px 14px;border-radius:12px;width:100%;font-size:15px;transition:border 0.2s;" onfocus="this.style.borderColor='#3b82f6'" onblur="this.style.borderColor='#e2e8f0'" />
     </div>
     
     <div style="margin-bottom:16px;">
-      <label style="display:block;color:#1f2937;font-weight:600;font-size:14px;margin-bottom:6px;">🏅 Match Type</label>
+      <label style="display:block;color:#1f2937;font-weight:600;font-size:14px;margin-bottom:4px;">🏅 Match Type</label>
+      <p style="color:#64748b;font-size:12px;margin:0 0 8px 0;line-height:1.4;">Select the match format to help categorize your game</p>
       <select id="matchType" style="background:#ffffff;color:#1f2937;border:2px solid #e2e8f0;padding:12px 14px;border-radius:12px;width:100%;font-size:15px;transition:border 0.2s;cursor:pointer;" onfocus="this.style.borderColor='#8b5cf6'" onblur="this.style.borderColor='#e2e8f0'">
         <option value="Friendly Match">Friendly Match – Practice or non-ranking match</option>
         <option value="League Match">League Match – Regular round-robin stage</option>
@@ -649,13 +769,16 @@
     </div>
     
     <div style="margin-bottom:8px;">
-      <label style="display:block;color:#1f2937;font-weight:600;font-size:14px;margin-bottom:6px;">⚙️ Match Settings</label>
+      <label style="display:block;color:#1f2937;font-weight:600;font-size:14px;margin-bottom:4px;">⚙️ Match Settings</label>
+      <p style="color:#64748b;font-size:12px;margin:0 0 8px 0;line-height:1.4;">Set total overs per innings and maximum wickets allowed</p>
       <div class="row" style="gap:10px;">
         <div style="flex:1;">
-          <input id="overs" type="number" min="1" placeholder="⏱️ Overs (Default: 2)" style="background:#ffffff;color:#1f2937;border:2px solid #e2e8f0;padding:12px 14px;border-radius:12px;width:100%;font-size:15px;transition:border 0.2s;" onfocus="this.style.borderColor='#10b981'" onblur="this.style.borderColor='#e2e8f0'" />
+          <label style="display:block;color:#64748b;font-size:11px;margin-bottom:4px;">Total Overs</label>
+          <input id="overs" type="number" min="1" placeholder="Default: 2" style="background:#ffffff;color:#1f2937;border:2px solid #e2e8f0;padding:12px 14px;border-radius:12px;width:100%;font-size:15px;transition:border 0.2s;" onfocus="this.style.borderColor='#10b981'" onblur="this.style.borderColor='#e2e8f0'" />
         </div>
         <div style="flex:1;">
-          <input id="wicketsLimit" type="number" min="1" max="20" placeholder="🎪 Wickets (Default: 10)" style="background:#ffffff;color:#1f2937;border:2px solid #e2e8f0;padding:12px 14px;border-radius:12px;width:100%;font-size:15px;transition:border 0.2s;" onfocus="this.style.borderColor='#10b981'" onblur="this.style.borderColor='#e2e8f0'" />
+          <label style="display:block;color:#64748b;font-size:11px;margin-bottom:4px;">Max Wickets</label>
+          <input id="wicketsLimit" type="number" min="1" max="20" placeholder="Default: 10" style="background:#ffffff;color:#1f2937;border:2px solid #e2e8f0;padding:12px 14px;border-radius:12px;width:100%;font-size:15px;transition:border 0.2s;" onfocus="this.style.borderColor='#10b981'" onblur="this.style.borderColor='#e2e8f0'" />
         </div>
       </div>
     </div>
@@ -687,6 +810,7 @@
         <!-- Team Name (Left) -->
         <div style="flex:1;min-width:0;">
           <div id="status" style="font-size:22px;font-weight:800;background:linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:-0.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"></div>
+          <div id="firstInningsScore" style="font-size:13px;color:#3b82f6;font-weight:700;margin-top:6px;display:none;letter-spacing:0.3px;"></div>
         </div>
         <!-- Primary Score Display (Right) -->
         <div style="flex:0 0 auto;">
@@ -699,7 +823,7 @@
 
       <!-- Overs Info -->
       <div class="flex-between" style="margin-bottom:12px;">
-        <div id="oversExtrasInfo" class="chip" style="text-align:center;flex:1;"></div>
+        <div id="oversExtrasInfo" class="chip" style="text-align:center;flex:1;background:linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);border:1px solid #cbd5e1;padding:10px 16px;border-radius:10px;font-size:14px;font-weight:700;color:#1e293b;letter-spacing:0.3px;"></div>
         <button style="background:none;border:none;color:var(--muted);font-size:18px;cursor:pointer;padding:0;margin:0;margin-left:8px;" onclick="showChartView()" title="Chart">📊</button>
       </div>
 
@@ -707,7 +831,7 @@
       <div id="liveOverDisplay" style="margin-bottom:12px;padding:8px 10px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;"></div>
 
       <!-- First Innings Info Banner -->
-      <div id="firstInningsInfo" class="chip" style="display:none;text-align:center;margin-bottom:12px;"></div>
+      <div id="firstInningsInfo" style="display:none;text-align:center;margin-bottom:12px;padding:12px 16px;border-radius:12px;background:linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);color:#ffffff;font-size:14px;font-weight:700;box-shadow:0 4px 12px rgba(59,130,246,0.3);letter-spacing:0.3px;"></div>
     </div>
 
     <!-- 🔢 Scoring and Action Buttons (Keypad) -->
@@ -751,8 +875,8 @@
         <button class="btn btn-muted" onclick="showMoreOptions()" style="flex:1;font-size:18px;padding:16px 0;">☰</button>
       </div>
 
-      <!-- Additional Runs Row (Hidden by Default) -->
-      <div id="moreRunsRow" style="display:none;margin-top:8px;">
+      <!-- Additional Runs Row (Visible by Default) -->
+      <div id="moreRunsRow" style="display:block;margin-top:8px;">
         <div class="row">
           <button class="btn" onclick="addLegalRun(3)" style="flex:1;font-size:18px;padding:12px 0;background:#e5e7eb;color:#1f2937;font-weight:700;box-shadow:0 0 0 1px rgba(0,0,0,0.1) inset;">3</button>
           <button class="btn" onclick="addLegalRun(5)" style="flex:1;font-size:18px;padding:12px 0;background:#e5e7eb;color:#1f2937;font-weight:700;box-shadow:0 0 0 1px rgba(0,0,0,0.1) inset;">5</button>
@@ -815,20 +939,22 @@
     </div>
 
     <!-- Reset and Export Buttons -->
-    <div class="row" style="margin-top:8px; gap:8px;">
-      <div style="flex:1;">
-        <button class="btn" style="width:100%;font-size:14px;padding:12px 0;background:#64748b;" onclick="resetAll()">🔄 Reset Match</button>
-      </div>
-      <div style="flex:1;">
-        <button class="btn" style="width:100%;font-size:14px;padding:12px 0;background:#0891b2;" onclick="exportScoreboard()">📤 Export/Share</button>
-      </div>
-    </div>
-
-    <!-- Share Links Section -->
-    <div style="margin-top:8px;display:flex;flex-direction:column;gap:8px;">
-      <button id="shareBtn" class="btn" style="font-size:13px;padding:10px 0;background:#10b981;" onclick="shareViewerLink()">� Viewer Link (Public)</button>
-      <button class="btn" style="font-size:13px;padding:10px 0;background:#f59e0b;" onclick="shareScorerLink()">✏️ Scorer Link (Private)</button>
-      <button class="btn" style="font-size:13px;padding:10px 0;background:#06b6d4;" onclick="shareTournamentLink()">🏆 Tournament Link</button>
+    <div style="margin-top:12px;padding:12px 0;border-top:1px solid #e5e7eb;display:grid;grid-template-columns:1fr 1fr;gap:6px 12px;">
+      <a href="javascript:void(0)" onclick="resetAll()" style="color:#1e293b;text-decoration:none;font-size:13px;font-weight:600;padding:8px 12px;border-radius:8px;background:linear-gradient(135deg, #fafbfc 0%, #e2e8f0 100%);border:1px solid #cbd5e1;display:flex;align-items:center;justify-content:center;transition:all 0.2s;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,0.06);" onmouseover="this.style.background='linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%)';this.style.boxShadow='0 2px 6px rgba(0,0,0,0.1)'" onmouseout="this.style.background='linear-gradient(135deg, #fafbfc 0%, #e2e8f0 100%)';this.style.boxShadow='0 1px 3px rgba(0,0,0,0.06)'">
+        <span>Reset Match →</span>
+      </a>
+      <a href="javascript:void(0)" onclick="exportScoreboard()" style="color:#0369a1;text-decoration:none;font-size:13px;font-weight:600;padding:8px 12px;border-radius:8px;background:linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);border:1px solid #7dd3fc;display:flex;align-items:center;justify-content:center;transition:all 0.2s;text-align:center;box-shadow:0 1px 3px rgba(3,105,161,0.15);" onmouseover="this.style.background='linear-gradient(135deg, #bae6fd 0%, #7dd3fc 100%)';this.style.boxShadow='0 2px 6px rgba(3,105,161,0.25)'" onmouseout="this.style.background='linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%)';this.style.boxShadow='0 1px 3px rgba(3,105,161,0.15)'">
+        <span>Export/Share →</span>
+      </a>
+      <a id="shareBtn" href="javascript:void(0)" onclick="shareViewerLink()" style="color:#065f46;text-decoration:none;font-size:13px;font-weight:600;padding:8px 12px;border-radius:8px;background:linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);border:1px solid #6ee7b7;display:flex;align-items:center;justify-content:center;transition:all 0.2s;text-align:center;box-shadow:0 1px 3px rgba(6,95,70,0.15);" onmouseover="this.style.background='linear-gradient(135deg, #a7f3d0 0%, #6ee7b7 100%)';this.style.boxShadow='0 2px 6px rgba(6,95,70,0.25)'" onmouseout="this.style.background='linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%)';this.style.boxShadow='0 1px 3px rgba(6,95,70,0.15)'">
+        <span>Viewer Link (Public) →</span>
+      </a>
+      <a href="javascript:void(0)" onclick="shareScorerLink()" style="color:#92400e;text-decoration:none;font-size:13px;font-weight:600;padding:8px 12px;border-radius:8px;background:linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);border:1px solid #fcd34d;display:flex;align-items:center;justify-content:center;transition:all 0.2s;text-align:center;box-shadow:0 1px 3px rgba(146,64,14,0.15);" onmouseover="this.style.background='linear-gradient(135deg, #fde68a 0%, #fcd34d 100%)';this.style.boxShadow='0 2px 6px rgba(146,64,14,0.25)'" onmouseout="this.style.background='linear-gradient(135deg, #fef3c7 0%, #fde68a 100%)';this.style.boxShadow='0 1px 3px rgba(146,64,14,0.15)'">
+        <span>Scorer Link (Private) →</span>
+      </a>
+      <a href="javascript:void(0)" onclick="shareTournamentLink()" style="color:#0e7490;text-decoration:none;font-size:13px;font-weight:600;padding:8px 12px;border-radius:8px;background:linear-gradient(135deg, #cffafe 0%, #a5f3fc 100%);border:1px solid #67e8f9;display:flex;align-items:center;justify-content:center;transition:all 0.2s;text-align:center;grid-column:1/-1;box-shadow:0 1px 3px rgba(14,116,144,0.15);" onmouseover="this.style.background='linear-gradient(135deg, #a5f3fc 0%, #67e8f9 100%)';this.style.boxShadow='0 2px 6px rgba(14,116,144,0.25)'" onmouseout="this.style.background='linear-gradient(135deg, #cffafe 0%, #a5f3fc 100%)';this.style.boxShadow='0 1px 3px rgba(14,116,144,0.15)'">
+        <span>Tournament Link →</span>
+      </a>
     </div>
 
   </div>
@@ -882,6 +1008,17 @@ function updateUI(){
   // Team Name
   document.getElementById("status").textContent = batting;
 
+  // First Innings Score (show when in second innings)
+  const firstInningsScoreElem = document.getElementById("firstInningsScore");
+  if (inSecond && firstInningsScoreElem) {
+    const firstOvers = Math.floor(first.legalBalls/6);
+    const firstBalls = first.legalBalls % 6;
+    firstInningsScoreElem.textContent = `${teamA}: ${first.runs}/${first.wkts} (${firstOvers}.${firstBalls})`;
+    firstInningsScoreElem.style.display = 'block';
+  } else if (firstInningsScoreElem) {
+    firstInningsScoreElem.style.display = 'none';
+  }
+
   // Overs and Run Rate
   const overs = Math.floor(inn.legalBalls/6);
   const ballsInOver = inn.legalBalls % 6;
@@ -926,6 +1063,22 @@ function updateUI(){
     return {runs, wkts};
   }
   
+  // Count legal balls (excluding WD and NB extras)
+  function countLegalBalls(overArray) {
+    let legalCount = 0;
+    overArray.forEach(sym => {
+      if (typeof sym === 'string') {
+        // A ball is NOT legal if it starts with WD or NB (unless it's a BYE which is B or LB)
+        const isWide = sym.startsWith('WD');
+        const isNoBall = sym.startsWith('NB');
+        if (!isWide && !isNoBall) {
+          legalCount++;
+        }
+      }
+    });
+    return legalCount;
+  }
+  
   // Show current over if it has balls, or last completed over if current is empty
   if (inn.curOver.length > 0) {
     // Current over in progress
@@ -937,9 +1090,10 @@ function updateUI(){
       return `<span style="display:inline-block;margin:1px 2px;padding:4px 8px;border-radius:999px;background:${bgColor};color:#fff;font-weight:600;border:1px solid ${borderColor};font-size:13px;">${sym}</span>`;
     }).join('');
     const overStats = overRunsAndWkts(inn.curOver);
+    const ballCount = countLegalBalls(inn.curOver);
     liveOverDiv.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center;">
-      <div style="color:#1f2937;font-weight:600;font-size:13px;">Over ${inn.overs.length + 1}: ${ballsChips}</div>
-      <div style="color:#1f2937;font-weight:600;font-size:13px;">${overStats.runs}/${overStats.wkts}</div>
+      <div style="color:#1f2937;font-weight:700;font-size:14px;">Ov ${inn.overs.length + 1} (${ballCount}): ${ballsChips}</div>
+      <div style="color:#1f2937;font-weight:700;font-size:14px;">${overStats.runs}/${overStats.wkts}</div>
     </div>`;
     liveOverDiv.style.display = 'block';
   } else if (inn.overs.length > 0) {
@@ -953,13 +1107,14 @@ function updateUI(){
       return `<span style="display:inline-block;margin:1px 2px;padding:4px 8px;border-radius:999px;background:${bgColor};color:#fff;font-weight:600;border:1px solid ${borderColor};font-size:13px;">${sym}</span>`;
     }).join('');
     const overStats = overRunsAndWkts(lastOver);
+    const ballCount = countLegalBalls(lastOver);
     liveOverDiv.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center;">
-      <div style="color:#1f2937;font-weight:600;font-size:13px;">Over ${inn.overs.length}✓: ${ballsChips}</div>
-      <div style="color:#1f2937;font-weight:600;font-size:13px;">${overStats.runs}/${overStats.wkts}</div>
+      <div style="color:#1f2937;font-weight:700;font-size:14px;">Ov ${inn.overs.length} (${ballCount}): ${ballsChips}</div>
+      <div style="color:#1f2937;font-weight:700;font-size:14px;">${overStats.runs}/${overStats.wkts}</div>
     </div>`;
     liveOverDiv.style.display = 'block';
   } else {
-    liveOverDiv.innerHTML = `<div style="color:#94a3b8;font-size:13px;">No balls bowled yet</div>`;
+    liveOverDiv.innerHTML = `<div style="color:#94a3b8;font-size:13px;font-weight:600;">Ov 1 (0): No balls bowled yet</div>`;
     liveOverDiv.style.display = 'block';
   }
 
@@ -969,11 +1124,9 @@ function updateUI(){
     const need = Math.max(first.runs + 1 - second.runs, 0);
     const ballsLeft = (oversLimit * 6) - second.legalBalls;
     const reqRR = ballsLeft > 0 ? (need * 6 / ballsLeft).toFixed(2) : '0.00';
-    const firstOvers = Math.floor(first.legalBalls/6);
-    const firstBallsInOver = first.legalBalls % 6;
     
     firstInfoDiv.style.display = 'block';
-    firstInfoDiv.innerHTML = `${teamA}: <b>${first.runs}</b> (${firstOvers}.${firstBallsInOver}) | Need: <b>${need}</b> in <b>${ballsLeft}</b> balls | RRR: <b>${reqRR}</b>`;
+    firstInfoDiv.innerHTML = `Need <b>${need}</b> runs in <b>${ballsLeft}</b> balls | RRR: <b>${reqRR}</b>`;
   } else {
     firstInfoDiv.style.display = 'none';
     firstInfoDiv.innerHTML = '';
@@ -2433,6 +2586,183 @@ function showChartView() {
   alert(message);
 }
 
+// ========== Saved Matches Management ==========
+
+function refreshSavedMatches() {
+  const allMatches = loadAllMatchSessions();
+  const section = document.getElementById('savedMatchesSection');
+  const listDiv = document.getElementById('savedMatchesList');
+  
+  if (!allMatches || allMatches.length === 0) {
+    section.style.display = 'none';
+    return;
+  }
+  
+  // Show section
+  section.style.display = 'block';
+  
+  // Helper function to calculate time ago
+  function getTimeAgo(timestamp) {
+    const hoursSince = Math.floor((Date.now() - timestamp) / (1000 * 60 * 60));
+    const minutesSince = Math.floor((Date.now() - timestamp) / (1000 * 60));
+    const daysSince = Math.floor(hoursSince / 24);
+    
+    if (daysSince > 0) {
+      return `${daysSince} day${daysSince > 1 ? 's' : ''} ago`;
+    } else if (hoursSince > 0) {
+      return `${hoursSince} hour${hoursSince > 1 ? 's' : ''} ago`;
+    } else {
+      return `${minutesSince} minute${minutesSince > 1 ? 's' : ''} ago`;
+    }
+  }
+  
+  // Build match rows for all matches
+  const matchesHtml = allMatches.map((match, index) => {
+    const timeAgo = getTimeAgo(match.timestamp);
+    return `
+      <div style="border:2px solid #e2e8f0;border-radius:12px;padding:16px;background:linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);margin-bottom:12px;">
+        <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:12px;">
+          <div style="flex:1;">
+            <div style="font-size:18px;font-weight:700;color:#1f2937;margin-bottom:6px;">
+              ${match.teamA} <span style="color:#3b82f6;">vs</span> ${match.teamB}
+            </div>
+            <div style="font-size:13px;color:#64748b;margin-bottom:4px;">
+              📅 Saved: ${timeAgo}
+            </div>
+            <div style="font-size:13px;color:#64748b;">
+              🆔 Match ID: <code style="background:#f1f5f9;padding:2px 6px;border-radius:4px;font-size:12px;">${match.matchId}</code>
+            </div>
+          </div>
+        </div>
+        
+        <div style="display:flex;gap:8px;margin-top:12px;">
+          <button class="btn" onclick="resumeSavedMatchById('${match.matchId}')" style="flex:1;padding:10px 0;background:#10b981;font-size:14px;">
+            ✏️ Resume Match
+          </button>
+          <button class="btn" onclick="terminateSavedMatchById('${match.matchId}')" style="flex:1;padding:10px 0;background:#e31d1d;font-size:14px;">
+            🗑️ Delete Match
+          </button>
+        </div>
+      </div>
+    `;
+  }).join('');
+  
+  listDiv.innerHTML = matchesHtml || '<div style="color:#94a3b8;padding:20px;text-align:center;">No saved matches found</div>';
+}
+
+function resumeSavedMatchById(matchId) {
+  const allMatches = loadAllMatchSessions();
+  const match = allMatches.find(m => m.matchId === matchId);
+  
+  if (!match) {
+    alert('❌ Match not found');
+    return;
+  }
+  
+  // Log the match details for debugging
+  console.log('🔄 Resuming match with details:', {
+    organizationId: match.organizationId,
+    matchId: match.matchId,
+    editToken: match.editToken,
+    teamA: match.teamA,
+    teamB: match.teamB
+  });
+  
+  // Build URL with edit token and reload
+  const resumeUrl = `scorer.html?org=${match.organizationId}&match=${match.matchId}&edit=${match.editToken}`;
+  console.log('🔄 Resuming match URL:', resumeUrl);
+  window.location.href = resumeUrl;
+}
+
+function resumeSavedMatch() {
+  const savedSession = loadCurrentMatchSession();
+  if (!savedSession) {
+    alert('❌ No saved match found');
+    return;
+  }
+  
+  // Build URL with edit token and reload
+  const resumeUrl = `scorer.html?org=${savedSession.organizationId}&match=${savedSession.matchId}&edit=${savedSession.editToken}`;
+  console.log('🔄 Resuming match:', resumeUrl);
+  window.location.href = resumeUrl;
+}
+
+function terminateSavedMatchById(matchId) {
+  if (!confirm('⚠️ Are you sure you want to delete this saved match?\n\nThis will:\n✓ Remove the match from Firebase server\n✓ Clear from local storage\n\nThis action cannot be undone.')) {
+    return;
+  }
+  
+  const allMatches = loadAllMatchSessions();
+  const matchToDelete = allMatches.find(m => m.matchId === matchId);
+  
+  if (!matchToDelete) {
+    alert('❌ Match not found');
+    return;
+  }
+  
+  // Check if Firebase is enabled
+  if (!firebaseEnabled || !db) {
+    // Just remove from localStorage if Firebase is not enabled
+    removeMatchFromHistory(matchId);
+    alert('✅ Match deleted from local storage');
+    refreshSavedMatches();
+    return;
+  }
+  
+  // Delete from Firebase
+  const matchPath = 'organizations/' + matchToDelete.organizationId + '/matches/' + matchToDelete.matchId;
+  
+  db.ref(matchPath).remove()
+    .then(() => {
+      console.log('🗑️ Match deleted from Firebase:', matchToDelete.matchId);
+      // Remove from localStorage after successful Firebase deletion
+      removeMatchFromHistory(matchId);
+      alert('✅ Match deleted successfully from server and local storage');
+      refreshSavedMatches();
+    })
+    .catch((error) => {
+      console.error('❌ Failed to delete match from Firebase:', error);
+      // Still remove from localStorage even if Firebase deletion fails
+      removeMatchFromHistory(matchId);
+      alert('⚠️ Match deleted from local storage, but server deletion failed.\n\nError: ' + error.message);
+      refreshSavedMatches();
+    });
+}
+
+// Helper function to remove a match from history
+function removeMatchFromHistory(matchId) {
+  try {
+    let matchHistory = loadAllMatchSessions();
+    matchHistory = matchHistory.filter(m => m.matchId !== matchId);
+    localStorage.setItem('cricketbook_match_history', JSON.stringify(matchHistory));
+    
+    // Also clear current session if it matches
+    const currentSession = loadCurrentMatchSession();
+    if (currentSession && currentSession.matchId === matchId) {
+      localStorage.removeItem('cricketbook_current_session');
+    }
+    
+    console.log('🗑️ Removed match from history:', matchId);
+  } catch (error) {
+    console.error('❌ Failed to remove match from history:', error);
+  }
+}
+
+function terminateSavedMatch() {
+  if (!confirm('⚠️ Are you sure you want to delete this saved match?\n\nThis will:\n✓ Remove the match from Firebase server\n✓ Clear from local storage\n\nThis action cannot be undone.')) {
+    return;
+  }
+  
+  const savedSession = loadCurrentMatchSession();
+  if (!savedSession) {
+    alert('❌ No saved match found');
+    return;
+  }
+  
+  // Use the new function with matchId
+  terminateSavedMatchById(savedSession.matchId);
+}
+
 // ========== Viewer Mode Initialization ==========
 
 window.addEventListener('DOMContentLoaded', () => {
@@ -2441,31 +2771,8 @@ window.addEventListener('DOMContentLoaded', () => {
   const hasUrlParams = urlParams.has('org') || urlParams.has('match');
   
   if (!hasUrlParams && !isViewerMode) {
-    const savedSession = loadCurrentMatchSession();
-    if (savedSession) {
-      const resumeMatch = confirm(
-        `🔄 Resume Previous Match?\n\n${savedSession.teamA} vs ${savedSession.teamB}\n\nClick OK to continue scoring, or Cancel to start a new match.`
-      );
-      
-      if (resumeMatch) {
-        // Restore session variables
-        organizationId = savedSession.organizationId;
-        matchId = savedSession.matchId;
-        editToken = savedSession.editToken;
-        teamA = savedSession.teamA;
-        teamB = savedSession.teamB;
-        canEditMatch = true;
-        
-        // Build URL with edit token and reload
-        const resumeUrl = `scorer.html?org=${organizationId}&match=${matchId}&edit=${editToken}`;
-        console.log('🔄 Resuming match:', resumeUrl);
-        window.location.href = resumeUrl;
-        return;
-      } else {
-        // User wants new match - clear old session
-        clearCurrentMatchSession();
-      }
-    }
+    // Display saved matches section instead of popup
+    refreshSavedMatches();
   }
   
   if (isViewerMode) {
@@ -2521,14 +2828,20 @@ window.addEventListener('DOMContentLoaded', () => {
     const urlOrgId = urlParams.get('org');
     const urlMatchId = urlParams.get('match');
     
-    if (urlOrgId && urlMatchId && firebaseEnabled) {
-      // Loading existing match - check edit permissions
+    if (urlOrgId && urlMatchId) {
+      // Loading existing match from URL
       organizationId = urlOrgId;
       matchId = urlMatchId;
       
       console.log("🔄 Loading existing match from URL");
       console.log("📋 Organization ID:", organizationId);
       console.log("📋 Match ID:", matchId);
+      
+      if (!firebaseEnabled) {
+        console.error("❌ Cannot load match - Firebase is not configured");
+        alert("❌ Cannot load match: Firebase is not configured.\n\nPlease configure Firebase to use live scoring features.");
+        return;
+      }
       
       // Check edit permission and load match
       checkEditPermission().then(() => {
@@ -2544,6 +2857,9 @@ window.addEventListener('DOMContentLoaded', () => {
     } else if (firebaseEnabled) {
       // New match - scorer has full edit rights
       console.log("🏏 Scorer mode - Ready to start new match");
+    } else {
+      // Firebase not configured and no match to load
+      console.warn("⚠️ Firebase not configured - new matches will not be saved to cloud");
     }
   }
 });

@@ -25,19 +25,13 @@
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       min-height: 100vh;
+      padding: 18px;
       color: #1f2937;
     }
     
     .container {
       max-width: 800px;
       margin: 0 auto;
-      padding: 20px 16px;
-    }
-    
-    @media (max-width: 768px) {
-      .container {
-        padding: 12px 12px;
-      }
     }
     
     /* Card */
@@ -139,7 +133,7 @@
     /* Navigation */
     .nav {
       text-align: center;
-      margin-bottom: 20px;
+      margin-bottom: 15px;
       padding: 0 5px;
     }
     
@@ -147,13 +141,13 @@
       display: inline-block;
       color: white;
       text-decoration: none;
-      padding: 5px 8px;
-      margin: 3px 2px;
-      border-radius: 6px;
+      padding: 8px 14px;
+      margin: 3px 3px;
+      border-radius: 8px;
       background: rgba(255, 255, 255, 0.15);
       backdrop-filter: blur(10px);
       font-weight: 600;
-      font-size: 11px;
+      font-size: 13px;
       transition: all 0.2s;
       white-space: nowrap;
     }
@@ -169,13 +163,13 @@
     
     @media (max-width: 768px) {
       .nav {
-        margin-bottom: 15px;
-        padding: 0 3px;
+        margin-bottom: 12px;
+        padding: 0 2px;
       }
       .nav a {
-        padding: 4px 6px;
-        margin: 2px 1px;
-        font-size: 10px;
+        padding: 7px 10px;
+        margin: 2px 2px;
+        font-size: 11px;
       }
     }
     
@@ -215,97 +209,43 @@
   <div class="card">
     <h1>🏏 About CricketBook</h1>
     
-    <p>CricketBook is a <strong>free, real-time cricket scoring application</strong> designed for local cricket matches, tournaments, and friendly games. Our tool makes it easy to score matches ball-by-ball and share live updates instantly with players, friends, and family.</p>
+    <p>CricketBook is a <strong>free, real-time cricket scoring tool</strong> for local matches and tournaments. Score matches ball-by-ball and share live updates instantly with WhatsApp integration.</p>
 
-    <h2>What We Offer</h2>
-    <p>CricketBook provides four main ways to experience cricket matches:</p>
-    
-    <h3 style="color:#3b82f6;font-size:18px;margin:16px 0 8px;">⚙️ Scorer Tool</h3>
-    <p>A powerful scoring interface for match officials and scorers. Record every ball, wicket, extra, and milestone with precision. Features protected edit access with secure tokens - only authorized scorers can edit matches while the public can watch safely. Create tournaments, generate organization IDs, and share dual links: public viewer links for spectators and private scorer links for co-scorers. The scorer creates unique match IDs that can be shared for live viewing, making it easy for others to follow along in real-time without the risk of accidental changes.</p>
-    
-    <h3 style="color:#3b82f6;font-size:18px;margin:16px 0 8px;">📺 Live Score</h3>
-    <p>Watch real-time cricket scores with automatic updates. The live score page automatically detects ongoing matches and displays ball-by-ball updates, over summaries, and match progress. Perfect for spectators who want to follow the action remotely.</p>
-    
-    <h3 style="color:#3b82f6;font-size:18px;margin:16px 0 8px;">📋 All Matches</h3>
-    <p>Browse through match history with a comprehensive view of all matches - both completed and ongoing. See recent matches in an organized grid layout, track tournament progress, and quickly jump to any match for detailed viewing.</p>
-
-    <h2>Key Features</h2>
+    <h2>Core Features</h2>
     <ul class="feature-list">
-      <li><strong>WhatsApp Integration:</strong> Share live scores with custom pre-written messages directly to WhatsApp in one tap</li>
-      <li><strong>Match Type Categories:</strong> Select match type (Friendly, League, Semi-Final, Final, Qualifier, Eliminator, Super Over, 3rd Place Playoff)</li>
-      <li><strong>Edit Token Protection:</strong> Secure edit access with unique tokens - public can watch, only authorized scorers can edit</li>
-      <li><strong>Dual Link Sharing:</strong> Separate viewer links (public) and scorer links (private) for controlled access</li>
-      <li><strong>Tournament Management:</strong> Name your tournaments and organize matches by league/competition with auto-saved history</li>
-      <li><strong>Dynamic Tournament Display:</strong> Shows "#TournamentName - Match Type" across all pages (Scorer, Live Score, Matches)</li>
-      <li><strong>Real-time Synchronization:</strong> Scores update instantly across all devices using Firebase</li>
+      <li><strong>Real-Time Scoring:</strong> Ball-by-ball tracking with instant updates across all devices</li>
+      <li><strong>WhatsApp Sharing:</strong> One-tap sharing with custom messages - "No need to ask 'score kya hai?' every 5 minutes 😄"</li>
+      <li><strong>Secure Access:</strong> Edit tokens protect scoring - public can watch, only authorized scorers can edit</li>
+      <li><strong>Tournament Management:</strong> Organize matches with custom names and 8 match types (League, Semi-Final, Final, etc.)</li>
       <li><strong>Auto-Detection:</strong> Live Score page automatically finds and displays ongoing matches</li>
-      <li><strong>Ball-by-Ball Tracking:</strong> Record every delivery with runs, wickets, and extras</li>
-      <li><strong>Detailed Statistics:</strong> Track runs, wickets, extras, strike rates, run rates, and overs progress</li>
-      <li><strong>Complete Match Summary:</strong> Over-by-over breakdown with runs/wickets per over and ball-by-ball details</li>
-      <li><strong>Match History:</strong> View up to 20 recent matches in an organized grid with tournament badges and live indicators</li>
-      <li><strong>Customizable Settings:</strong> Configure overs limit, wickets (supports 1-20 players), and team names</li>
-      <li><strong>Multi-User Isolation:</strong> Organization IDs ensure your tournaments stay separate from others</li>
-      <li><strong>Privacy-First:</strong> Tournament history stored only on your device, never shared with others</li>
-      <li><strong>Cross-Browser Sharing:</strong> Works seamlessly across different devices and browsers with URL parameters</li>
-      <li><strong>Mobile-First Design:</strong> Optimized interface for phones, tablets, and desktops</li>
-      <li><strong>No Registration:</strong> Start using immediately without any sign-up or account creation</li>
-      <li><strong>100% Free:</strong> No hidden costs, subscriptions, or premium features - completely free forever</li>
-    </ul>
-
-    <h2>Perfect For</h2>
-    <ul class="feature-list">
-      <li>Local neighborhood cricket matches</li>
-      <li>School and college tournaments</li>
-      <li>Office cricket leagues</li>
-      <li>Family cricket gatherings</li>
-      <li>Street cricket (gully cricket) games</li>
-      <li>Practice matches and scrimmages</li>
-      <li>Weekend cricket clubs</li>
-      <li>Community cricket events</li>
+      <li><strong>Match History:</strong> Browse up to 20 recent matches with detailed over-by-over summaries</li>
+      <li><strong>Flexible Settings:</strong> Configure overs limit (1-50), wickets (1-20 players), and team names</li>
+      <li><strong>Privacy-First:</strong> Tournament history stored locally on your device only</li>
+      <li><strong>No Sign-up:</strong> Start scoring immediately - 100% free forever</li>
     </ul>
 
     <h2>How It Works</h2>
-    <p><strong>For Scorers:</strong> Open the scorer tool, optionally enter a tournament name (or leave blank for casual matches), select the match type (League, Semi-Final, Final, etc.), enter team names and match settings, then start recording each ball. The app generates a unique Organization ID based on your tournament name to keep your matches organized. Click "Viewer Link" to share on WhatsApp with a fun pre-written message that includes your tournament name and match type.</p>
-    <p><strong>WhatsApp Sharing:</strong> When you share the viewer link, a custom message is automatically created: "🏏 [Tournament - Match Type] is LIVE! No need to ask 'score kya hai?' every 5 minutes 😄 Check the live score anytime right here 👇 [link]". One tap shares it to any WhatsApp chat or group.</p>
-    <p><strong>Match Types:</strong> Choose from 8 match categories: Friendly Match (practice), League Match (regular round-robin), Qualifier 1 (winner to final), Eliminator (loser eliminated), Semi-Final, Final (championship), 3rd Place Playoff, or Super Over (tie-breaker). The match type displays alongside your tournament name across all pages.</p>
-    <p><strong>Tournament Management:</strong> When you enter a tournament name, it's saved to your device's history for quick autocomplete next time. Your tournament list is private and stored locally - other users won't see your tournaments in their dropdown.</p>
-    <p><strong>For Viewers:</strong> Simply open the Live Score page - it automatically detects and displays the current live match. Or use the shared WhatsApp link (with org and match parameters) to watch a specific match across any device or browser.</p>
-    <p><strong>For Everyone:</strong> Browse all matches on the Matches page, see which games are live with tournament badges (#TournamentName - Match Type), and review completed match results with detailed statistics.</p>
+    <p><strong>Score:</strong> Enter tournament name (optional), select match type, set team names → Record each ball → Share via WhatsApp</p>
+    <p><strong>Watch:</strong> Open Live Score for auto-detected matches or use shared link from scorer</p>
+    <p><strong>Share:</strong> Two link types - Viewer Link (public, read-only) and Scorer Link (private, edit access)</p>
 
-    <h2>Technology</h2>
-    <p>Built with modern web technologies including Firebase Realtime Database for instant synchronization and localStorage for privacy-focused tournament history. The app features real-time listeners that automatically update scores without page refreshes, organization-based database isolation for multi-user environments, smart match detection algorithms, tournament-based URL sharing with org and match parameters, and a responsive design that works beautifully on all screen sizes.</p>
+    <h2>Perfect For</h2>
+    <ul class="feature-list">
+      <li>Neighborhood gully cricket games</li>
+      <li>School and college tournaments</li>
+      <li>Office cricket leagues</li>
+      <li>Weekend cricket clubs and community events</li>
+    </ul>
 
-    <h2>Privacy & Security</h2>
-    <p>Your privacy and data integrity matter. Tournament names you create are stored only on your device using localStorage - they're never shared with other users. Each tournament gets a unique Organization ID that keeps your matches separate from others. Match scores are shared via Firebase for live viewing, but your personal tournament list remains private.</p>
-    
-    <p><strong>Edit Token Protection:</strong> Every match generates a secure edit token that controls who can modify scores. Share the public viewer link for spectators to watch safely (read-only mode), and share the private scorer link only with trusted co-scorers who need edit access. This prevents accidental changes and malicious tampering while keeping matches publicly viewable.</p>
+    <h2>Technology & Security</h2>
+    <p>Built with Firebase Realtime Database for instant sync and localStorage for privacy. Edit token system prevents unauthorized changes while keeping matches publicly viewable. Organization IDs isolate tournaments between different users.</p>
 
     <h2>Our Mission</h2>
-    <p>To make professional-grade cricket scoring accessible to everyone. We believe every cricket match deserves proper scoring and the ability to share the excitement with others, whether it's a neighborhood game or an organized tournament. We prioritize privacy, ease of use, and real-time collaboration while ensuring multiple users can run their own tournaments without interference.</p>
+    <p>Make professional-grade cricket scoring accessible to everyone - from backyard games to organized tournaments. Free, simple, and secure.</p>
 
-    <h2>Updates & Features (Latest: December 2025)</h2>
-    <p><strong>Recent Updates:</strong></p>
-    <ul class="feature-list">
-      <li>WhatsApp Integration with custom pre-written sharing messages</li>
-      <li>Match Type categorization with 8 options (League, Semi-Final, Final, etc.)</li>
-      <li>Tournament display format: "#TournamentName - Match Type" across all pages</li>
-      <li>Overs display with total limit (e.g., "1.3/20 overs") for better context</li>
-      <li>Edit token security system for protected scoring access</li>
-      <li>Dual link sharing: Viewer links (public) and Scorer links (private)</li>
-      <li>Enhanced share modal with prominent WhatsApp button (green, official color)</li>
-      <li>Organization ID system for multi-user isolation and tournament grouping</li>
-      <li>Tournament name autocomplete with localStorage-based history (privacy-focused)</li>
-      <li>Dynamic tournament and match type display on Scorer page</li>
-      <li>Cross-browser/cross-device sharing with URL parameters (org & match)</li>
-      <li>Enhanced Match Summary showing runs/wickets per over</li>
-      <li>Improved mobile responsiveness and touch-friendly interface</li>
-    </ul>
-    <p>CricketBook continuously evolves with new features like WhatsApp integration for instant sharing, match type categorization for organized tournaments, edit token protection for secure scoring, customizable settings for different match formats, automatic live match detection, and improved tournament management. We're committed to making cricket scoring simple, fast, secure, private, and enjoyable for everyone.</p>
-
-    <h2>Contact & Support</h2>
-    <p>Have questions, feedback, or suggestions? We'd love to hear from you!</p>
+    <h2>Contact</h2>
     <p><strong>Instagram:</strong> <a href="https://www.instagram.com/cricketbook.digital/" target="_blank" rel="noopener noreferrer" style="color:#3b82f6;text-decoration:none;font-weight:600;">@cricketbook.digital</a></p>
-    <p>For bug reports, feature requests, or general inquiries, please send us a DM on Instagram. We aim to respond within 24-48 hours.</p>
+    <p>For support, feature requests, or feedback - DM us on Instagram!</p>
 
   </div>
   

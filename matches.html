@@ -213,13 +213,13 @@
       display: inline-block;
       color: white;
       text-decoration: none;
-      padding: 5px 8px;
-      margin: 3px 2px;
-      border-radius: 6px;
+      padding: 8px 14px;
+      margin: 3px 3px;
+      border-radius: 8px;
       background: rgba(255, 255, 255, 0.15);
       backdrop-filter: blur(10px);
       font-weight: 600;
-      font-size: 11px;
+      font-size: 13px;
       transition: all 0.2s;
       white-space: nowrap;
     }
@@ -236,12 +236,12 @@
     @media (max-width: 768px) {
       .nav {
         margin-bottom: 12px;
-        padding: 0 3px;
+        padding: 0 2px;
       }
       .nav a {
-        padding: 4px 6px;
-        margin: 2px 1px;
-        font-size: 10px;
+        padding: 7px 10px;
+        margin: 2px 2px;
+        font-size: 11px;
       }
     }
     
@@ -378,7 +378,7 @@
       console.log('📊 Loaded matches from Firebase for org ' + organizationId + ':', allMatches); // Debug log
       
       if (!allMatches) {
-        document.getElementById('loading').innerHTML = '<div class="empty-state"><div class="empty-state-icon">🏏</div><div style="font-size:18px;font-weight:600;margin-bottom:8px;">No matches yet</div><div>Start your first match to see it here!</div></div>';
+        document.getElementById('loading').innerHTML = '<div class="empty-state"><div class="empty-state-icon">🏏</div><div style="font-size:18px;font-weight:600;margin-bottom:12px;color:#1f2937;">No Matches Yet</div><div style="color:#6b7280;margin-bottom:16px;">Start your first match to see it here!</div><a href="index.html" style="background:#8b5cf6;color:white;padding:10px 24px;border-radius:10px;text-decoration:none;display:inline-block;font-weight:600;">🏠 Go to Home & Start Scoring</a></div>';
         document.getElementById('loading').style.display = 'block';
         document.getElementById('content').style.display = 'none';
         return;
@@ -536,7 +536,7 @@
         } else if (!match.matchCompleted && !hasResult) {
           // Check if match is paused/inactive
           if (isInactive) {
-            statusBadge = '<span style="display:inline-block;background:#f59e0b;color:white;padding:3px 10px;border-radius:20px;font-size:10px;font-weight:600;margin-left:8px;">⚠️ Stalled</span>';
+            statusBadge = '<span style="display:inline-block;background:#9333ea;color:white;padding:3px 10px;border-radius:20px;font-size:10px;font-weight:600;margin-left:8px;">⚠️ Stalled</span>';
           } else {
             // Show LIVE badge for any ongoing match (first or second innings)
             statusBadge = '<span style="display:inline-block;background:#f59e0b;color:white;padding:3px 10px;border-radius:20px;font-size:10px;font-weight:600;margin-left:8px;">🏏 LIVE</span>';

@@ -25,13 +25,13 @@
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       min-height: 100vh;
+      padding: 18px;
       color: #1f2937;
     }
     
     .container {
       max-width: 1200px;
       margin: 0 auto;
-      padding: 20px 16px;
     }
     
     /* Hero Section */
@@ -39,7 +39,7 @@
       text-align: center;
       color: white;
       margin-bottom: 30px;
-      padding: 20px 16px;
+      padding: 0;
     }
     
     .hero h1 {
@@ -59,12 +59,9 @@
     }
     
     @media (max-width: 768px) {
-      .container {
-        padding: 12px 12px;
-      }
       .hero {
         margin-bottom: 20px;
-        padding: 12px 12px;
+        padding: 0;
       }
       .hero h1 {
         font-size: 32px;
@@ -180,7 +177,7 @@
     /* Navigation */
     .nav {
       text-align: center;
-      margin-bottom: 20px;
+      margin-bottom: 15px;
       padding: 0 5px;
     }
     
@@ -188,13 +185,13 @@
       display: inline-block;
       color: white;
       text-decoration: none;
-      padding: 5px 8px;
-      margin: 3px 2px;
-      border-radius: 6px;
+      padding: 8px 14px;
+      margin: 3px 3px;
+      border-radius: 8px;
       background: rgba(255, 255, 255, 0.15);
       backdrop-filter: blur(10px);
       font-weight: 600;
-      font-size: 11px;
+      font-size: 13px;
       transition: all 0.2s;
       white-space: nowrap;
     }
@@ -210,13 +207,13 @@
     
     @media (max-width: 768px) {
       .nav {
-        margin-bottom: 15px;
-        padding: 0 3px;
+        margin-bottom: 12px;
+        padding: 0 2px;
       }
       .nav a {
-        padding: 4px 6px;
-        margin: 2px 1px;
-        font-size: 10px;
+        padding: 7px 10px;
+        margin: 2px 2px;
+        font-size: 11px;
       }
     }
   </style>
@@ -237,36 +234,7 @@
       <p>Real-time Cricket Scoring for Local Matches & Tournaments</p>
     </div>
     
-    <!-- Cards Grid -->
-    <div class="cards-grid">
-      <!-- Scorer Card -->
-      <a href="scorer.html" class="card">
-        <h2>⚙️ Scorer</h2>
-        <p>Create and score your match in real-time. Record every ball, share on WhatsApp, and get secure edit access with dual viewer/scorer links.</p>
-        <span class="card-link">Start Scoring →</span>
-      </a>
-      
-      <!-- Live Score Card -->
-      <a href="livescore.html" class="card">
-        <h2>📺 Live Score</h2>
-        <p>Watch ongoing matches with automatic ball-by-ball updates. See live overs, runs, wickets, and match progress in real-time.</p>
-        <span class="card-link">Watch Live →</span>
-      </a>
-      
-      <!-- All Matches Card -->
-      <a href="matches.html" class="card">
-        <h2>📋 All Matches</h2>
-        <p>Browse your tournament history. See all completed and ongoing matches organized with match types and tournament names.</p>
-        <span class="card-link">View Matches →</span>
-      </a>
-      
-      <!-- About Card -->
-      <a href="about.html" class="card">
-        <h2>ℹ️ About</h2>
-        <p>Learn about features, privacy, security, and how CricketBook makes cricket scoring simple and free for everyone.</p>
-        <span class="card-link">Learn More →</span>
-      </a>
-    </div>
+ 
     
     <!-- How It Works Section -->
     <div class="card" style="max-width: 800px; margin: 0 auto 24px;">
@@ -311,7 +279,7 @@
       </div>
     </div>
     
-    <!-- Why CricketBook Section -->
+      <!-- Why CricketBook Section -->
     <div class="card" style="max-width: 800px; margin: 0 auto 24px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
       <h2 style="text-align: center; font-size: 28px; margin-bottom: 24px; color: white;">🏆 Why CricketBook?</h2>
       
@@ -360,6 +328,38 @@
       </div>
     </div>
     
+<!-- Cards Grid -->
+    <div class="cards-grid">
+      <!-- Scorer Card -->
+      <a href="scorer.html" class="card" style="background:linear-gradient(135deg, #667eea 0%, #764ba2 100%);border:3px solid #ffffff;box-shadow:0 12px 48px rgba(102,126,234,0.4), 0 4px 16px rgba(118,75,162,0.3);transform:scale(1.02);position:relative;">
+        <div style="position:absolute;top:12px;right:12px;background:#10b981;color:white;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700;letter-spacing:0.5px;">POPULAR</div>
+        <h2 style="color:#ffffff;font-size:24px;">⚙️ Scorer</h2>
+        <p style="color:rgba(255,255,255,0.95);font-weight:500;">Create and score your match in real-time. Record every ball, share on WhatsApp, and get secure edit access with dual viewer/scorer links.</p>
+        <span class="card-link" style="background:linear-gradient(135deg, #10b981 0%, #059669 100%);color:#ffffff;padding:14px 28px;border-radius:12px;font-size:16px;font-weight:800;letter-spacing:0.5px;box-shadow:0 4px 16px rgba(16,185,129,0.4);display:inline-block;margin-top:8px;">🚀 Start Scoring →</span>
+      </a>
+      
+      <!-- Live Score Card -->
+      <a href="livescore.html" class="card" style="background:linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);border:2px solid #e2e8f0;box-shadow:0 8px 24px rgba(0,0,0,0.08), 0 2px 8px rgba(0,0,0,0.04);">
+        <h2 style="color:#3b82f6;font-size:22px;margin-bottom:12px;">📺 Live Score</h2>
+        <p style="color:#4b5563;font-weight:500;line-height:1.6;">Watch ongoing matches with automatic ball-by-ball updates. See live overs, runs, wickets, and match progress in real-time.</p>
+        <span class="card-link" style="background:linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);color:#ffffff;padding:12px 24px;border-radius:10px;font-size:15px;font-weight:700;box-shadow:0 3px 12px rgba(59,130,246,0.3);display:inline-block;margin-top:8px;">Watch Live →</span>
+      </a>
+      
+      <!-- All Matches Card -->
+      <a href="matches.html" class="card" style="background:linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);border:2px solid #e2e8f0;box-shadow:0 8px 24px rgba(0,0,0,0.08), 0 2px 8px rgba(0,0,0,0.04);">
+        <h2 style="color:#8b5cf6;font-size:22px;margin-bottom:12px;">📋 All Matches</h2>
+        <p style="color:#4b5563;font-weight:500;line-height:1.6;">Browse your tournament history. See all completed and ongoing matches organized with match types and tournament names.</p>
+        <span class="card-link" style="background:linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);color:#ffffff;padding:12px 24px;border-radius:10px;font-size:15px;font-weight:700;box-shadow:0 3px 12px rgba(139,92,246,0.3);display:inline-block;margin-top:8px;">View Matches →</span>
+      </a>
+      
+      <!-- About Card -->
+      <a href="about.html" class="card" style="background:linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);border:2px solid #e2e8f0;box-shadow:0 8px 24px rgba(0,0,0,0.08), 0 2px 8px rgba(0,0,0,0.04);">
+        <h2 style="color:#0891b2;font-size:22px;margin-bottom:12px;">ℹ️ About</h2>
+        <p style="color:#4b5563;font-weight:500;line-height:1.6;">Learn about features, privacy, security, and how CricketBook makes cricket scoring simple and free for everyone.</p>
+        <span class="card-link" style="background:linear-gradient(135deg, #0891b2 0%, #0e7490 100%);color:#ffffff;padding:12px 24px;border-radius:10px;font-size:15px;font-weight:700;box-shadow:0 3px 12px rgba(8,145,178,0.3);display:inline-block;margin-top:8px;">Learn More →</span>
+      </a>
+    </div>
+
     <!-- Footer -->
     <div class="footer">
       <p>Made with ❤️ for local cricket matches.</p>
