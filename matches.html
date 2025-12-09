@@ -453,7 +453,28 @@
       
     }, (error) => {
       console.error('❌ Firebase error:', error); // Debug log
-      document.getElementById('loading').innerHTML = '<div class="error">Error loading matches: ' + error.message + '</div>';
+      
+      // Check if it's a connection limit error
+      if (error.code === 'PERMISSION_DENIED' || error.message.includes('connection') || error.message.includes('limit')) {
+        document.getElementById('loading').innerHTML = `
+          <div class="error" style="padding:32px;text-align:center;">
+            <div style="font-size:48px;margin-bottom:16px;">⚠️</div>
+            <h2 style="color:#ef4444;font-size:22px;margin-bottom:12px;">Connection Limit Reached</h2>
+            <p style="margin-bottom:20px;">Too many people are browsing matches right now! 🏏</p>
+            <p style="margin-bottom:24px;font-size:14px;">Please wait a few minutes and try again.</p>
+            <button onclick="location.reload()" style="background:#8b5cf6;color:white;border:none;padding:12px 28px;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;">
+              🔄 Try Again
+            </button>
+          </div>
+        `;
+        
+        // Stop polling
+        if (pollingInterval) {
+          clearInterval(pollingInterval);
+        }
+      } else {
+        document.getElementById('loading').innerHTML = '<div class="error">Error loading matches: ' + error.message + '</div>';
+      }
     });
     };
     

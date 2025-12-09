@@ -1420,6 +1420,48 @@ function listenForUpdates() {
     
     // Clear the flag after UI update
     isLoadingFromFirebase = false;
+  }, (error) => {
+    // Handle connection errors (e.g., connection limit reached)
+    console.error("❌ Firebase connection error:", error);
+    
+    if (error.code === 'PERMISSION_DENIED' || error.message.includes('connection') || error.message.includes('limit')) {
+      // Show user-friendly error message
+      const gameDiv = document.getElementById('game');
+      const setupDiv = document.getElementById('setup');
+      
+      const errorHTML = `
+        <div style="max-width:520px;margin:40px auto;padding:32px;background:#ffffff;border-radius:20px;box-shadow:0 10px 40px rgba(0,0,0,0.15);text-align:center;">
+          <div style="font-size:64px;margin-bottom:16px;">⚠️</div>
+          <h2 style="color:#ef4444;font-size:24px;margin:0 0 12px;font-weight:800;">Connection Limit Reached</h2>
+          <p style="color:#6b7280;font-size:15px;line-height:1.6;margin:0 0 20px;">
+            Too many people are watching this match right now! 🏏<br>
+            Firebase free tier allows 100 simultaneous connections.
+          </p>
+          <p style="color:#6b7280;font-size:14px;line-height:1.6;margin:0 0 24px;">
+            Please wait a few minutes and try again.<br>
+            Some viewers may disconnect soon.
+          </p>
+          <button onclick="location.reload()" style="background:linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);color:#ffffff;border:none;padding:14px 32px;border-radius:12px;font-size:16px;font-weight:700;cursor:pointer;box-shadow:0 4px 12px rgba(59,130,246,0.3);">
+            🔄 Try Again
+          </button>
+          <div style="margin-top:20px;padding:12px;background:#f3f4f6;border-radius:8px;">
+            <p style="font-size:12px;color:#6b7280;margin:0;">
+              <strong>Note:</strong> Match data is still being recorded.<br>
+              Only viewing is temporarily limited.
+            </p>
+          </div>
+        </div>
+      `;
+      
+      if (gameDiv) gameDiv.innerHTML = errorHTML;
+      if (setupDiv) setupDiv.innerHTML = errorHTML;
+      
+      alert('⚠️ Connection Limit Reached!\n\nToo many viewers watching right now.\n\nPlease try again in a few minutes.');
+    } else {
+      // Other errors
+      console.error("Error details:", error);
+      alert('⚠️ Connection Error\n\n' + error.message + '\n\nPlease check your internet connection and try again.');
+    }
   });
 }
 
@@ -2798,6 +2840,28 @@ function refreshSavedMatches() {
     return;
   }
   
+  // Filter out completed matches (those with results declared)
+  const incompleteMatches = allMatches.filter(match => {
+    // Hide if match is marked as completed
+    if (match.matchCompleted) {
+      return false;
+    }
+    
+    // Hide if there's a result text (match finished)
+    if (match.resultText && match.resultText.trim() !== '') {
+      return false;
+    }
+    
+    // Show match if it's still in progress
+    return true;
+  });
+  
+  // If no incomplete matches, hide section
+  if (incompleteMatches.length === 0) {
+    section.style.display = 'none';
+    return;
+  }
+  
   // Show section
   section.style.display = 'block';
   
@@ -2816,8 +2880,8 @@ function refreshSavedMatches() {
     }
   }
   
-  // Build match rows for all matches
-  const matchesHtml = allMatches.map((match, index) => {
+  // Build match rows for incomplete matches only
+  const matchesHtml = incompleteMatches.map((match, index) => {
     const timeAgo = getTimeAgo(match.timestamp);
     return `
       <div style="border:2px solid #e2e8f0;border-radius:12px;padding:16px;background:linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);margin-bottom:12px;">
