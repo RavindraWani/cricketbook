@@ -1167,9 +1167,8 @@ function updateUI(){
       return `<span style="display:inline-block;margin:1px 2px;padding:4px 8px;border-radius:999px;background:${bgColor};color:#fff;font-weight:600;border:1px solid ${borderColor};font-size:13px;">${sym}</span>`;
     }).join('');
     const overStats = overRunsAndWkts(inn.curOver);
-    const ballCount = countLegalBalls(inn.curOver);
     liveOverDiv.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center;">
-      <div style="color:#1f2937;font-weight:700;font-size:14px;">Ov ${inn.overs.length + 1}.${ballCount}: ${ballsChips}</div>
+      <div style="color:#1f2937;font-weight:700;font-size:14px;">${ballsChips}</div>
       <div style="color:#1f2937;font-weight:700;font-size:14px;">${overStats.runs}/${overStats.wkts}</div>
     </div>`;
     liveOverDiv.style.display = 'block';
@@ -1184,14 +1183,13 @@ function updateUI(){
       return `<span style="display:inline-block;margin:1px 2px;padding:4px 8px;border-radius:999px;background:${bgColor};color:#fff;font-weight:600;border:1px solid ${borderColor};font-size:13px;">${sym}</span>`;
     }).join('');
     const overStats = overRunsAndWkts(lastOver);
-    const ballCount = countLegalBalls(lastOver);
     liveOverDiv.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center;">
-      <div style="color:#1f2937;font-weight:700;font-size:14px;">Ov ${inn.overs.length}.${ballCount}: ${ballsChips}</div>
+      <div style="color:#1f2937;font-weight:700;font-size:14px;">${ballsChips}</div>
       <div style="color:#1f2937;font-weight:700;font-size:14px;">${overStats.runs}/${overStats.wkts}</div>
     </div>`;
     liveOverDiv.style.display = 'block';
   } else {
-    liveOverDiv.innerHTML = `<div style="color:#94a3b8;font-size:13px;font-weight:600;">Ov 1.0: No balls bowled yet</div>`;
+    liveOverDiv.innerHTML = `<div style="color:#94a3b8;font-size:13px;font-weight:600;">No balls bowled yet</div>`;
     liveOverDiv.style.display = 'block';
   }
 
@@ -1811,30 +1809,97 @@ function updateUIFromFirebase() {
 
 function updateLiveOverDisplay(inn) {
   const liveOverDiv = document.getElementById("liveOverDisplay");
-  if (!inn.overs || !Array.isArray(inn.overs) || inn.overs.length === 0) {
+  
+  // Show current over if it has balls, or last completed over if current is empty
+  if (inn.curOver && inn.curOver.length > 0) {
+    // Current over in progress
+    const ballsChips = inn.curOver.map(sym => {
+      const isWicket = /W$/.test(sym) || /\+W$/.test(sym);
+      const bgColor = isWicket ? '#e31d1d' : '#3b82f6';
+      const borderColor = isWicket ? '#b91c1c' : '#2563eb';
+      return `<span style="display:inline-block;margin:1px 2px;padding:4px 8px;border-radius:999px;background:${bgColor};color:#fff;font-weight:600;border:1px solid ${borderColor};font-size:13px;">${sym}</span>`;
+    }).join('');
+    
+    // Calculate runs/wickets for this over
+    let runs = 0, wkts = 0;
+    inn.curOver.forEach(sym => {
+      if (typeof sym === 'string') {
+        if (/^([0-9]+)\+W$/.test(sym)) { runs += parseInt(sym); wkts += 1; }
+        else if (/^W$/.test(sym)) { wkts += 1; }
+        else if (/^WD\+([0-9]+)\+W$/.test(sym)) { runs += 1 + parseInt(sym.match(/^WD\+([0-9]+)\+W$/)[1]); wkts += 1; }
+        else if (/^WD\+W$/.test(sym)) { runs += 1; wkts += 1; }
+        else if (/^NB\+([0-9]+)\+W$/.test(sym)) { runs += 1 + parseInt(sym.match(/^NB\+([0-9]+)\+W$/)[1]); wkts += 1; }
+        else if (/^NB\+W$/.test(sym)) { runs += 1; wkts += 1; }
+        else if (/^B\+([0-9]+)\+W$/.test(sym)) { runs += parseInt(sym.match(/^B\+([0-9]+)\+W$/)[1]); wkts += 1; }
+        else if (/^B\+W$/.test(sym)) { runs += 0; wkts += 1; }
+        else if (/^([0-9]+)W$/.test(sym)) { runs += parseInt(sym); wkts += 1; }
+        else if (/^WD\+([0-9]+)W$/.test(sym)) { runs += 1 + parseInt(sym.match(/^WD\+([0-9]+)W$/)[1]); wkts += 1; }
+        else if (/^WDW$/.test(sym)) { runs += 1; wkts += 1; }
+        else if (/^NB\+([0-9]+)W$/.test(sym)) { runs += 1 + parseInt(sym.match(/^NB\+([0-9]+)W$/)[1]); wkts += 1; }
+        else if (/^NBW$/.test(sym)) { runs += 1; wkts += 1; }
+        else if (/^B\+([0-9]+)W$/.test(sym)) { runs += parseInt(sym.match(/^B\+([0-9]+)W$/)[1]); wkts += 1; }
+        else if (/^BW$/.test(sym)) { runs += 0; wkts += 1; }
+        else if (/^[0-9]$/.test(sym)) runs += parseInt(sym);
+        else if (/^NB$/.test(sym) || /^WD$/.test(sym)) runs += 1;
+        else if (/^NB\+([0-9]+)$/.test(sym)) runs += 1 + parseInt(sym.match(/^NB\+([0-9]+)$/)[1]);
+        else if (/^WD\+([0-9]+)$/.test(sym)) runs += 1 + parseInt(sym.match(/^WD\+([0-9]+)$/)[1]);
+        else if (/^B\+([0-9]+)$/.test(sym)) runs += parseInt(sym.match(/^B\+([0-9]+)$/)[1]);
+        else if (/^LB\+([0-9]+)$/.test(sym)) runs += parseInt(sym.match(/^LB\+([0-9]+)$/)[1]);
+      }
+    });
+    
+    liveOverDiv.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center;">
+      <div style="color:#1f2937;font-weight:700;font-size:14px;">${ballsChips}</div>
+      <div style="color:#1f2937;font-weight:700;font-size:14px;">${runs}/${wkts}</div>
+    </div>`;
+    liveOverDiv.style.display = 'block';
+  } else if (inn.overs && inn.overs.length > 0) {
+    // Show last completed over
+    const lastOver = inn.overs[inn.overs.length - 1];
+    const ballsChips = lastOver.map(sym => {
+      const isWicket = /W$/.test(sym) || /\+W$/.test(sym);
+      const bgColor = isWicket ? '#e31d1d' : '#10b981';
+      const borderColor = isWicket ? '#b91c1c' : '#059669';
+      return `<span style="display:inline-block;margin:1px 2px;padding:4px 8px;border-radius:999px;background:${bgColor};color:#fff;font-weight:600;border:1px solid ${borderColor};font-size:13px;">${sym}</span>`;
+    }).join('');
+    
+    // Calculate runs/wickets for last over
+    let runs = 0, wkts = 0;
+    lastOver.forEach(sym => {
+      if (typeof sym === 'string') {
+        if (/^([0-9]+)\+W$/.test(sym)) { runs += parseInt(sym); wkts += 1; }
+        else if (/^W$/.test(sym)) { wkts += 1; }
+        else if (/^WD\+([0-9]+)\+W$/.test(sym)) { runs += 1 + parseInt(sym.match(/^WD\+([0-9]+)\+W$/)[1]); wkts += 1; }
+        else if (/^WD\+W$/.test(sym)) { runs += 1; wkts += 1; }
+        else if (/^NB\+([0-9]+)\+W$/.test(sym)) { runs += 1 + parseInt(sym.match(/^NB\+([0-9]+)\+W$/)[1]); wkts += 1; }
+        else if (/^NB\+W$/.test(sym)) { runs += 1; wkts += 1; }
+        else if (/^B\+([0-9]+)\+W$/.test(sym)) { runs += parseInt(sym.match(/^B\+([0-9]+)\+W$/)[1]); wkts += 1; }
+        else if (/^B\+W$/.test(sym)) { runs += 0; wkts += 1; }
+        else if (/^([0-9]+)W$/.test(sym)) { runs += parseInt(sym); wkts += 1; }
+        else if (/^WD\+([0-9]+)W$/.test(sym)) { runs += 1 + parseInt(sym.match(/^WD\+([0-9]+)W$/)[1]); wkts += 1; }
+        else if (/^WDW$/.test(sym)) { runs += 1; wkts += 1; }
+        else if (/^NB\+([0-9]+)W$/.test(sym)) { runs += 1 + parseInt(sym.match(/^NB\+([0-9]+)W$/)[1]); wkts += 1; }
+        else if (/^NBW$/.test(sym)) { runs += 1; wkts += 1; }
+        else if (/^B\+([0-9]+)W$/.test(sym)) { runs += parseInt(sym.match(/^B\+([0-9]+)W$/)[1]); wkts += 1; }
+        else if (/^BW$/.test(sym)) { runs += 0; wkts += 1; }
+        else if (/^[0-9]$/.test(sym)) runs += parseInt(sym);
+        else if (/^NB$/.test(sym) || /^WD$/.test(sym)) runs += 1;
+        else if (/^NB\+([0-9]+)$/.test(sym)) runs += 1 + parseInt(sym.match(/^NB\+([0-9]+)$/)[1]);
+        else if (/^WD\+([0-9]+)$/.test(sym)) runs += 1 + parseInt(sym.match(/^WD\+([0-9]+)$/)[1]);
+        else if (/^B\+([0-9]+)$/.test(sym)) runs += parseInt(sym.match(/^B\+([0-9]+)$/)[1]);
+        else if (/^LB\+([0-9]+)$/.test(sym)) runs += parseInt(sym.match(/^LB\+([0-9]+)$/)[1]);
+      }
+    });
+    
+    liveOverDiv.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center;">
+      <div style="color:#1f2937;font-weight:700;font-size:14px;">${ballsChips}</div>
+      <div style="color:#1f2937;font-weight:700;font-size:14px;">${runs}/${wkts}</div>
+    </div>`;
+    liveOverDiv.style.display = 'block';
+  } else {
     liveOverDiv.innerHTML = '<div style="color:#94a3b8;font-size:13px;">No balls bowled yet</div>';
-    return;
+    liveOverDiv.style.display = 'block';
   }
-  
-  const lastOver = inn.overs[inn.overs.length - 1];
-  const overNum = inn.overs.length;
-  const ballsHtml = lastOver.map(sym => {
-    let label = sym;
-    let color = '#64748b';
-    if (typeof sym === 'number') {
-      label = sym;
-      if (sym === 4) color = '#3b82f6';
-      else if (sym === 6) color = '#8b5cf6';
-      else color = '#1f2937';
-    } else if (typeof sym === 'string') {
-      if (sym.includes('W')) color = '#e31d1d';
-      else if (sym.startsWith('WD') || sym.startsWith('NB')) color = '#f59e0b';
-      else if (sym === 'B' || sym === 'LB') color = '#6b7280';
-    }
-    return `<span style="display:inline-block;min-width:32px;width:32px;height:32px;padding:0;margin:2px;background:${color};color:#fff;border-radius:4px;font-size:12px;font-weight:600;text-align:center;line-height:32px;">${label}</span>`;
-  }).join('');
-  
-  liveOverDiv.innerHTML = `<div style="color:#475569;font-size:13px;font-weight:600;margin-bottom:6px;">Over ${overNum}</div>${ballsHtml}`;
 }
 
 function getViewerLink() {
