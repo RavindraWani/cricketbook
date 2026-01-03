@@ -789,7 +789,10 @@
     <div style="margin-bottom:16px;">
       <label style="display:block;color:#1f2937;font-weight:600;font-size:14px;margin-bottom:4px;">⚔️ Team Names</label>
       <p style="color:#64748b;font-size:12px;margin:0 0 8px 0;line-height:1.4;">Enter the names of both teams. First team will bat first.</p>
-      <input id="teamA" placeholder="🏏 Batting First (e.g., Mumbai Indians)" style="background:#ffffff;color:#1f2937;border:2px solid #e2e8f0;padding:12px 14px;border-radius:12px;width:100%;margin-bottom:10px;font-size:15px;transition:border 0.2s;" onfocus="this.style.borderColor='#3b82f6'" onblur="this.style.borderColor='#e2e8f0'" />
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+        <input id="teamA" placeholder="🏏 Batting First (e.g., Mumbai Indians)" style="background:#ffffff;color:#1f2937;border:2px solid #e2e8f0;padding:12px 14px;border-radius:12px;width:100%;font-size:15px;transition:border 0.2s;" onfocus="this.style.borderColor='#3b82f6'" onblur="this.style.borderColor='#e2e8f0'" />
+        <button id="switchTeamsBtn" onclick="switchTeamNames()" title="Switch teams" style="background:#8b5cf6;color:white;border:none;border-radius:10px;padding:10px;font-size:18px;cursor:pointer;transition:all 0.2s;box-shadow:0 2px 8px rgba(139,92,246,0.25);min-width:40px;height:46px;flex-shrink:0;" onmouseover="this.style.background='#7c3aed';this.style.transform='scale(1.05)';this.style.boxShadow='0 4px 12px rgba(139,92,246,0.35)'" onmouseout="this.style.background='#8b5cf6';this.style.transform='scale(1)';this.style.boxShadow='0 2px 8px rgba(139,92,246,0.25)'">⇅</button>
+      </div>
       <input id="teamB" placeholder="🎯 Bowling First (e.g., Chennai Super Kings)" style="background:#ffffff;color:#1f2937;border:2px solid #e2e8f0;padding:12px 14px;border-radius:12px;width:100%;font-size:15px;transition:border 0.2s;" onfocus="this.style.borderColor='#3b82f6'" onblur="this.style.borderColor='#e2e8f0'" />
     </div>
     
@@ -2231,6 +2234,30 @@ async function checkTournamentExists() {
       statusDiv.style.display = 'none';
     }
   }, 500); // Wait 500ms after user stops typing
+}
+
+/* Switch team names */
+function switchTeamNames() {
+  const teamAInput = document.getElementById("teamA");
+  const teamBInput = document.getElementById("teamB");
+  
+  // Swap the values
+  const tempValue = teamAInput.value;
+  teamAInput.value = teamBInput.value;
+  teamBInput.value = tempValue;
+  
+  // Visual feedback - briefly highlight the fields
+  teamAInput.style.borderColor = '#8b5cf6';
+  teamBInput.style.borderColor = '#8b5cf6';
+  teamAInput.style.boxShadow = '0 0 0 3px rgba(139,92,246,0.15)';
+  teamBInput.style.boxShadow = '0 0 0 3px rgba(139,92,246,0.15)';
+  
+  setTimeout(() => {
+    teamAInput.style.borderColor = '#e2e8f0';
+    teamBInput.style.borderColor = '#e2e8f0';
+    teamAInput.style.boxShadow = 'none';
+    teamBInput.style.boxShadow = 'none';
+  }, 500);
 }
 
 /* ---------------- Flow ---------------- */
