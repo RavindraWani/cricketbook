@@ -1082,18 +1082,24 @@ function updateUI(){
   // Team Name
   document.getElementById("status").textContent = batting;
   
-  // Bowling Team Display
-  document.getElementById("bowlingTeamDisplay").textContent = `vs ${bowling}`;
-
   // First Innings Score (show when in second innings)
   const firstInningsScoreElem = document.getElementById("firstInningsScore");
+  const bowlingTeamDisplay = document.getElementById("bowlingTeamDisplay");
+  
   if (inSecond && firstInningsScoreElem) {
     const firstOvers = Math.floor(first.legalBalls/6);
     const firstBalls = first.legalBalls % 6;
     firstInningsScoreElem.textContent = `${teamA}: ${first.runs}/${first.wkts} (${firstOvers}.${firstBalls})`;
     firstInningsScoreElem.style.display = 'block';
-  } else if (firstInningsScoreElem) {
-    firstInningsScoreElem.style.display = 'none';
+    // Hide bowling team display in second innings as first innings score already shows it
+    bowlingTeamDisplay.style.display = 'none';
+  } else {
+    if (firstInningsScoreElem) {
+      firstInningsScoreElem.style.display = 'none';
+    }
+    // Show bowling team display in first innings
+    bowlingTeamDisplay.textContent = `vs ${bowling}`;
+    bowlingTeamDisplay.style.display = 'block';
   }
 
   // Overs and Run Rate
@@ -1138,22 +1144,6 @@ function updateUI(){
       }
     });
     return {runs, wkts};
-  }
-  
-  // Count legal balls (excluding WD and NB extras)
-  function countLegalBalls(overArray) {
-    let legalCount = 0;
-    overArray.forEach(sym => {
-      if (typeof sym === 'string') {
-        // A ball is NOT legal if it starts with WD or NB (unless it's a BYE which is B or LB)
-        const isWide = sym.startsWith('WD');
-        const isNoBall = sym.startsWith('NB');
-        if (!isWide && !isNoBall) {
-          legalCount++;
-        }
-      }
-    });
-    return legalCount;
   }
   
   // Show current over if it has balls, or last completed over if current is empty
@@ -1250,40 +1240,6 @@ function updateUI(){
   }
   inn.overs.forEach(countOverSymbols);
   countOverSymbols(inn.curOver);
-
-  // Calculate this over stats
-  function overRunsAndWkts(arr) {
-    let runs = 0, wkts = 0;
-    arr.forEach(sym => {
-      if (typeof sym === 'string') {
-        // New format with + signs
-        if (/^([0-9]+)\+W$/.test(sym)) { runs += parseInt(sym); wkts += 1; }
-        else if (/^W$/.test(sym)) { wkts += 1; }
-        else if (/^WD\+([0-9]+)\+W$/.test(sym)) { runs += 1 + parseInt(sym.match(/^WD\+([0-9]+)\+W$/)[1]); wkts += 1; }
-        else if (/^WD\+W$/.test(sym)) { runs += 1; wkts += 1; }
-        else if (/^NB\+([0-9]+)\+W$/.test(sym)) { runs += 1 + parseInt(sym.match(/^NB\+([0-9]+)\+W$/)[1]); wkts += 1; }
-        else if (/^NB\+W$/.test(sym)) { runs += 1; wkts += 1; }
-        else if (/^B\+([0-9]+)\+W$/.test(sym)) { runs += parseInt(sym.match(/^B\+([0-9]+)\+W$/)[1]); wkts += 1; }
-        else if (/^B\+W$/.test(sym)) { runs += 0; wkts += 1; }
-        // Old format (backward compatibility)
-        else if (/^([0-9]+)W$/.test(sym)) { runs += parseInt(sym); wkts += 1; }
-        else if (/^WD\+([0-9]+)W$/.test(sym)) { runs += 1 + parseInt(sym.match(/^WD\+([0-9]+)W$/)[1]); wkts += 1; }
-        else if (/^WDW$/.test(sym)) { runs += 1; wkts += 1; }
-        else if (/^NB\+([0-9]+)W$/.test(sym)) { runs += 1 + parseInt(sym.match(/^NB\+([0-9]+)W$/)[1]); wkts += 1; }
-        else if (/^NBW$/.test(sym)) { runs += 1; wkts += 1; }
-        else if (/^B\+([0-9]+)W$/.test(sym)) { runs += parseInt(sym.match(/^B\+([0-9]+)W$/)[1]); wkts += 1; }
-        else if (/^BW$/.test(sym)) { runs += 0; wkts += 1; }
-        // Normal balls
-        else if (/^[0-9]$/.test(sym)) runs += parseInt(sym);
-        else if (/^NB$/.test(sym) || /^WD$/.test(sym)) runs += 1;
-        else if (/^NB\+([0-9]+)$/.test(sym)) runs += 1 + parseInt(sym.match(/^NB\+([0-9]+)$/)[1]);
-        else if (/^WD\+([0-9]+)$/.test(sym)) runs += 1 + parseInt(sym.match(/^WD\+([0-9]+)$/)[1]);
-        else if (/^B\+([0-9]+)$/.test(sym)) runs += parseInt(sym.match(/^B\+([0-9]+)$/)[1]);
-        else if (/^LB\+([0-9]+)$/.test(sym)) runs += parseInt(sym.match(/^LB\+([0-9]+)$/)[1]);
-      }
-    });
-    return {runs, wkts};
-  }
 
   const thisOver = overRunsAndWkts(inn.curOver);
   thisOverRuns = thisOver.runs;
@@ -1737,8 +1693,27 @@ function updateUIFromFirebase() {
   const bowling = inSecond ? teamA : teamB;
   document.getElementById("status").textContent = batting;
   
-  // Bowling Team Display
-  document.getElementById("bowlingTeamDisplay").textContent = `vs ${bowling}`;
+  // Handle bowling team display and first innings score visibility
+  const bowlingTeamDisplay = document.getElementById("bowlingTeamDisplay");
+  const firstInningsScoreElem = document.getElementById("firstInningsScore");
+  
+  if (inSecond) {
+    // In second innings, hide bowling team display as first innings score shows the context
+    bowlingTeamDisplay.style.display = 'none';
+    if (firstInningsScoreElem) {
+      const firstOvers = Math.floor(first.legalBalls/6);
+      const firstBalls = first.legalBalls % 6;
+      firstInningsScoreElem.textContent = `${teamA}: ${first.runs}/${first.wkts} (${firstOvers}.${firstBalls})`;
+      firstInningsScoreElem.style.display = 'block';
+    }
+  } else {
+    // In first innings, show bowling team display
+    bowlingTeamDisplay.textContent = `vs ${bowling}`;
+    bowlingTeamDisplay.style.display = 'block';
+    if (firstInningsScoreElem) {
+      firstInningsScoreElem.style.display = 'none';
+    }
+  }
   
   // Overs and Run Rate
   const overs = Math.floor(inn.legalBalls/6);
@@ -1805,6 +1780,9 @@ function updateUIFromFirebase() {
   } else {
     resultDiv.style.display = 'none';
   }
+  
+  // Update localStorage session (important for removing completed matches from saved list)
+  saveCurrentMatchSession();
 }
 
 function updateLiveOverDisplay(inn) {
