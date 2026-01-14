@@ -627,10 +627,6 @@
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
 
   <script>
-    // Admin access code (stored in localStorage after first successful login)
-    // You can change this code as needed
-    const ADMIN_ACCESS_CODE = 'cricket2025admin';
-    
     // Firebase Configuration
     const firebaseConfig = {
       apiKey: "AIzaSyAFfwgHq761oFMg4CVqmZezGR_WK6ZGvAY",
@@ -659,21 +655,56 @@
       showDashboard();
     }
     
-    // Handle login
+    // Handle login - Verify against Firebase
     function handleLogin(event) {
       event.preventDefault();
       const accessCode = document.getElementById('accessCode').value;
       const errorEl = document.getElementById('loginError');
       
-      if (accessCode === ADMIN_ACCESS_CODE) {
-        sessionStorage.setItem('admin_logged_in', 'true');
-        errorEl.classList.remove('show');
-        showDashboard();
-      } else {
-        errorEl.textContent = '❌ Invalid access code. Please try again.';
-        errorEl.classList.add('show');
-        document.getElementById('accessCode').value = '';
-      }
+      // Show loading state
+      errorEl.textContent = '🔄 Verifying...';
+      errorEl.style.background = 'rgba(59, 130, 246, 0.1)';
+      errorEl.style.borderColor = 'rgba(59, 130, 246, 0.3)';
+      errorEl.style.color = '#60a5fa';
+      errorEl.classList.add('show');
+      
+      // Check password from Firebase
+      database.ref('adminConfig/accessCode').once('value')
+        .then((snapshot) => {
+          const storedPassword = snapshot.val();
+          
+          if (!storedPassword) {
+            // If no password exists in Firebase, set default one
+            errorEl.textContent = '⚠️ No admin password configured in Firebase. Please contact administrator.';
+            errorEl.style.background = 'rgba(245, 158, 11, 0.1)';
+            errorEl.style.borderColor = 'rgba(245, 158, 11, 0.3)';
+            errorEl.style.color = '#fbbf24';
+            errorEl.classList.add('show');
+            document.getElementById('accessCode').value = '';
+            return;
+          }
+          
+          if (accessCode === storedPassword) {
+            sessionStorage.setItem('admin_logged_in', 'true');
+            errorEl.classList.remove('show');
+            showDashboard();
+          } else {
+            errorEl.textContent = '❌ Invalid access code. Please try again.';
+            errorEl.style.background = 'rgba(239, 68, 68, 0.1)';
+            errorEl.style.borderColor = 'rgba(239, 68, 68, 0.3)';
+            errorEl.style.color = '#fca5a5';
+            errorEl.classList.add('show');
+            document.getElementById('accessCode').value = '';
+          }
+        })
+        .catch((error) => {
+          console.error('Error fetching password:', error);
+          errorEl.textContent = '❌ Error connecting to database. Please try again.';
+          errorEl.style.background = 'rgba(239, 68, 68, 0.1)';
+          errorEl.style.borderColor = 'rgba(239, 68, 68, 0.3)';
+          errorEl.style.color = '#fca5a5';
+          errorEl.classList.add('show');
+        });
     }
     
     // Show dashboard
