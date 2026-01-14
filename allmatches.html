@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7X5LQ6WESD"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-7X5LQ6WESD');
+</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Browse all cricket matches worldwide - live scores, recent results, and ongoing tournaments. Compact view of global cricket matches in real-time.">
+  <title>All Cricket Matches - Global Live Scores & Results | CricketBook</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 18px;
+      color: #1f2937;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    .header {
+      text-align: center;
+      margin-bottom: 16px;
+      color: white;
+    }
+    
+    .header h1 {
+      font-size: 28px;
+      font-weight: 800;
+      margin-bottom: 4px;
+    }
+    
+    .header p {
+      font-size: 14px;
+      opacity: 0.9;
+    }
+    
+    /* Navigation */
+    .nav {
+      text-align: center;
+      margin-bottom: 15px;
+      padding: 0 5px;
+    }
+    
+    .nav a {
+      display: inline-block;
+      color: white;
+      text-decoration: none;
+      padding: 8px 14px;
+      margin: 3px 3px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(10px);
+      font-weight: 600;
+      font-size: 13px;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+    
+    .nav a:hover {
+      background: rgba(255, 255, 255, 0.25);
+      transform: translateY(-1px);
+    }
+    
+    .nav a.active {
+      background: rgba(255, 255, 255, 0.3);
+    }
+    
+    @media (max-width: 768px) {
+      .nav {
+        margin-bottom: 12px;
+        padding: 0 2px;
+      }
+      .nav a {
+        padding: 6px 8px;
+        margin: 2px 1px;
+        font-size: 10.5px;
+      }
+    }
+    
+    @media (max-width: 400px) {
+      .nav a {
+        padding: 6px 6px;
+        margin: 2px 1px;
+        font-size: 10px;
+      }
+    }
+    
+    /* Stats Overview */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    
+    .stat-card {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 12px;
+      padding: 12px 16px;
+      text-align: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,.08);
+    }
+    
+    .stat-value {
+      font-size: 24px;
+      font-weight: 800;
+      color: #667eea;
+      margin-bottom: 4px;
+    }
+    
+    .stat-label {
+      font-size: 12px;
+      color: #6b7280;
+      font-weight: 600;
+    }
+    
+    /* Search and Filter */
+    .controls {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 16px;
+      box-shadow: 0 4px 12px rgba(0,0,0,.08);
+    }
+    
+    .search-box {
+      width: 100%;
+      padding: 12px 16px;
+      border: 2px solid #e5e7eb;
+      border-radius: 10px;
+      font-size: 14px;
+      margin-bottom: 12px;
+      transition: all 0.2s;
+    }
+    
+    .search-box:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102,126,234,0.1);
+    }
+    
+    .filter-buttons {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+    
+    .filter-btn {
+      padding: 8px 16px;
+      border: 2px solid #e5e7eb;
+      border-radius: 8px;
+      background: white;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      color: #6b7280;
+    }
+    
+    .filter-btn:hover {
+      border-color: #667eea;
+      color: #667eea;
+    }
+    
+    .filter-btn.active {
+      background: #667eea;
+      border-color: #667eea;
+      color: white;
+    }
+    
+    .view-toggle {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+    }
+    
+    .view-btn {
+      padding: 8px 16px;
+      border: 2px solid #e5e7eb;
+      border-radius: 8px;
+      background: white;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      color: #6b7280;
+    }
+    
+    .view-btn:hover {
+      border-color: #667eea;
+      color: #667eea;
+    }
+    
+    .view-btn.active {
+      background: #667eea;
+      border-color: #667eea;
+      color: white;
+    }
+    
+    /* Compact Match List */
+    .match-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    
+    .match-item {
+      background: white;
+      border-radius: 12px;
+      padding: 12px 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,.06);
+      transition: all 0.2s;
+      cursor: pointer;
+      border-left: 4px solid transparent;
+    }
+    
+    .match-item:hover {
+      transform: translateX(4px);
+      box-shadow: 0 4px 12px rgba(0,0,0,.1);
+    }
+    
+    .match-item.live {
+      border-left-color: #10b981;
+      background: linear-gradient(to right, rgba(16,185,129,0.05) 0%, white 20%);
+    }
+    
+    .match-item.completed {
+      border-left-color: #6b7280;
+    }
+    
+    .match-item.stalled {
+      border-left-color: #f59e0b;
+    }
+    
+    .match-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      gap: 12px;
+    }
+    
+    .match-teams {
+      flex: 1;
+      min-width: 0;
+    }
+    
+    .team-names {
+      font-size: 15px;
+      font-weight: 700;
+      color: #1f2937;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    
+    .match-badges {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      flex-shrink: 0;
+    }
+    
+    .badge {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 12px;
+      font-size: 10px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    
+    .badge-live {
+      background: #10b981;
+      color: white;
+      animation: pulse 2s infinite;
+    }
+    
+    .badge-completed {
+      background: #6b7280;
+      color: white;
+    }
+    
+    .badge-stalled {
+      background: #f59e0b;
+      color: white;
+    }
+    
+    .badge-quick {
+      background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+      color: #92400e;
+      border: 1px solid #fbbf24;
+    }
+    
+    .badge-tournament {
+      background: #e0e7ff;
+      color: #4338ca;
+      border: 1px solid #a5b4fc;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
+    
+    .match-scores {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      font-size: 13px;
+      margin-bottom: 6px;
+    }
+    
+    .score-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .team-name {
+      color: #6b7280;
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 100px;
+    }
+    
+    .score-value {
+      color: #1f2937;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    
+    .match-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      color: #9ca3af;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    
+    .match-result {
+      color: #10b981;
+      font-weight: 600;
+      font-size: 12px;
+      margin-top: 6px;
+    }
+    
+    /* Grouped View */
+    .tournament-group {
+      margin-bottom: 16px;
+    }
+    
+    .tournament-header {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 10px;
+      padding: 12px 16px;
+      margin-bottom: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,.06);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .tournament-header:hover {
+      background: white;
+      transform: translateY(-1px);
+    }
+    
+    .tournament-name {
+      font-size: 16px;
+      font-weight: 700;
+      color: #1f2937;
+    }
+    
+    .tournament-count {
+      background: #667eea;
+      color: white;
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+    
+    .tournament-matches {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    
+    .tournament-matches.collapsed {
+      display: none;
+    }
+    
+    /* Loading and Empty States */
+    .loading {
+      text-align: center;
+      color: white;
+      font-size: 18px;
+      padding: 40px;
+    }
+    
+    .empty-state {
+      background: white;
+      border-radius: 16px;
+      padding: 40px 20px;
+      text-align: center;
+      color: #6b7280;
+    }
+    
+    .empty-state-icon {
+      font-size: 48px;
+      margin-bottom: 12px;
+      opacity: 0.5;
+    }
+    
+    .error {
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      color: #991b1b;
+      padding: 16px;
+      border-radius: 12px;
+      text-align: center;
+      margin-top: 20px;
+    }
+    
+    /* Refresh Button */
+    .refresh-btn {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #10b981;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 56px;
+      height: 56px;
+      font-size: 24px;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(16,185,129,0.3);
+      transition: all 0.2s;
+      z-index: 100;
+    }
+    
+    .refresh-btn:hover {
+      background: #059669;
+      transform: scale(1.1);
+    }
+    
+    .refresh-btn:active {
+      transform: scale(0.95);
+    }
+    
+    @media (max-width: 768px) {
+      .refresh-btn {
+        bottom: 16px;
+        right: 16px;
+        width: 48px;
+        height: 48px;
+        font-size: 20px;
+      }
+      
+      .match-scores {
+        grid-template-columns: 1fr;
+      }
+      
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Navigation -->
+    <nav class="nav">
+      <a href="index.html">🏠 Home</a>
+      <a href="livescore.html">📺 Live Score</a>
+      <a href="matches.html">📋 My Matches</a>
+      <a href="allmatches.html" class="active">🌍 All Matches</a>
+      <a href="about.html">ℹ️ About</a>
+    </nav>
+    
+    <div class="header">
+      <h1>🌍 All Cricket Matches</h1>
+      <p>Global Live Scores & Results</p>
+    </div>
+    
+    <!-- Stats Overview -->
+    <div id="statsOverview" class="stats-grid" style="display:none;">
+      <div class="stat-card">
+        <div class="stat-value" id="statTotal">0</div>
+        <div class="stat-label">Total Matches</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="statLive">0</div>
+        <div class="stat-label">Live Now</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="statCompleted">0</div>
+        <div class="stat-label">Completed</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="statTournaments">0</div>
+        <div class="stat-label">Tournaments</div>
+      </div>
+    </div>
+    
+    <!-- Search and Filter Controls -->
+    <div id="controls" class="controls" style="display:none;">
+      <input type="text" id="searchBox" class="search-box" placeholder="🔍 Search teams, tournaments...">
+      
+      <div class="filter-buttons">
+        <button class="filter-btn active" data-filter="all">All Matches</button>
+        <button class="filter-btn" data-filter="live">🔴 Live</button>
+        <button class="filter-btn" data-filter="completed">✅ Completed</button>
+        <button class="filter-btn" data-filter="quick">⚡ Quick</button>
+        <button class="filter-btn" data-filter="tournament">🏆 Tournament</button>
+      </div>
+    </div>
+    
+    <div class="loading" id="loading">Loading all matches...</div>
+    
+    <!-- Match List -->
+    <div id="matchList" class="match-list" style="display:none;"></div>
+    
+    <!-- Refresh Button -->
+    <button class="refresh-btn" id="refreshBtn" onclick="refreshMatches()" style="display:none;" title="Refresh matches">
+      🔄
+    </button>
+  </div>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+
+  <script>
+    // Firebase Configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyAFfwgHq761oFMg4CVqmZezGR_WK6ZGvAY",
+      authDomain: "cricketbook-35725.firebaseapp.com",
+      databaseURL: "https://cricketbook-35725-default-rtdb.firebaseio.com",
+      projectId: "cricketbook-35725",
+      storageBucket: "cricketbook-35725.firebasestorage.app",
+      messagingSenderId: "128747950424",
+      appId: "1:128747950424:web:dce02e8420c353f1acd52d"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const database = firebase.database();
+
+    // Global state
+    let allMatches = [];
+    let filteredMatches = [];
+    let currentFilter = 'all';
+    let searchQuery = '';
+    
+    // Load ALL matches from Firebase (not just user's matches)
+    function loadAllMatches() {
+      console.log('🌍 Loading ALL matches from Firebase...');
+      
+      // Get all organizations' matches
+      const tournamentsPromise = database.ref('tournaments').once('value');
+      const quickMatchesPromise = database.ref('quickMatches').once('value');
+      
+      Promise.all([tournamentsPromise, quickMatchesPromise]).then(([tournamentsSnapshot, quickMatchesSnapshot]) => {
+        let allMatchesObj = {};
+        
+        // Load tournament matches from all organizations
+        const tournamentsData = tournamentsSnapshot.val() || {};
+        Object.keys(tournamentsData).forEach(orgId => {
+          const orgMatches = tournamentsData[orgId]?.matches || {};
+          Object.keys(orgMatches).forEach(matchId => {
+            allMatchesObj[matchId] = {
+              ...orgMatches[matchId],
+              matchId: matchId,
+              organizationId: orgId
+            };
+          });
+        });
+        
+        // Load quick matches from all organizations
+        const quickMatchesData = quickMatchesSnapshot.val() || {};
+        Object.keys(quickMatchesData).forEach(orgId => {
+          const orgMatches = quickMatchesData[orgId]?.matches || {};
+          Object.keys(orgMatches).forEach(matchId => {
+            allMatchesObj[matchId] = {
+              ...orgMatches[matchId],
+              matchId: matchId,
+              organizationId: orgId
+            };
+          });
+        });
+        
+        // Convert to array and sort by lastUpdated timestamp (newest first)
+        allMatches = Object.values(allMatchesObj).sort((a, b) => {
+          const timeA = a.lastUpdated || a.timestamp || 0;
+          const timeB = b.lastUpdated || b.timestamp || 0;
+          return timeB - timeA;
+        });
+        
+        console.log(`📊 Loaded ${allMatches.length} total matches from Firebase`);
+        
+        if (allMatches.length === 0) {
+          document.getElementById('loading').innerHTML = '<div class="empty-state"><div class="empty-state-icon">🏏</div><div style="font-size:18px;font-weight:600;margin-bottom:12px;color:#1f2937;">No Matches Found</div><div style="color:#6b7280;margin-bottom:16px;">No cricket matches available at the moment.</div><a href="index.html" style="background:#8b5cf6;color:white;padding:10px 24px;border-radius:10px;text-decoration:none;display:inline-block;font-weight:600;">🏠 Go to Home</a></div>';
+          return;
+        }
+        
+        // Update stats
+        updateStats();
+        
+        // Apply filters and display
+        applyFilters();
+        
+        // Show controls and content
+        document.getElementById('statsOverview').style.display = 'grid';
+        document.getElementById('controls').style.display = 'block';
+        document.getElementById('matchList').style.display = 'flex';
+        document.getElementById('refreshBtn').style.display = 'block';
+        document.getElementById('loading').style.display = 'none';
+        
+      }).catch((error) => {
+        console.error('❌ Firebase error:', error);
+        document.getElementById('loading').innerHTML = '<div class="error">Error loading matches: ' + error.message + '<br><br><button onclick="location.reload()" style="background:#8b5cf6;color:white;border:none;padding:10px 24px;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;margin-top:12px;">🔄 Try Again</button></div>';
+      });
+    }
+    
+    // Update statistics
+    function updateStats() {
+      const total = allMatches.length;
+      
+      const live = allMatches.filter(match => isLiveMatch(match)).length;
+      
+      const completed = allMatches.filter(match => {
+        const hasResult = match.resultText && match.resultText.trim() !== '';
+        const isComplete = match.matchCompleted || (match.first?.done && match.second?.done);
+        return hasResult || isComplete;
+      }).length;
+      
+      const tournaments = new Set(allMatches.map(m => m.tournamentName || '').filter(t => t.trim() !== '')).size;
+      
+      document.getElementById('statTotal').textContent = total;
+      document.getElementById('statLive').textContent = live;
+      document.getElementById('statCompleted').textContent = completed;
+      document.getElementById('statTournaments').textContent = tournaments;
+    }
+    
+    // Check if match is live
+    function isLiveMatch(match) {
+      if (match.matchCompleted) return false;
+      if (match.resultText && match.resultText.trim() !== '') return false;
+      
+      const firstDone = match.first?.done || false;
+      const secondDone = match.second?.done || false;
+      const inSecond = match.inSecond || false;
+      
+      return (!inSecond && !firstDone) || (inSecond && !secondDone);
+    }
+    
+    // Check if match is stalled (no update in 15+ minutes)
+    function isStalledMatch(match) {
+      if (!isLiveMatch(match)) return false;
+      
+      const currentTime = Date.now();
+      const lastUpdate = match.lastUpdated || match.timestamp || 0;
+      const minutesSinceUpdate = (currentTime - lastUpdate) / (1000 * 60);
+      
+      return minutesSinceUpdate >= 15;
+    }
+    
+    // Apply filters
+    function applyFilters() {
+      filteredMatches = allMatches.filter(match => {
+        // Text search
+        if (searchQuery) {
+          const query = searchQuery.toLowerCase();
+          const teamA = (match.teamA || '').toLowerCase();
+          const teamB = (match.teamB || '').toLowerCase();
+          const tournament = (match.tournamentName || '').toLowerCase();
+          
+          if (!teamA.includes(query) && !teamB.includes(query) && !tournament.includes(query)) {
+            return false;
+          }
+        }
+        
+        // Filter by type
+        if (currentFilter === 'live') {
+          return isLiveMatch(match);
+        } else if (currentFilter === 'completed') {
+          const hasResult = match.resultText && match.resultText.trim() !== '';
+          const isComplete = match.matchCompleted || (match.first?.done && match.second?.done);
+          return hasResult || isComplete;
+        } else if (currentFilter === 'quick') {
+          return !match.tournamentName || match.tournamentName.trim() === '';
+        } else if (currentFilter === 'tournament') {
+          return match.tournamentName && match.tournamentName.trim() !== '';
+        }
+        
+        return true; // 'all' filter
+      });
+      
+      displayMatches();
+    }
+    
+    // Display matches
+    function displayMatches() {
+      const container = document.getElementById('matchList');
+      
+      if (filteredMatches.length === 0) {
+        container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">🔍</div><div style="font-size:16px;font-weight:600;color:#1f2937;">No matches found</div><div style="color:#6b7280;margin-top:8px;">Try adjusting your filters or search query</div></div>';
+        return;
+      }
+      
+      displayListMatches();
+    }
+    
+    // Display list view
+    function displayListMatches() {
+      const container = document.getElementById('matchList');
+      
+      container.innerHTML = filteredMatches.map(match => {
+        return createMatchCard(match);
+      }).join('');
+      
+      // Add click handlers
+      document.querySelectorAll('.match-item').forEach(item => {
+        item.addEventListener('click', () => {
+          const matchId = item.dataset.matchId;
+          const orgId = item.dataset.orgId;
+          window.location.href = `livescore.html?org=${orgId}&match=${matchId}`;
+        });
+      });
+    }
+    
+    // Display grouped view (by tournament)
+    function displayGroupedMatches() {
+      const container = document.getElementById('matchList');
+      
+      // Group matches by tournament
+      const grouped = {};
+      filteredMatches.forEach(match => {
+        const tournamentName = match.tournamentName && match.tournamentName.trim() !== '' 
+          ? match.tournamentName 
+          : '⚡ Quick Matches';
+        
+        if (!grouped[tournamentName]) {
+          grouped[tournamentName] = [];
+        }
+        grouped[tournamentName].push(match);
+      });
+      
+      // Sort tournament names
+      const tournamentNames = Object.keys(grouped).sort((a, b) => {
+        if (a === '⚡ Quick Matches') return 1;
+        if (b === '⚡ Quick Matches') return -1;
+        return a.localeCompare(b);
+      });
+      
+      container.innerHTML = tournamentNames.map(tournamentName => {
+        const matches = grouped[tournamentName];
+        const isCollapsed = collapsedTournaments.has(tournamentName);
+        
+        return `
+          <div class="tournament-group">
+            <div class="tournament-header" onclick="toggleTournament('${tournamentName.replace(/'/g, "\\'")}')">
+              <div class="tournament-name">${tournamentName}</div>
+              <div class="tournament-count">${matches.length}</div>
+            </div>
+            <div class="tournament-matches ${isCollapsed ? 'collapsed' : ''}" id="tournament-${tournamentName.replace(/\s+/g, '-')}">
+              ${matches.map(match => createMatchCard(match)).join('')}
+            </div>
+          </div>
+        `;
+      }).join('');
+      
+      // Add click handlers
+      document.querySelectorAll('.match-item').forEach(item => {
+        item.addEventListener('click', () => {
+          const matchId = item.dataset.matchId;
+          const orgId = item.dataset.orgId;
+          window.location.href = `livescore.html?org=${orgId}&match=${matchId}`;
+        });
+      });
+    }
+    
+    // Create match card HTML
+    function createMatchCard(match) {
+      const firstScore = `${match.first?.runs || 0}/${match.first?.wkts || 0}`;
+      const firstOvers = calculateOvers(match.first?.legalBalls || 0);
+      const secondScore = `${match.second?.runs || 0}/${match.second?.wkts || 0}`;
+      const secondOvers = calculateOvers(match.second?.legalBalls || 0);
+      
+      const live = isLiveMatch(match);
+      const stalled = isStalledMatch(match);
+      const hasResult = match.resultText && match.resultText.trim() !== '';
+      const completed = hasResult || match.matchCompleted;
+      
+      let statusClass = '';
+      let statusBadge = '';
+      
+      if (live) {
+        if (stalled) {
+          statusClass = 'stalled';
+          statusBadge = '<span class="badge badge-stalled">⚠️ Stalled</span>';
+        } else {
+          statusClass = 'live';
+          statusBadge = '<span class="badge badge-live">🔴 LIVE</span>';
+        }
+      } else if (completed) {
+        statusClass = 'completed';
+        statusBadge = '<span class="badge badge-completed">✅ Done</span>';
+      }
+      
+      const isQuickMatch = !match.tournamentName || match.tournamentName.trim() === '';
+      const typeBadge = isQuickMatch
+        ? '<span class="badge badge-quick">⚡ Quick</span>'
+        : '<span class="badge badge-tournament">🏆 ' + (match.matchType || 'Tournament') + '</span>';
+      
+      const dateStr = match.timestamp ? new Date(match.timestamp).toLocaleDateString('en-US', { 
+        month: 'short', 
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      }) : '';
+      
+      const tournamentLabel = !isQuickMatch ? `<span style="font-size:11px;color:#667eea;font-weight:700;">#${match.tournamentName}</span>` : '';
+      
+      return `
+        <div class="match-item ${statusClass}" data-match-id="${match.matchId}" data-org-id="${match.organizationId}">
+          <div class="match-header">
+            <div class="match-teams">
+              <div class="team-names">${match.teamA || 'Team A'} vs ${match.teamB || 'Team B'}</div>
+              ${tournamentLabel}
+            </div>
+            <div class="match-badges">
+              ${statusBadge}
+              ${typeBadge}
+            </div>
+          </div>
+          
+          <div class="match-scores">
+            <div class="score-item">
+              <span class="team-name">${match.teamA || 'Team A'}</span>
+              <span class="score-value">${firstScore} (${firstOvers})</span>
+            </div>
+            <div class="score-item">
+              <span class="team-name">${match.teamB || 'Team B'}</span>
+              <span class="score-value">${secondScore} (${secondOvers})</span>
+            </div>
+          </div>
+          
+          ${hasResult ? `<div class="match-result">🏆 ${match.resultText}</div>` : ''}
+          
+          <div class="match-meta">
+            <span>${dateStr}</span>
+            <span>Org: ${match.organizationId?.substring(0, 8)}...</span>
+          </div>
+        </div>
+      `;
+    }
+    
+    // Calculate overs
+    function calculateOvers(legalBalls) {
+      if (!legalBalls) return '0.0';
+      const overs = Math.floor(legalBalls / 6);
+      const balls = legalBalls % 6;
+      return `${overs}.${balls}`;
+    }
+    
+    // Toggle tournament group
+    function toggleTournament(tournamentName) {
+      const groupId = 'tournament-' + tournamentName.replace(/\s+/g, '-');
+      const group = document.getElementById(groupId);
+      
+      if (group) {
+        group.classList.toggle('collapsed');
+        
+        if (group.classList.contains('collapsed')) {
+          collapsedTournaments.add(tournamentName);
+        } else {
+          collapsedTournaments.delete(tournamentName);
+        }
+      }
+    }
+    
+    // Refresh matches
+    function refreshMatches() {
+      document.getElementById('loading').style.display = 'block';
+      document.getElementById('loading').textContent = 'Refreshing matches...';
+      document.getElementById('matchList').style.display = 'none';
+      document.getElementById('statsOverview').style.display = 'none';
+      document.getElementById('controls').style.display = 'none';
+      
+      loadAllMatches();
+    }
+    
+    // Event Listeners
+    document.getElementById('searchBox').addEventListener('input', (e) => {
+      searchQuery = e.target.value;
+      applyFilters();
+    });
+    
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentFilter = btn.dataset.filter;
+        applyFilters();
+      });
+    });
+    
+    // Initial load
+    loadAllMatches();
+    
+    // Auto-refresh every 2 minutes for live matches
+    setInterval(() => {
+      console.log('🔄 Auto-refreshing matches...');
+      loadAllMatches();
+    }, 120000);
+  </script>
+
+  <!-- Footer -->
+  <footer style="text-align:center;padding:24px 0;color:#ffffff;font-size:14px;margin-top:24px;">
+    <p style="margin:0 0 8px;">Made with ❤️ for cricket lovers worldwide.</p>
+    <p style="margin:0;opacity:0.9;">© 2025 CricketBook — Global Cricket Scoring Platform</p>
+  </footer>
+
+</body>
+</html>
