@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Admin Panel - CricketBook</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+      min-height: 100vh;
+      padding: 18px;
+      color: #f3f4f6;
+    }
+    
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+    
+    /* Login Screen */
+    .login-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 80vh;
+    }
+    
+    .login-card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      padding: 40px;
+      max-width: 400px;
+      width: 100%;
+      box-shadow: 0 20px 60px rgba(0,0,0,.4);
+      backdrop-filter: blur(10px);
+    }
+    
+    .login-header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+    
+    .login-header h1 {
+      font-size: 28px;
+      font-weight: 800;
+      margin-bottom: 8px;
+      color: #fbbf24;
+    }
+    
+    .login-header p {
+      font-size: 14px;
+      color: #9ca3af;
+    }
+    
+    .form-group {
+      margin-bottom: 20px;
+    }
+    
+    .form-label {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: #e5e7eb;
+    }
+    
+    .form-input {
+      width: 100%;
+      padding: 12px 16px;
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      font-size: 14px;
+      background: rgba(255, 255, 255, 0.05);
+      color: white;
+      transition: all 0.2s;
+    }
+    
+    .form-input:focus {
+      outline: none;
+      border-color: #fbbf24;
+      background: rgba(255, 255, 255, 0.08);
+    }
+    
+    .btn-login {
+      width: 100%;
+      padding: 14px;
+      background: #fbbf24;
+      color: #1f2937;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .btn-login:hover {
+      background: #f59e0b;
+      transform: translateY(-1px);
+    }
+    
+    .error-message {
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: #fca5a5;
+      padding: 12px;
+      border-radius: 10px;
+      font-size: 14px;
+      margin-top: 16px;
+      display: none;
+    }
+    
+    .error-message.show {
+      display: block;
+    }
+    
+    /* Admin Dashboard */
+    #adminDashboard {
+      display: none;
+    }
+    
+    .header {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 16px;
+      padding: 20px 24px;
+      margin-bottom: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .header-left h1 {
+      font-size: 24px;
+      font-weight: 800;
+      margin-bottom: 4px;
+      color: #fbbf24;
+    }
+    
+    .header-left p {
+      font-size: 14px;
+      color: #9ca3af;
+    }
+    
+    .btn-logout {
+      padding: 10px 20px;
+      background: rgba(239, 68, 68, 0.2);
+      color: #fca5a5;
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .btn-logout:hover {
+      background: rgba(239, 68, 68, 0.3);
+    }
+    
+    /* Stats Cards */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    
+    .stat-card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: 20px;
+      text-align: center;
+    }
+    
+    .stat-value {
+      font-size: 32px;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+    
+    .stat-value.danger {
+      color: #f87171;
+    }
+    
+    .stat-value.warning {
+      color: #fbbf24;
+    }
+    
+    .stat-value.success {
+      color: #34d399;
+    }
+    
+    .stat-label {
+      font-size: 14px;
+      color: #9ca3af;
+      font-weight: 600;
+    }
+    
+    /* Filters */
+    .filters {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 24px;
+    }
+    
+    .filter-row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    
+    .filter-btn {
+      padding: 10px 20px;
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.05);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      color: #e5e7eb;
+    }
+    
+    .filter-btn:hover {
+      border-color: #fbbf24;
+      color: #fbbf24;
+    }
+    
+    .filter-btn.active {
+      background: #fbbf24;
+      border-color: #fbbf24;
+      color: #1f2937;
+    }
+    
+    .search-input {
+      flex: 1;
+      min-width: 250px;
+      padding: 10px 16px;
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      font-size: 14px;
+      background: rgba(255, 255, 255, 0.05);
+      color: white;
+    }
+    
+    .search-input:focus {
+      outline: none;
+      border-color: #fbbf24;
+    }
+    
+    /* Match List */
+    .match-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    
+    .match-card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: 20px;
+      transition: all 0.2s;
+      border-left: 4px solid transparent;
+    }
+    
+    .match-card.stalled {
+      border-left-color: #f59e0b;
+      background: rgba(245, 158, 11, 0.05);
+    }
+    
+    .match-card.selected {
+      background: rgba(239, 68, 68, 0.1);
+      border-color: rgba(239, 68, 68, 0.3);
+    }
+    
+    .match-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 16px;
+      gap: 16px;
+    }
+    
+    .match-info {
+      flex: 1;
+    }
+    
+    .match-teams {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: #f3f4f6;
+    }
+    
+    .match-meta {
+      font-size: 13px;
+      color: #9ca3af;
+      margin-bottom: 4px;
+    }
+    
+    .match-badges {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+    
+    .badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+    
+    .badge-stalled {
+      background: rgba(245, 158, 11, 0.2);
+      color: #fbbf24;
+      border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+    
+    .badge-live {
+      background: rgba(16, 185, 129, 0.2);
+      color: #34d399;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+    
+    .match-actions {
+      display: flex;
+      gap: 8px;
+      flex-direction: column;
+    }
+    
+    .checkbox-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .checkbox {
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
+    }
+    
+    .btn-view {
+      padding: 8px 16px;
+      background: rgba(59, 130, 246, 0.2);
+      color: #60a5fa;
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+    
+    .btn-view:hover {
+      background: rgba(59, 130, 246, 0.3);
+    }
+    
+    /* Bulk Actions */
+    .bulk-actions {
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 24px;
+      display: none;
+      position: sticky;
+      top: 18px;
+      z-index: 10;
+    }
+    
+    .bulk-actions.show {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+    }
+    
+    .bulk-info {
+      font-size: 16px;
+      font-weight: 600;
+      color: #fca5a5;
+    }
+    
+    .bulk-buttons {
+      display: flex;
+      gap: 12px;
+    }
+    
+    .btn-bulk-delete {
+      padding: 12px 24px;
+      background: #dc2626;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .btn-bulk-delete:hover {
+      background: #b91c1c;
+    }
+    
+    .btn-cancel {
+      padding: 12px 24px;
+      background: rgba(255, 255, 255, 0.1);
+      color: #e5e7eb;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .btn-cancel:hover {
+      background: rgba(255, 255, 255, 0.15);
+    }
+    
+    /* Loading & Empty States */
+    .loading {
+      text-align: center;
+      color: #9ca3af;
+      font-size: 18px;
+      padding: 40px;
+    }
+    
+    .empty-state {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 16px;
+      padding: 60px 20px;
+      text-align: center;
+      color: #9ca3af;
+    }
+    
+    .empty-icon {
+      font-size: 64px;
+      margin-bottom: 16px;
+      opacity: 0.5;
+    }
+    
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(4px);
+      z-index: 1000;
+      padding: 20px;
+      overflow-y: auto;
+    }
+    
+    .modal.show {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .modal-content {
+      background: #1f2937;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 20px;
+      padding: 32px;
+      max-width: 500px;
+      width: 100%;
+      box-shadow: 0 20px 60px rgba(0,0,0,.6);
+    }
+    
+    .modal-header {
+      font-size: 24px;
+      font-weight: 800;
+      margin-bottom: 16px;
+      color: #fca5a5;
+    }
+    
+    .modal-body {
+      font-size: 16px;
+      color: #d1d5db;
+      margin-bottom: 24px;
+      line-height: 1.6;
+    }
+    
+    .modal-actions {
+      display: flex;
+      gap: 12px;
+      justify-content: flex-end;
+    }
+    
+    @media (max-width: 768px) {
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      
+      .bulk-actions.show {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      
+      .bulk-buttons {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Login Screen -->
+    <div id="loginScreen" class="login-container">
+      <div class="login-card">
+        <div class="login-header">
+          <h1>🔐 Admin Panel</h1>
+          <p>CricketBook Management</p>
+        </div>
+        <form id="loginForm" onsubmit="handleLogin(event)">
+          <div class="form-group">
+            <label class="form-label">Access Code</label>
+            <input type="password" id="accessCode" class="form-input" placeholder="Enter admin access code" required>
+          </div>
+          <button type="submit" class="btn-login">Login</button>
+          <div id="loginError" class="error-message"></div>
+        </form>
+      </div>
+    </div>
+    
+    <!-- Admin Dashboard -->
+    <div id="adminDashboard">
+      <div class="header">
+        <div class="header-left">
+          <h1>⚙️ Admin Dashboard</h1>
+          <p>Match Management & Cleanup</p>
+        </div>
+        <button class="btn-logout" onclick="logout()">Logout</button>
+      </div>
+      
+      <!-- Stats -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-value" id="statTotal">0</div>
+          <div class="stat-label">Total Matches</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value danger" id="statStalled">0</div>
+          <div class="stat-label">Stalled Matches</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value warning" id="statLive">0</div>
+          <div class="stat-label">Live Matches</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value success" id="statCompleted">0</div>
+          <div class="stat-label">Completed</div>
+        </div>
+      </div>
+      
+      <!-- Filters -->
+      <div class="filters">
+        <div class="filter-row">
+          <input type="text" id="searchBox" class="search-input" placeholder="🔍 Search matches...">
+          <button class="filter-btn active" data-filter="all">All</button>
+          <button class="filter-btn" data-filter="stalled">⚠️ Stalled</button>
+          <button class="filter-btn" data-filter="live">🔴 Live</button>
+          <button class="filter-btn" data-filter="completed">✅ Completed</button>
+        </div>
+      </div>
+      
+      <!-- Bulk Actions Bar -->
+      <div id="bulkActions" class="bulk-actions">
+        <div class="bulk-info">
+          <span id="selectedCount">0</span> matches selected
+        </div>
+        <div class="bulk-buttons">
+          <button class="btn-cancel" onclick="clearSelection()">Cancel</button>
+          <button class="btn-bulk-delete" onclick="showDeleteConfirmation()">🗑️ Delete Selected</button>
+        </div>
+      </div>
+      
+      <div class="loading" id="loading">Loading matches...</div>
+      
+      <!-- Match List -->
+      <div id="matchList" class="match-list" style="display:none;"></div>
+    </div>
+  </div>
+  
+  <!-- Delete Confirmation Modal -->
+  <div id="deleteModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">⚠️ Confirm Deletion</div>
+      <div class="modal-body" id="deleteMessage">
+        Are you sure you want to delete the selected matches? This action cannot be undone.
+      </div>
+      <div class="modal-actions">
+        <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+        <button class="btn-bulk-delete" onclick="confirmDelete()">Delete Permanently</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+
+  <script>
+    // Admin access code (stored in localStorage after first successful login)
+    // You can change this code as needed
+    const ADMIN_ACCESS_CODE = 'cricket2025admin';
+    
+    // Firebase Configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyAFfwgHq761oFMg4CVqmZezGR_WK6ZGvAY",
+      authDomain: "cricketbook-35725.firebaseapp.com",
+      databaseURL: "https://cricketbook-35725-default-rtdb.firebaseio.com",
+      projectId: "cricketbook-35725",
+      storageBucket: "cricketbook-35725.firebasestorage.app",
+      messagingSenderId: "128747950424",
+      appId: "1:128747950424:web:dce02e8420c353f1acd52d"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const database = firebase.database();
+
+    // Global state
+    let allMatches = [];
+    let filteredMatches = [];
+    let selectedMatches = new Set();
+    let currentFilter = 'all';
+    let searchQuery = '';
+    
+    // Check if already logged in
+    const isLoggedIn = sessionStorage.getItem('admin_logged_in') === 'true';
+    if (isLoggedIn) {
+      showDashboard();
+    }
+    
+    // Handle login
+    function handleLogin(event) {
+      event.preventDefault();
+      const accessCode = document.getElementById('accessCode').value;
+      const errorEl = document.getElementById('loginError');
+      
+      if (accessCode === ADMIN_ACCESS_CODE) {
+        sessionStorage.setItem('admin_logged_in', 'true');
+        errorEl.classList.remove('show');
+        showDashboard();
+      } else {
+        errorEl.textContent = '❌ Invalid access code. Please try again.';
+        errorEl.classList.add('show');
+        document.getElementById('accessCode').value = '';
+      }
+    }
+    
+    // Show dashboard
+    function showDashboard() {
+      document.getElementById('loginScreen').style.display = 'none';
+      document.getElementById('adminDashboard').style.display = 'block';
+      loadMatches();
+    }
+    
+    // Logout
+    function logout() {
+      sessionStorage.removeItem('admin_logged_in');
+      location.reload();
+    }
+    
+    // Load all matches from Firebase
+    function loadMatches() {
+      console.log('📊 Loading all matches...');
+      
+      const tournamentsPromise = database.ref('tournaments').once('value');
+      const quickMatchesPromise = database.ref('quickMatches').once('value');
+      
+      Promise.all([tournamentsPromise, quickMatchesPromise]).then(([tournamentsSnapshot, quickMatchesSnapshot]) => {
+        let allMatchesObj = {};
+        
+        // Load tournament matches from all organizations
+        const tournamentsData = tournamentsSnapshot.val() || {};
+        Object.keys(tournamentsData).forEach(orgId => {
+          const orgMatches = tournamentsData[orgId]?.matches || {};
+          Object.keys(orgMatches).forEach(matchId => {
+            allMatchesObj[matchId] = {
+              ...orgMatches[matchId],
+              matchId: matchId,
+              organizationId: orgId,
+              path: `tournaments/${orgId}/matches/${matchId}`
+            };
+          });
+        });
+        
+        // Load quick matches from all organizations
+        const quickMatchesData = quickMatchesSnapshot.val() || {};
+        Object.keys(quickMatchesData).forEach(orgId => {
+          const orgMatches = quickMatchesData[orgId]?.matches || {};
+          Object.keys(orgMatches).forEach(matchId => {
+            allMatchesObj[matchId] = {
+              ...orgMatches[matchId],
+              matchId: matchId,
+              organizationId: orgId,
+              path: `quickMatches/${orgId}/matches/${matchId}`
+            };
+          });
+        });
+        
+        // Convert to array and sort by lastUpdated timestamp (newest first)
+        allMatches = Object.values(allMatchesObj).sort((a, b) => {
+          const timeA = a.lastUpdated || a.timestamp || 0;
+          const timeB = b.lastUpdated || b.timestamp || 0;
+          return timeB - timeA;
+        });
+        
+        console.log(`✅ Loaded ${allMatches.length} matches`);
+        
+        updateStats();
+        applyFilters();
+        
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('matchList').style.display = 'flex';
+        
+      }).catch((error) => {
+        console.error('❌ Error loading matches:', error);
+        document.getElementById('loading').innerHTML = '<div class="empty-state"><div class="empty-icon">⚠️</div><div>Error loading matches: ' + error.message + '</div></div>';
+      });
+    }
+    
+    // Update statistics
+    function updateStats() {
+      const total = allMatches.length;
+      const stalled = allMatches.filter(m => isStalledMatch(m)).length;
+      const live = allMatches.filter(m => isLiveMatch(m) && !isStalledMatch(m)).length;
+      const completed = allMatches.filter(m => isCompletedMatch(m)).length;
+      
+      document.getElementById('statTotal').textContent = total;
+      document.getElementById('statStalled').textContent = stalled;
+      document.getElementById('statLive').textContent = live;
+      document.getElementById('statCompleted').textContent = completed;
+    }
+    
+    // Check if match is live
+    function isLiveMatch(match) {
+      if (match.matchCompleted) return false;
+      if (match.resultText && match.resultText.trim() !== '') return false;
+      
+      const firstDone = match.first?.done || false;
+      const secondDone = match.second?.done || false;
+      const inSecond = match.inSecond || false;
+      
+      return (!inSecond && !firstDone) || (inSecond && !secondDone);
+    }
+    
+    // Check if match is stalled (no update in 15+ minutes)
+    function isStalledMatch(match) {
+      if (!isLiveMatch(match)) return false;
+      
+      const currentTime = Date.now();
+      const lastUpdate = match.lastUpdated || match.timestamp || 0;
+      const minutesSinceUpdate = (currentTime - lastUpdate) / (1000 * 60);
+      
+      return minutesSinceUpdate >= 15;
+    }
+    
+    // Check if match is completed
+    function isCompletedMatch(match) {
+      const hasResult = match.resultText && match.resultText.trim() !== '';
+      const isComplete = match.matchCompleted || (match.first?.done && match.second?.done);
+      return hasResult || isComplete;
+    }
+    
+    // Apply filters
+    function applyFilters() {
+      filteredMatches = allMatches.filter(match => {
+        // Text search
+        if (searchQuery) {
+          const query = searchQuery.toLowerCase();
+          const teamA = (match.teamA || '').toLowerCase();
+          const teamB = (match.teamB || '').toLowerCase();
+          const tournament = (match.tournamentName || '').toLowerCase();
+          const matchId = match.matchId.toLowerCase();
+          
+          if (!teamA.includes(query) && !teamB.includes(query) && !tournament.includes(query) && !matchId.includes(query)) {
+            return false;
+          }
+        }
+        
+        // Filter by type
+        if (currentFilter === 'stalled') {
+          return isStalledMatch(match);
+        } else if (currentFilter === 'live') {
+          return isLiveMatch(match) && !isStalledMatch(match);
+        } else if (currentFilter === 'completed') {
+          return isCompletedMatch(match);
+        }
+        
+        return true; // 'all' filter
+      });
+      
+      displayMatches();
+    }
+    
+    // Display matches
+    function displayMatches() {
+      const container = document.getElementById('matchList');
+      
+      if (filteredMatches.length === 0) {
+        container.innerHTML = '<div class="empty-state"><div class="empty-icon">🔍</div><div style="font-size:18px;font-weight:600;margin-bottom:8px;">No matches found</div><div>Try adjusting your filters or search query</div></div>';
+        return;
+      }
+      
+      container.innerHTML = filteredMatches.map(match => {
+        const isStalled = isStalledMatch(match);
+        const isLive = isLiveMatch(match);
+        const isSelected = selectedMatches.has(match.matchId);
+        
+        const firstScore = `${match.first?.runs || 0}/${match.first?.wkts || 0}`;
+        const firstOvers = calculateOvers(match.first?.legalBalls || 0);
+        const secondScore = `${match.second?.runs || 0}/${match.second?.wkts || 0}`;
+        const secondOvers = calculateOvers(match.second?.legalBalls || 0);
+        
+        const dateStr = match.timestamp ? new Date(match.timestamp).toLocaleString('en-US', { 
+          month: 'short', 
+          day: 'numeric',
+          year: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit'
+        }) : '';
+        
+        const lastUpdateStr = match.lastUpdated ? new Date(match.lastUpdated).toLocaleString('en-US', { 
+          month: 'short', 
+          day: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit'
+        }) : '';
+        
+        const inactiveMinutes = match.lastUpdated ? Math.floor((Date.now() - match.lastUpdated) / (1000 * 60)) : 0;
+        
+        return `
+          <div class="match-card ${isStalled ? 'stalled' : ''} ${isSelected ? 'selected' : ''}">
+            <div class="match-header">
+              <div class="match-info">
+                <div class="match-teams">${match.teamA || 'Team A'} vs ${match.teamB || 'Team B'}</div>
+                <div class="match-meta">Match ID: ${match.matchId}</div>
+                <div class="match-meta">Organization: ${match.organizationId}</div>
+                <div class="match-meta">Created: ${dateStr}</div>
+                ${lastUpdateStr ? `<div class="match-meta">Last Update: ${lastUpdateStr} (${inactiveMinutes} min ago)</div>` : ''}
+                <div class="match-meta">
+                  ${match.teamA}: ${firstScore} (${firstOvers}) | 
+                  ${match.teamB}: ${secondScore} (${secondOvers})
+                </div>
+                <div class="match-badges">
+                  ${isStalled ? '<span class="badge badge-stalled">⚠️ Stalled</span>' : ''}
+                  ${isLive && !isStalled ? '<span class="badge badge-live">🔴 Live</span>' : ''}
+                  ${match.tournamentName ? `<span class="badge" style="background:rgba(99,102,241,0.2);color:#a5b4fc;border:1px solid rgba(99,102,241,0.3);">🏆 ${match.tournamentName}</span>` : ''}
+                </div>
+              </div>
+              <div class="match-actions">
+                <div class="checkbox-wrapper">
+                  <input type="checkbox" class="checkbox" ${isSelected ? 'checked' : ''} onchange="toggleSelection('${match.matchId}')">
+                  <label style="font-size:12px;color:#9ca3af;">Select</label>
+                </div>
+                <a href="livescore.html?org=${match.organizationId}&match=${match.matchId}" target="_blank" class="btn-view">👁️ View</a>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+    
+    // Calculate overs
+    function calculateOvers(legalBalls) {
+      if (!legalBalls) return '0.0';
+      const overs = Math.floor(legalBalls / 6);
+      const balls = legalBalls % 6;
+      return `${overs}.${balls}`;
+    }
+    
+    // Toggle match selection
+    function toggleSelection(matchId) {
+      if (selectedMatches.has(matchId)) {
+        selectedMatches.delete(matchId);
+      } else {
+        selectedMatches.add(matchId);
+      }
+      
+      updateBulkActions();
+      displayMatches();
+    }
+    
+    // Clear selection
+    function clearSelection() {
+      selectedMatches.clear();
+      updateBulkActions();
+      displayMatches();
+    }
+    
+    // Update bulk actions bar
+    function updateBulkActions() {
+      const bulkBar = document.getElementById('bulkActions');
+      const count = selectedMatches.size;
+      
+      document.getElementById('selectedCount').textContent = count;
+      
+      if (count > 0) {
+        bulkBar.classList.add('show');
+      } else {
+        bulkBar.classList.remove('show');
+      }
+    }
+    
+    // Show delete confirmation
+    function showDeleteConfirmation() {
+      const count = selectedMatches.size;
+      const message = `Are you sure you want to delete ${count} match${count > 1 ? 'es' : ''}? This action cannot be undone and will permanently remove the match${count > 1 ? 'es' : ''} from Firebase.`;
+      document.getElementById('deleteMessage').textContent = message;
+      document.getElementById('deleteModal').classList.add('show');
+    }
+    
+    // Close modal
+    function closeModal() {
+      document.getElementById('deleteModal').classList.remove('show');
+    }
+    
+    // Confirm delete
+    async function confirmDelete() {
+      const matchesToDelete = Array.from(selectedMatches);
+      const count = matchesToDelete.length;
+      
+      console.log(`🗑️ Deleting ${count} matches...`);
+      
+      try {
+        // Delete each match from Firebase
+        const deletePromises = matchesToDelete.map(matchId => {
+          const match = allMatches.find(m => m.matchId === matchId);
+          if (match && match.path) {
+            console.log(`Deleting: ${match.path}`);
+            return database.ref(match.path).remove();
+          }
+        });
+        
+        await Promise.all(deletePromises);
+        
+        console.log(`✅ Successfully deleted ${count} matches`);
+        alert(`✅ Successfully deleted ${count} match${count > 1 ? 'es' : ''}!`);
+        
+        // Clear selection and reload
+        selectedMatches.clear();
+        closeModal();
+        updateBulkActions();
+        loadMatches();
+        
+      } catch (error) {
+        console.error('❌ Error deleting matches:', error);
+        alert('❌ Error deleting matches: ' + error.message);
+      }
+    }
+    
+    // Event Listeners
+    document.getElementById('searchBox').addEventListener('input', (e) => {
+      searchQuery = e.target.value;
+      applyFilters();
+    });
+    
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentFilter = btn.dataset.filter;
+        applyFilters();
+      });
+    });
+  </script>
+
+  <!-- Footer -->
+  <footer style="text-align:center;padding:24px 0;color:#9ca3af;font-size:12px;margin-top:24px;">
+    <p style="margin:0;">Admin Panel - CricketBook Management System</p>
+  </footer>
+
+</body>
+</html>
