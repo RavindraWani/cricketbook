@@ -3560,54 +3560,35 @@ function showHelpModal() {
   modalContent.onclick = function(e) { e.stopPropagation(); };
   
   modalContent.innerHTML = `
-    <h3 style="margin:0 0 20px;font-size:22px;color:#1f2937;text-align:center;font-weight:800;">❓ Quick Tips</h3>
+    <h3 style="margin:0 0 20px;font-size:22px;color:#1f2937;text-align:center;font-weight:800;">🏏 How to Score</h3>
     
     <div style="color:#374151;line-height:1.6;font-size:14px;">
-      <div style="margin-bottom:16px;padding:14px;background:linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);border-left:4px solid #3b82f6;border-radius:8px;">
-        <div style="font-weight:800;font-size:15px;margin-bottom:6px;color:#1e40af;">🏏 Scoring Basics</div>
+      <div style="margin-bottom:14px;padding:14px;background:linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);border-left:4px solid #3b82f6;border-radius:8px;">
+        <div style="font-weight:800;font-size:15px;margin-bottom:6px;color:#1e40af;">📱 Score Buttons</div>
         <ul style="margin:6px 0;padding-left:20px;">
-          <li>Tap <strong>0-6</strong> for runs scored by batsman</li>
-          <li>Tap <strong>LB</strong> (Leg Bye) when ball hits batsman's body</li>
-          <li>Tap <strong>BYE</strong> when ball misses everything</li>
-          <li>Tap <strong>WD</strong> (Wide) or <strong>NB</strong> (No Ball) for extras</li>
-          <li>After WD/NB, choose additional runs if any</li>
+          <li><strong>0-6</strong> - Runs scored by batsman</li>
+          <li><strong>WD</strong> (Wide) / <strong>NB</strong> (No Ball) - Extras</li>
+          <li><strong>LB</strong> (Leg Bye) / <strong>BYE</strong> - Ball didn't hit bat</li>
+          <li>After WD/NB, select extra runs if any were taken</li>
         </ul>
       </div>
       
-      <div style="margin-bottom:16px;padding:14px;background:linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);border-left:4px solid #f59e0b;border-radius:8px;">
-        <div style="font-weight:800;font-size:15px;margin-bottom:6px;color:#92400e;">🎯 Wickets</div>
+      <div style="margin-bottom:14px;padding:14px;background:linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);border-left:4px solid #f59e0b;border-radius:8px;">
+        <div style="font-weight:800;font-size:15px;margin-bottom:6px;color:#92400e;">🎯 Recording Wickets</div>
         <ul style="margin:6px 0;padding-left:20px;">
-          <li>Tap <strong>OUT</strong> button for quick wicket</li>
-          <li>Or tap a run button <strong>then OUT</strong> for run-out</li>
-          <li>Use <strong>WD+W</strong> or <strong>NB+W</strong> for extras with wicket</li>
+          <li>Tap <strong>OUT</strong> - For bowled, caught, LBW, etc.</li>
+          <li>Score runs <strong>then OUT</strong> - For run-outs</li>
+          <li><strong>WD+W</strong> / <strong>NB+W</strong> - Extra ball with wicket</li>
+          <li><strong>UNDO</strong> button reverses last action (unlimited)</li>
         </ul>
       </div>
       
-      <div style="margin-bottom:16px;padding:14px;background:linear-gradient(135deg, #fce7f3 0%, #fbcfe8 100%);border-left:4px solid #ec4899;border-radius:8px;">
-        <div style="font-weight:800;font-size:15px;margin-bottom:6px;color:#831843;">⚡ Quick Actions</div>
+      <div style="padding:14px;background:linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);border-left:4px solid #10b981;border-radius:8px;">
+        <div style="font-weight:800;font-size:15px;margin-bottom:6px;color:#065f46;">🔗 Share Link</div>
         <ul style="margin:6px 0;padding-left:20px;">
-          <li><strong>UNDO</strong> - Remove last ball (available for 3 balls)</li>
-          <li><strong>New Over</strong> - Manually complete current over</li>
-          <li><strong>Switch Strike</strong> - Change batting strike</li>
-          <li><strong>Change Bowler</strong> - Update current bowler</li>
-        </ul>
-      </div>
-      
-      <div style="margin-bottom:16px;padding:14px;background:linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);border-left:4px solid #10b981;border-radius:8px;">
-        <div style="font-weight:800;font-size:15px;margin-bottom:6px;color:#065f46;">📊 Features</div>
-        <ul style="margin:6px 0;padding-left:20px;">
-          <li><strong>Share</strong> - Get shareable link for live updates</li>
-          <li><strong>Chart (📊)</strong> - View detailed innings summary</li>
-          <li><strong>Commentary</strong> - Ball-by-ball commentary below</li>
-        </ul>
-      </div>
-      
-      <div style="padding:14px;background:linear-gradient(135deg, #f3e8ff 0%, #e9d5ff 100%);border-left:4px solid #8b5cf6;border-radius:8px;">
-        <div style="font-weight:800;font-size:15px;margin-bottom:6px;color:#5b21b6;">💡 Pro Tips</div>
-        <ul style="margin:6px 0;padding-left:20px;">
-          <li>Innings auto-ends at <strong>10 wickets</strong> or <strong>overs limit</strong></li>
-          <li>Target score shown in 2nd innings</li>
-          <li>All scores saved automatically in your browser</li>
+          <li>Tap <strong>Share</strong> button at top to get links</li>
+          <li><strong>View Link</strong> - Share with anyone to watch live</li>
+          <li><strong>Editor Link</strong> - Share with co-scorer to edit together</li>
         </ul>
       </div>
     </div>
@@ -3909,7 +3890,7 @@ function showChartView() {
 
 // ========== Saved Matches Management ==========
 
-function refreshSavedMatches() {
+async function refreshSavedMatches() {
   const allMatches = loadAllMatchSessions();
   const section = document.getElementById('savedMatchesSection');
   const listDiv = document.getElementById('savedMatchesList');
@@ -3956,6 +3937,61 @@ function refreshSavedMatches() {
   // Show section
   section.style.display = 'block';
   
+  // Fetch live data from Firebase for each match
+  const liveMatchesPromises = incompleteMatches.map(async (match) => {
+    if (!db || !match.organizationId || !match.matchId) {
+      return match; // Return original if Firebase not available
+    }
+    
+    try {
+      // Try tournament path first
+      let snapshot = await db.ref(`tournaments/${match.organizationId}/matches/${match.matchId}`).once('value');
+      let liveData = snapshot.val();
+      
+      // If not found, try quick matches path
+      if (!liveData) {
+        snapshot = await db.ref(`quickMatches/${match.organizationId}/matches/${match.matchId}`).once('value');
+        liveData = snapshot.val();
+      }
+      
+      // Merge live data with stored match data
+      if (liveData) {
+        const updatedMatch = {
+          ...match,
+          first: liveData.first || match.first,
+          second: liveData.second || match.second,
+          inSecond: liveData.inSecond !== undefined ? liveData.inSecond : match.inSecond,
+          lastUpdated: liveData.lastUpdated || match.lastUpdated,
+          matchCompleted: liveData.matchCompleted || false,
+          resultText: liveData.resultText || ''
+        };
+        
+        // Update localStorage with latest completion status
+        if (liveData.matchCompleted || (liveData.resultText && liveData.resultText.trim() !== '')) {
+          // Match is now completed - remove from localStorage
+          console.log('🏁 Match completed, removing from saved matches:', match.matchId);
+          removeMatchFromHistory(match.matchId);
+          return null; // Return null to filter out later
+        }
+        
+        return updatedMatch;
+      }
+    } catch (error) {
+      console.warn('⚠️ Could not fetch live data for match:', match.matchId, error);
+    }
+    
+    return match; // Return original if fetch failed
+  });
+  
+  // Wait for all live data to be fetched
+  const liveMatches = (await Promise.all(liveMatchesPromises)).filter(m => m !== null); // Filter out completed matches
+  
+  // If all matches are now completed, hide section
+  if (liveMatches.length === 0) {
+    section.style.display = 'none';
+    return;
+  }
+  
   // Helper function to calculate time ago
   function getTimeAgo(timestamp) {
     const hoursSince = Math.floor((Date.now() - timestamp) / (1000 * 60 * 60));
@@ -3971,32 +4007,41 @@ function refreshSavedMatches() {
     }
   }
   
-  // Build match rows for incomplete matches only
-  const matchesHtml = incompleteMatches.map((match, index) => {
+  // Build match rows with live data (2-column compact layout)
+  const matchesHtml = liveMatches.map((match, index) => {
     const timeAgo = getTimeAgo(match.timestamp);
+    
+    // Calculate current scores
+    const firstScore = `${match.first?.runs || 0}/${match.first?.wkts || 0}`;
+    const secondScore = `${match.second?.runs || 0}/${match.second?.wkts || 0}`;
+    const firstOvers = match.first?.legalBalls ? `${Math.floor(match.first.legalBalls / 6)}.${match.first.legalBalls % 6}` : '0.0';
+    const secondOvers = match.second?.legalBalls ? `${Math.floor(match.second.legalBalls / 6)}.${match.second.legalBalls % 6}` : '0.0';
+    
     return `
-      <div style="border:2px solid #e2e8f0;border-radius:12px;padding:16px;background:linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);margin-bottom:12px;">
-        <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:12px;">
-          <div style="flex:1;">
-            <div style="font-size:18px;font-weight:700;color:#1f2937;margin-bottom:6px;">
-              ${match.teamA} <span style="color:#3b82f6;">vs</span> ${match.teamB}
+      <div style="border:2px solid #e2e8f0;border-radius:12px;padding:12px;background:linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);margin-bottom:10px;">
+        <div style="display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;margin-bottom:10px;">
+          <div>
+            <div style="font-size:15px;font-weight:700;color:#1f2937;margin-bottom:6px;">
+              ${match.teamA} <span style="color:#3b82f6;font-size:13px;">vs</span> ${match.teamB}
             </div>
-            <div style="font-size:13px;color:#64748b;margin-bottom:4px;">
-              📅 Saved: ${timeAgo}
+            <div style="font-size:12px;color:#1f2937;margin-bottom:2px;">
+              <span style="font-weight:600;">${match.teamA}:</span> ${firstScore} <span style="color:#64748b;font-size:11px;">(${firstOvers})</span>
             </div>
-            <div style="font-size:13px;color:#64748b;">
-              🆔 Match ID: <code style="background:#f1f5f9;padding:2px 6px;border-radius:4px;font-size:12px;">${match.matchId}</code>
+            <div style="font-size:12px;color:#1f2937;margin-bottom:4px;">
+              <span style="font-weight:600;">${match.teamB}:</span> ${secondScore} <span style="color:#64748b;font-size:11px;">(${secondOvers})</span>
+            </div>
+            <div style="font-size:11px;color:#64748b;">
+              📅 ${timeAgo}
             </div>
           </div>
-        </div>
-        
-        <div style="display:flex;gap:8px;margin-top:12px;">
-          <button class="btn" onclick="resumeSavedMatchById('${match.matchId}')" style="flex:1;padding:10px 0;background:#10b981;font-size:14px;">
-            ✏️ Resume Match
-          </button>
-          <button class="btn" onclick="terminateSavedMatchById('${match.matchId}')" style="flex:1;padding:10px 0;background:#e31d1d;font-size:14px;">
-            🗑️ Delete Match
-          </button>
+          <div style="display:flex;flex-direction:column;gap:6px;">
+            <button class="btn" onclick="resumeSavedMatchById('${match.matchId}')" style="padding:6px 12px;background:#10b981;font-size:12px;white-space:nowrap;min-width:90px;">
+              ✏️ Resume
+            </button>
+            <button class="btn" onclick="terminateSavedMatchById('${match.matchId}')" style="padding:6px 12px;background:#e31d1d;font-size:12px;white-space:nowrap;min-width:90px;">
+              🗑️ Delete
+            </button>
+          </div>
         </div>
       </div>
     `;
@@ -4064,35 +4109,53 @@ function terminateSavedMatchById(matchId) {
     return;
   }
   
-  // Delete from Firebase - try both tournament and quick match paths
+  // Delete from Firebase - check both tournament and quick match paths
   const tournamentPath = 'tournaments/' + matchToDelete.organizationId + '/matches/' + matchToDelete.matchId;
   const quickMatchPath = 'quickMatches/' + matchToDelete.organizationId + '/matches/' + matchToDelete.matchId;
   
-  // Try tournament path first
-  db.ref(tournamentPath).remove()
-    .then(() => {
-      console.log('🗑️ Match deleted from Firebase (tournament):', matchToDelete.matchId);
+  // Check both paths and delete from wherever it exists
+  Promise.all([
+    db.ref(tournamentPath).once('value'),
+    db.ref(quickMatchPath).once('value')
+  ]).then(([tournamentSnapshot, quickMatchSnapshot]) => {
+    const deletePromises = [];
+    
+    // Delete from tournament path if exists
+    if (tournamentSnapshot.exists()) {
+      console.log('🗑️ Deleting match from tournament path');
+      deletePromises.push(db.ref(tournamentPath).remove());
+    }
+    
+    // Delete from quick match path if exists
+    if (quickMatchSnapshot.exists()) {
+      console.log('🗑️ Deleting match from quick match path');
+      deletePromises.push(db.ref(quickMatchPath).remove());
+    }
+    
+    // If match doesn't exist in Firebase at all
+    if (deletePromises.length === 0) {
+      console.log('⚠️ Match not found in Firebase, removing from localStorage only');
       removeMatchFromHistory(matchId);
-      alert('✅ Match deleted successfully from server and local storage');
+      alert('✅ Match deleted from local storage (not found on server)');
       refreshSavedMatches();
-    })
-    .catch(() => {
-      // If tournament path fails, try quick match path
-      db.ref(quickMatchPath).remove()
-        .then(() => {
-          console.log('🗑️ Match deleted from Firebase (quick match):', matchToDelete.matchId);
-          removeMatchFromHistory(matchId);
-          alert('✅ Match deleted successfully from server and local storage');
-          refreshSavedMatches();
-        })
-        .catch((error) => {
-          console.error('❌ Failed to delete match from Firebase:', error);
-          // Still remove from localStorage even if Firebase deletion fails
-          removeMatchFromHistory(matchId);
-          alert('⚠️ Match deleted from local storage, but server deletion failed.\n\nError: ' + error.message);
-          refreshSavedMatches();
-        });
-    });
+      return;
+    }
+    
+    // Execute all delete operations
+    return Promise.all(deletePromises)
+      .then(() => {
+        console.log('✅ Match deleted from Firebase:', matchToDelete.matchId);
+        removeMatchFromHistory(matchId);
+        alert('✅ Match deleted successfully from server and local storage');
+        refreshSavedMatches();
+      });
+  }).catch((error) => {
+    console.error('❌ Failed to delete match from Firebase:', error);
+    // Still remove from localStorage even if Firebase deletion fails
+    removeMatchFromHistory(matchId);
+    alert('⚠️ Match deleted from local storage, but server deletion failed.\n\nError: ' + error.message);
+    refreshSavedMatches();
+  });
 }
 
 // Helper function to remove a match from history

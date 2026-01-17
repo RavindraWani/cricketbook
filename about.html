@@ -253,26 +253,30 @@
   <div class="card">
     <h1>🏏 About CricketBook</h1>
     
-    <p>Free, real-time cricket scoring for local matches. Create Quick Matches (single) or organize Tournaments (multiple matches) with password protection and points tables.</p>
+    <p>Free, real-time cricket scoring platform for local matches. Create Quick Matches (single) or organize Tournaments (multiple matches) with password protection and automatic points tables.</p>
 
     <h2>Key Features</h2>
     <ul class="feature-list">
-      <li>Quick Match - single match without tournament setup, auto-tracked</li>
+      <li>Quick Match - Single match without setup, instantly tracked in your browser</li>
       <li>Real-time ball-by-ball scoring with instant Firebase sync</li>
-      <li>WhatsApp sharing - share live scores directly from match page 📱</li>
-      <li>Global Match Browser - view all ongoing matches worldwide 🌍</li>
-      <li>Tournament mode - organize multiple matches with unique names & passwords</li>
-      <li>Secure edit tokens (public view, authorized scoring)</li>
-      <li>8 match types: League, Semi-Final, Final, etc.</li>
-      <li>Flexible settings: 1-50 overs, 1-20 wickets</li>
-      <li>100% free, always free</li>
+      <li>Two share links: View Link (watch live) & Editor Link (co-scoring)</li>
+      <li>WhatsApp sharing - Share live scores directly with one tap 📱</li>
+      <li>Global Match Browser - View all ongoing matches worldwide 🌍</li>
+      <li>Tournament mode - Group multiple matches with passwords & points tables</li>
+      <li>Automatic points table calculation for League matches</li>
+      <li>8 match types: Friendly, League, Semi-Final, Final, and more</li>
+      <li>Flexible settings: 1-50 overs, 1-20 wickets per innings</li>
+      <li>Saved Matches - Resume incomplete matches anytime</li>
+      <li>Undo button - Reverse any action (unlimited undo history)</li>
+      <li>100% free, no signup required, always free</li>
     </ul>
 
     <h2>How It Works</h2>
-    <p><strong>Quick Match:</strong> Single match without tournament - auto-tracked in your device<br>
-    <strong>Score:</strong> Record each ball with real-time Firebase sync<br>
-    <strong>Share:</strong> Viewer Link (public) or Scorer Link (edit access)<br>
-    <strong>Tournament:</strong> Multiple matches grouped together with password protection and points tables</p>
+    <p><strong>Quick Match:</strong> Single match without tournament - automatically saved to your device<br>
+    <strong>Score:</strong> Record each ball with real-time Firebase sync across all viewers<br>
+    <strong>Share:</strong> View Link (anyone can watch) or Editor Link (authorized scorers only)<br>
+    <strong>Tournament:</strong> Multiple matches grouped together with password protection and automatic points tables<br>
+    <strong>Resume:</strong> All incomplete matches auto-saved and accessible from home page</p>
 
     <h2>Net Run Rate (NRR)</h2>
     <p>Automatically calculated using standard ICC method for <strong>League Match</strong> type only.</p>
@@ -285,9 +289,20 @@
     <h3>Key Points</h3>
     <ul class="feature-list">
       <li>NRR table appears only for League Match type</li>
-      <li>All-out innings use full overs allocation</li>
+      <li>All-out innings use full overs allocation for calculation</li>
       <li>Positive NRR = scoring faster than opponents</li>
-      <li>View detailed breakdown: click ⓘ icon on Matches page</li>
+      <li>Negative NRR = conceding runs faster than scoring</li>
+      <li>View detailed breakdown: Click ⓘ icon on Matches page</li>
+    </ul>
+    
+    <h2>Database Connections</h2>
+    <p>CricketBook uses Firebase Realtime Database with optimized connection usage:</p>
+    <ul class="feature-list">
+      <li><strong>Scorer:</strong> 1 active connection (real-time sync while scoring)</li>
+      <li><strong>Viewers:</strong> 0 connections (polling every 2 seconds, not persistent)</li>
+      <li><strong>Match Browser:</strong> 0 connections (polling every 5 minutes)</li>
+      <li>Firebase free tier: 100 simultaneous connections</li>
+      <li>Efficient design allows many viewers without connection limits</li>
     </ul>
 
     <h2>Contact</h2>

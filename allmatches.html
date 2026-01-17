@@ -661,7 +661,7 @@
         console.log(`📊 Loaded ${allMatches.length} total matches from Firebase`);
         
         if (allMatches.length === 0) {
-          document.getElementById('loading').innerHTML = '<div class="empty-state"><div class="empty-state-icon">🏏</div><div style="font-size:18px;font-weight:600;margin-bottom:12px;color:#1f2937;">No Matches Found</div><div style="color:#6b7280;margin-bottom:16px;">No cricket matches available at the moment.</div><a href="index.html" style="background:#8b5cf6;color:white;padding:10px 24px;border-radius:10px;text-decoration:none;display:inline-block;font-weight:600;">🏠 Go to Home</a></div>';
+          document.getElementById('loading').innerHTML = '<div class="empty-state"><div class="empty-state-icon">🏏</div><div style="font-size:18px;font-weight:700;margin-bottom:8px;color:#1f2937;">No Matches Found</div><div style="color:#6b7280;font-size:14px;line-height:1.6;margin-bottom:20px;">No cricket matches are available worldwide at the moment.<br>Start scoring a match and it will appear here for everyone!</div><a href="index.html" style="background:linear-gradient(135deg, #667eea 0%, #764ba2 100%);color:white;padding:12px 28px;border-radius:12px;text-decoration:none;display:inline-block;font-weight:700;box-shadow:0 4px 12px rgba(102,126,234,0.3);transition:all 0.2s;">🏠 Go to Home</a></div>';
           return;
         }
         
@@ -766,7 +766,7 @@
       const container = document.getElementById('matchList');
       
       if (filteredMatches.length === 0) {
-        container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">🔍</div><div style="font-size:16px;font-weight:600;color:#1f2937;">No matches found</div><div style="color:#6b7280;margin-top:8px;">Try adjusting your filters or search query</div></div>';
+        container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">🔍</div><div style="font-size:16px;font-weight:700;color:#1f2937;margin-bottom:8px;">No Matches Found</div><div style="color:#6b7280;font-size:14px;line-height:1.6;">Try adjusting your filters or search query to find matches</div></div>';
         return;
       }
       

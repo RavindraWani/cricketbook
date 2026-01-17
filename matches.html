@@ -612,7 +612,7 @@
     if (!organizationId && userMatches.length === 0) {
       // No org ID and no match history - show welcome message
       console.warn('⚠️ No Organization ID found and no match history. Please start a match first.');
-      document.getElementById('loading').innerHTML = '<div class="empty-state"><div class="empty-state-icon">🏏</div><div style="font-size:18px;font-weight:600;margin-bottom:12px;color:#1f2937;">Welcome to CricketBook!</div><div style="color:#6b7280;margin-bottom:16px;">Start your first match to see all your matches here.</div><a href="index.html" class="btn new-match-btn" style="max-width:300px;margin:0 auto;">🏠 Go to Home & Start Match</a></div>';
+      document.getElementById('loading').innerHTML = '<div class="empty-state"><div class="empty-state-icon">🏏</div><div style="font-size:20px;font-weight:800;margin-bottom:8px;color:#1f2937;">Welcome to CricketBook!</div><div style="color:#6b7280;font-size:14px;line-height:1.6;margin-bottom:20px;">Your match history will appear here once you start scoring.<br>Let\'s get started with your first cricket match!</div><a href="index.html" class="btn new-match-btn" style="max-width:320px;margin:0 auto;background:linear-gradient(135deg, #667eea 0%, #764ba2 100%);color:white;padding:12px 28px;border-radius:12px;text-decoration:none;display:inline-block;font-weight:700;box-shadow:0 4px 12px rgba(102,126,234,0.3);transition:all 0.2s;">🏠 Go to Home & Start Match</a></div>';
       document.getElementById('loading').style.display = 'block';
       document.getElementById('content').style.display = 'none';
     } else {
@@ -646,7 +646,7 @@
       // If no orgIds found, show empty state
       if (orgIds.size === 0) {
         console.log('⚠️ No organization IDs found in history');
-        document.getElementById('loading').innerHTML = '<div class="empty-state"><div class="empty-state-icon">🏏</div><div style="font-size:18px;font-weight:600;margin-bottom:12px;color:#1f2937;">No Matches Yet</div><div style="color:#6b7280;margin-bottom:16px;">Start your first match to see it here!</div><a href="index.html" style="background:#8b5cf6;color:white;padding:10px 24px;border-radius:10px;text-decoration:none;display:inline-block;font-weight:600;">🏠 Go to Home & Start Scoring</a></div>';
+        document.getElementById('loading').innerHTML = '<div class="empty-state"><div class="empty-state-icon">🏏</div><div style="font-size:18px;font-weight:700;margin-bottom:8px;color:#1f2937;">No Matches Found</div><div style="color:#6b7280;font-size:14px;line-height:1.6;margin-bottom:20px;">Your match history is empty right now.<br>Start scoring your first match and build your cricket record!</div><a href="index.html" style="background:linear-gradient(135deg, #667eea 0%, #764ba2 100%);color:white;padding:12px 28px;border-radius:12px;text-decoration:none;display:inline-block;font-weight:700;box-shadow:0 4px 12px rgba(102,126,234,0.3);transition:all 0.2s;">🏠 Go to Home & Start Scoring</a></div>';
         document.getElementById('loading').style.display = 'block';
         document.getElementById('content').style.display = 'none';
         return;
@@ -671,7 +671,7 @@
         console.log('📊 Loaded total matches from Firebase:', Object.keys(allMatches).length);
         
         if (Object.keys(allMatches).length === 0) {
-          document.getElementById('loading').innerHTML = '<div class="empty-state"><div class="empty-state-icon">🏏</div><div style="font-size:18px;font-weight:600;margin-bottom:12px;color:#1f2937;">No Matches Yet</div><div style="color:#6b7280;margin-bottom:16px;">Start your first match to see it here!</div><a href="index.html" style="background:#8b5cf6;color:white;padding:10px 24px;border-radius:10px;text-decoration:none;display:inline-block;font-weight:600;">🏠 Go to Home & Start Scoring</a></div>';
+          document.getElementById('loading').innerHTML = '<div class="empty-state"><div class="empty-state-icon">🏏</div><div style="font-size:18px;font-weight:700;margin-bottom:8px;color:#1f2937;">No Matches Found</div><div style="color:#6b7280;font-size:14px;line-height:1.6;margin-bottom:20px;">Your match history is empty right now.<br>Start scoring your first match and build your cricket record!</div><a href="index.html" style="background:linear-gradient(135deg, #667eea 0%, #764ba2 100%);color:white;padding:12px 28px;border-radius:12px;text-decoration:none;display:inline-block;font-weight:700;box-shadow:0 4px 12px rgba(102,126,234,0.3);transition:all 0.2s;">🏠 Go to Home & Start Scoring</a></div>';
           document.getElementById('loading').style.display = 'block';
           document.getElementById('content').style.display = 'none';
           return;
@@ -886,7 +886,7 @@
       const container = document.getElementById('recentMatches');
       
       if (matches.length === 0) {
-        container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">🏏</div><div>No matches to display</div></div>';
+        container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">🏏</div><div style="font-size:16px;font-weight:600;color:#6b7280;">No matches to display</div></div>';
         return;
       }
       

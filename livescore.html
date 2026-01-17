@@ -336,7 +336,7 @@
     } else if (!organizationId) {
       // No org ID in URL or localStorage - show helpful message
       console.warn('⚠️ No Organization ID found. Please start a match first.');
-      document.getElementById('loading').innerHTML = '<div class="empty-state"><div class="empty-state-icon">🏏</div><div style="font-size:18px;font-weight:600;margin-bottom:12px;color:#1f2937;">Ready to Watch Live Cricket?</div><div style="color:#6b7280;margin-bottom:16px;">Start a new match or get a share link to view live scores here!</div><a href="index.html" class="btn" style="background:#8b5cf6;color:white;padding:10px 24px;border-radius:10px;text-decoration:none;display:inline-block;font-weight:600;">🏠 Go to Home</a></div>';
+      document.getElementById('loading').innerHTML = '<div class="empty-state"><div class="empty-state-icon">🏏</div><div style="font-size:18px;font-weight:700;margin-bottom:8px;color:#1f2937;">Ready to Watch Live Cricket?</div><div style="color:#6b7280;font-size:14px;line-height:1.6;margin-bottom:20px;">Start scoring a new match or ask your scorer to share the live score link with you!</div><a href="index.html" class="btn" style="background:linear-gradient(135deg, #667eea 0%, #764ba2 100%);color:white;padding:12px 28px;border-radius:12px;text-decoration:none;display:inline-block;font-weight:700;box-shadow:0 4px 12px rgba(102,126,234,0.3);transition:all 0.2s;">🏠 Go to Home</a></div>';
     } else {
       console.log('✅ Using Organization ID from localStorage:', organizationId);
     }
@@ -377,7 +377,7 @@
         console.log('⚡ Quick matches found:', Object.keys(quickMatches).length);
         
         if (Object.keys(allMatches).length === 0) {
-          document.getElementById('loading').innerHTML = '<div class="empty-state"><div class="empty-state-icon">🏏</div><div style="font-size:18px;font-weight:600;margin-bottom:12px;color:#1f2937;">No Matches Yet</div><div style="color:#6b7280;margin-bottom:16px;">Start your first match to see live scores here!</div><a href="index.html" style="background:#8b5cf6;color:white;padding:10px 24px;border-radius:10px;text-decoration:none;display:inline-block;font-weight:600;">🏠 Go to Home & Start Scoring</a></div>';
+          document.getElementById('loading').innerHTML = '<div class="empty-state"><div class="empty-state-icon">🏏</div><div style="font-size:18px;font-weight:700;margin-bottom:8px;color:#1f2937;">No Matches Yet</div><div style="color:#6b7280;font-size:14px;line-height:1.6;margin-bottom:20px;">Looks like there are no live matches at the moment.<br>Start scoring your first match and it will appear here!</div><a href="index.html" style="background:linear-gradient(135deg, #667eea 0%, #764ba2 100%);color:white;padding:12px 28px;border-radius:12px;text-decoration:none;display:inline-block;font-weight:700;box-shadow:0 4px 12px rgba(102,126,234,0.3);transition:all 0.2s;">🏠 Go to Home & Start Scoring</a></div>';
           // Retry after 5 seconds
           setTimeout(findAndLoadLiveMatch, 5000);
           return;
