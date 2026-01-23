@@ -205,6 +205,8 @@
       align-items: center;
       margin-bottom: 15px;
       padding: 0 5px;
+      position: relative;
+      z-index: 1001;
     }
 
     .nav-title {
@@ -232,60 +234,140 @@
       border-radius: 8px;
       cursor: pointer;
       transition: all 0.2s;
+      position: relative;
+      z-index: 1002;
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .nav-toggle:hover {
       background: rgba(255, 255, 255, 0.3);
     }
 
-    .nav-links {
-      text-align: center;
-      margin-bottom: 15px;
-      padding: 0 5px;
+    .nav-toggle .hamburger {
+      display: block;
+    }
+
+    .nav-toggle .close {
       display: none;
+      font-size: 28px;
+    }
+
+    .nav-toggle.active .hamburger {
+      display: none;
+    }
+
+    .nav-toggle.active .close {
+      display: block;
+    }
+
+    /* Navigation Overlay Backdrop */
+    .nav-backdrop {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(4px);
+      z-index: 999;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .nav-backdrop.active {
+      display: block;
+      opacity: 1;
+    }
+
+    /* Navigation Links Overlay */
+    .nav-links {
+      position: fixed;
+      top: 0;
+      right: -300px;
+      width: 280px;
+      height: 100vh;
+      background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
+      border-left: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 80px 20px 20px;
+      box-shadow: -4px 0 20px rgba(0, 0, 0, 0.3);
+      z-index: 1000;
+      overflow-y: auto;
+      transition: right 0.3s ease;
     }
     
     .nav-links.active {
-      display: block;
+      right: 0;
     }
     
     .nav-links a {
       display: block;
       color: white;
       text-decoration: none;
-      padding: 10px 14px;
+      padding: 14px 18px;
       margin: 8px 0;
-      border-radius: 8px;
+      border-radius: 10px;
       background: rgba(255, 255, 255, 0.15);
       backdrop-filter: blur(10px);
       font-weight: 600;
-      font-size: 14px;
+      font-size: 15px;
       transition: all 0.2s;
       white-space: nowrap;
+      border: 1px solid rgba(255, 255, 255, 0.1);
     }
     
     .nav-links a:hover {
       background: rgba(255, 255, 255, 0.25);
-      transform: translateY(-1px);
+      transform: translateX(-4px);
+      border-color: rgba(255, 255, 255, 0.3);
     }
     
     .nav-links a.active {
-      background: rgba(255, 255, 255, 0.3);
+      background: rgba(255, 255, 255, 0.35);
+      border-color: rgba(255, 255, 255, 0.4);
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 480px) {
+      .nav-links {
+        width: 100%;
+        right: -100%;
+      }
     }
   </style>
   <script>
     function toggleNav() {
       const navLinks = document.getElementById('navLinks');
+      const navBackdrop = document.getElementById('navBackdrop');
+      const navToggle = document.querySelector('.nav-toggle');
+      
       navLinks.classList.toggle('active');
+      navBackdrop.classList.toggle('active');
+      navToggle.classList.toggle('active');
+      
+      // Prevent body scroll when nav is open
+      if (navLinks.classList.contains('active')) {
+        document.body.style.overflow = 'hidden';
+      } else {
+        document.body.style.overflow = '';
+      }
     }
   </script>
 </head>
 <body>
   <div class="container">
     <!-- Navigation -->
+    <div class="nav-backdrop" id="navBackdrop" onclick="toggleNav()"></div>
     <div class="nav-header">
       <a href="index.html" class="nav-title">🏏 CricketBook</a>
-      <button class="nav-toggle" onclick="toggleNav()">☰</button>
+      <button class="nav-toggle" onclick="toggleNav()">
+        <span class="hamburger">☰</span>
+        <span class="close">×</span>
+      </button>
     </div>
     <nav class="nav-links" id="navLinks">
       <a href="index.html" class="active">🏠 Home</a>
@@ -429,7 +511,8 @@
     <!-- Footer -->
     <div class="footer">
       <p style="margin:0 0 4px;">Made with ❤️ for local cricket matches.</p>
-      <p style="margin:0 0 8px;">© 2026 CricketBook — Realtime Cricket Scoring Tool</p>
+      <p style="margin:0 0 4px;">© 2026 CricketBook — Realtime Cricket Scoring Tool</p>
+      <p style="margin:0 0 8px;font-size:12px;opacity:0.85;">⚡ Developed with AI assistance by GitHub Copilot (Claude Sonnet 4.5)</p>
       <p style="margin:0;"><a href="https://www.instagram.com/cricketbook.digital/" target="_blank" rel="noopener noreferrer" style="color:white;text-decoration:none;font-weight:600;opacity:0.95;transition:opacity 0.2s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.95'">📷 Follow us on Instagram</a></p>
     </div>
   </div>
