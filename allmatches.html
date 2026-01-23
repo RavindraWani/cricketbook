@@ -307,6 +307,128 @@
       color: white;
     }
     
+    /* Date Range Controls */
+    .date-controls {
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 2px solid #e5e7eb;
+    }
+    
+    .date-toggle {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      margin-bottom: 12px;
+    }
+    
+    .date-toggle-btn {
+      flex: 1;
+      padding: 10px 16px;
+      border: 2px solid #e5e7eb;
+      border-radius: 10px;
+      background: white;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      color: #6b7280;
+    }
+    
+    .date-toggle-btn:hover {
+      border-color: #667eea;
+      color: #667eea;
+    }
+    
+    .date-toggle-btn.active {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-color: #667eea;
+      color: white;
+    }
+    
+    .date-range-picker {
+      display: none;
+      margin-top: 12px;
+    }
+    
+    .date-range-picker.active {
+      display: block;
+    }
+    
+    .date-inputs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    
+    .date-input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    
+    .date-input-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: #6b7280;
+      margin-left: 4px;
+    }
+    
+    .date-input {
+      padding: 10px 12px;
+      border: 2px solid #e5e7eb;
+      border-radius: 8px;
+      font-size: 14px;
+      transition: all 0.2s;
+      font-family: inherit;
+    }
+    
+    .date-input:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102,126,234,0.1);
+    }
+    
+    .apply-date-btn {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      box-shadow: 0 4px 12px rgba(102,126,234,0.3);
+    }
+    
+    .apply-date-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 16px rgba(102,126,234,0.4);
+    }
+    
+    .apply-date-btn:active {
+      transform: translateY(0);
+    }
+    
+    .week-info {
+      text-align: center;
+      font-size: 13px;
+      color: #667eea;
+      font-weight: 600;
+      padding: 8px;
+      background: rgba(102,126,234,0.1);
+      border-radius: 8px;
+      margin-top: 8px;
+    }
+    
+    @media (max-width: 480px) {
+      .date-inputs {
+        grid-template-columns: 1fr;
+      }
+    }
+    
     /* Compact Match List */
     .match-list {
       display: flex;
@@ -659,6 +781,30 @@
         <button class="filter-btn" data-filter="quick">⚡ Quick</button>
         <button class="filter-btn" data-filter="tournament">🏆 Tournament</button>
       </div>
+      
+      <!-- Date Range Controls -->
+      <div class="date-controls">
+        <div class="date-toggle">
+          <button class="date-toggle-btn active" id="weekViewBtn" onclick="switchToWeekView()">📅 This Week</button>
+          <button class="date-toggle-btn" id="customDateBtn" onclick="switchToCustomDate()">🗓️ Custom Dates</button>
+        </div>
+        
+        <div class="date-range-picker" id="dateRangePicker">
+          <div class="date-inputs">
+            <div class="date-input-group">
+              <label class="date-input-label">From Date</label>
+              <input type="date" id="startDate" class="date-input">
+            </div>
+            <div class="date-input-group">
+              <label class="date-input-label">To Date</label>
+              <input type="date" id="endDate" class="date-input">
+            </div>
+          </div>
+          <button class="apply-date-btn" onclick="applyDateRange()">✅ Apply Date Range</button>
+        </div>
+        
+        <div class="week-info" id="weekInfo" style="display:block;"></div>
+      </div>
     </div>
     
     <div class="loading" id="loading">Loading all matches...</div>
@@ -691,12 +837,126 @@
     // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
     const database = firebase.database();
+    
+    // Date utility functions
+    function getWeekRange() {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      
+      const weekStart = new Date(today);
+      weekStart.setDate(today.getDate() - 3);
+      
+      const weekEnd = new Date(today);
+      weekEnd.setDate(today.getDate() + 3);
+      weekEnd.setHours(23, 59, 59, 999);
+      
+      return { start: weekStart, end: weekEnd };
+    }
+    
+    function formatDateDisplay(date) {
+      return date.toLocaleDateString('en-US', { 
+        month: 'short', 
+        day: 'numeric',
+        year: 'numeric'
+      });
+    }
+    
+    function updateWeekInfo() {
+      const weekInfo = document.getElementById('weekInfo');
+      if (dateViewMode === 'week') {
+        const { start, end } = getWeekRange();
+        weekInfo.textContent = `📅 Showing: ${formatDateDisplay(start)} - ${formatDateDisplay(end)} (7 days)`;
+        weekInfo.style.display = 'block';
+      } else if (dateViewMode === 'custom' && customStartDate && customEndDate) {
+        weekInfo.textContent = `📅 Showing: ${formatDateDisplay(customStartDate)} - ${formatDateDisplay(customEndDate)}`;
+        weekInfo.style.display = 'block';
+      } else {
+        weekInfo.style.display = 'none';
+      }
+    }
+    
+    function switchToWeekView() {
+      dateViewMode = 'week';
+      customStartDate = null;
+      customEndDate = null;
+      
+      document.getElementById('weekViewBtn').classList.add('active');
+      document.getElementById('customDateBtn').classList.remove('active');
+      document.getElementById('dateRangePicker').classList.remove('active');
+      
+      updateWeekInfo();
+      applyFilters();
+    }
+    
+    function switchToCustomDate() {
+      dateViewMode = 'custom';
+      
+      document.getElementById('weekViewBtn').classList.remove('active');
+      document.getElementById('customDateBtn').classList.add('active');
+      document.getElementById('dateRangePicker').classList.add('active');
+      
+      // Set default dates if not set
+      if (!document.getElementById('startDate').value) {
+        const today = new Date();
+        const weekAgo = new Date(today);
+        weekAgo.setDate(today.getDate() - 7);
+        
+        document.getElementById('startDate').value = weekAgo.toISOString().split('T')[0];
+        document.getElementById('endDate').value = today.toISOString().split('T')[0];
+      }
+      
+      updateWeekInfo();
+    }
+    
+    function applyDateRange() {
+      const startDateInput = document.getElementById('startDate').value;
+      const endDateInput = document.getElementById('endDate').value;
+      
+      if (!startDateInput || !endDateInput) {
+        alert('⚠️ Please select both start and end dates');
+        return;
+      }
+      
+      customStartDate = new Date(startDateInput);
+      customStartDate.setHours(0, 0, 0, 0);
+      
+      customEndDate = new Date(endDateInput);
+      customEndDate.setHours(23, 59, 59, 999);
+      
+      if (customStartDate > customEndDate) {
+        alert('⚠️ Start date must be before end date');
+        return;
+      }
+      
+      updateWeekInfo();
+      applyFilters();
+    }
+    
+    function isMatchInDateRange(match) {
+      const matchTimestamp = match.timestamp || match.lastUpdated || 0;
+      if (!matchTimestamp) return true; // Include matches without timestamp
+      
+      const matchDate = new Date(matchTimestamp);
+      
+      if (dateViewMode === 'week') {
+        const { start, end } = getWeekRange();
+        return matchDate >= start && matchDate <= end;
+      } else if (dateViewMode === 'custom' && customStartDate && customEndDate) {
+        return matchDate >= customStartDate && matchDate <= customEndDate;
+      }
+      
+      return true; // Default: show all
+    }
 
     // Global state
     let allMatches = [];
     let filteredMatches = [];
     let currentFilter = 'all';
     let searchQuery = '';
+    let dateViewMode = 'week'; // 'week' or 'custom'
+    let customStartDate = null;
+    let customEndDate = null;
+    let collapsedTournaments = new Set();
     
     // Load ALL matches from Firebase (not just user's matches)
     function loadAllMatches() {
@@ -751,6 +1011,9 @@
         
         // Update stats
         updateStats();
+        
+        // Initialize week view
+        updateWeekInfo();
         
         // Apply filters and display
         applyFilters();
@@ -814,6 +1077,11 @@
     // Apply filters
     function applyFilters() {
       filteredMatches = allMatches.filter(match => {
+        // Date range filter
+        if (!isMatchInDateRange(match)) {
+          return false;
+        }
+        
         // Text search
         if (searchQuery) {
           const query = searchQuery.toLowerCase();
@@ -842,7 +1110,27 @@
         return true; // 'all' filter
       });
       
+      // Update stats after filtering
+      updateFilteredStats();
+      
       displayMatches();
+    }
+    
+    // Update stats for filtered matches
+    function updateFilteredStats() {
+      const total = filteredMatches.length;
+      const live = filteredMatches.filter(match => isLiveMatch(match)).length;
+      const completed = filteredMatches.filter(match => {
+        const hasResult = match.resultText && match.resultText.trim() !== '';
+        const isComplete = match.matchCompleted || (match.first?.done && match.second?.done);
+        return hasResult || isComplete;
+      }).length;
+      const tournaments = new Set(filteredMatches.map(m => m.tournamentName || '').filter(t => t.trim() !== '')).size;
+      
+      document.getElementById('statTotal').textContent = total;
+      document.getElementById('statLive').textContent = live;
+      document.getElementById('statCompleted').textContent = completed;
+      document.getElementById('statTournaments').textContent = tournaments;
     }
     
     // Display matches
