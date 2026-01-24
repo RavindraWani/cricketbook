@@ -1126,7 +1126,7 @@
       </div>
 
       <!-- Live Over Display (replaces Ball Tracker) -->
-      <div id="liveOverDisplay" style="margin-bottom:12px;padding:12px 14px;background:linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);border:2px solid #e2e8f0;border-radius:14px;box-shadow:0 2px 6px rgba(0,0,0,0.04);min-height:48px;display:flex;align-items:center;"></div>
+      <div id="liveOverDisplay" style="margin-bottom:10px;padding:8px 10px;background:linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);border:2px solid #e2e8f0;border-radius:12px;box-shadow:0 2px 6px rgba(0,0,0,0.04);min-height:38px;display:flex;align-items:center;"></div>
 
       <!-- First Innings Info Banner -->
       <div id="firstInningsInfo" style="display:none;text-align:center;margin-bottom:12px;padding:12px 16px;border-radius:12px;background:linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);color:#ffffff;font-size:14px;font-weight:700;box-shadow:0 4px 12px rgba(59,130,246,0.3);letter-spacing:0.3px;"></div>
@@ -1445,12 +1445,12 @@ function updateUI(){
       const isWicket = /W$/.test(sym) || /\+W$/.test(sym);
       const bgColor = isWicket ? '#ef4444' : '#3b82f6';
       const borderColor = isWicket ? '#dc2626' : '#2563eb';
-      return `<span style="display:inline-flex;align-items:center;margin:2px 3px;padding:6px 10px;border-radius:8px;background:${bgColor};color:#fff;font-weight:700;border:none;font-size:12px;box-shadow:0 2px 4px rgba(0,0,0,0.1);white-space:nowrap;">${sym}</span>`;
+      return `<span style="display:inline-flex;align-items:center;margin:1px 2px;padding:4px 7px;border-radius:6px;background:${bgColor};color:#fff;font-weight:700;border:none;font-size:11px;box-shadow:0 1px 3px rgba(0,0,0,0.1);white-space:nowrap;">${sym}</span>`;
     }).join('');
     const overStats = overRunsAndWkts(inn.curOver);
-    liveOverDiv.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center;width:100%;gap:12px;">
+    liveOverDiv.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center;width:100%;gap:8px;">
       <div style="display:flex;flex-wrap:wrap;align-items:center;flex:1;min-width:0;">${ballsChips}</div>
-      <div style="flex-shrink:0;padding:8px 14px;background:linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);color:#fff;font-weight:800;font-size:15px;border-radius:10px;box-shadow:0 3px 8px rgba(59,130,246,0.3);white-space:nowrap;">${overStats.runs}/${overStats.wkts}</div>
+      <div style="flex-shrink:0;padding:5px 10px;background:linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);color:#fff;font-weight:800;font-size:13px;border-radius:8px;box-shadow:0 2px 6px rgba(59,130,246,0.3);white-space:nowrap;">${overStats.runs}/${overStats.wkts}</div>
     </div>`;
     liveOverDiv.style.display = 'flex';
   } else if (inn.overs.length > 0) {
@@ -1461,16 +1461,16 @@ function updateUI(){
       const isWicket = /W$/.test(sym) || /\+W$/.test(sym);
       const bgColor = isWicket ? '#ef4444' : '#10b981';
       const borderColor = isWicket ? '#dc2626' : '#059669';
-      return `<span style="display:inline-flex;align-items:center;margin:2px 3px;padding:6px 10px;border-radius:8px;background:${bgColor};color:#fff;font-weight:700;border:none;font-size:12px;box-shadow:0 2px 4px rgba(0,0,0,0.1);white-space:nowrap;">${sym}</span>`;
+      return `<span style="display:inline-flex;align-items:center;margin:1px 2px;padding:4px 7px;border-radius:6px;background:${bgColor};color:#fff;font-weight:700;border:none;font-size:11px;box-shadow:0 1px 3px rgba(0,0,0,0.1);white-space:nowrap;">${sym}</span>`;
     }).join('');
     const overStats = overRunsAndWkts(lastOver);
-    liveOverDiv.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center;width:100%;gap:12px;">
+    liveOverDiv.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center;width:100%;gap:8px;">
       <div style="display:flex;flex-wrap:wrap;align-items:center;flex:1;min-width:0;opacity:0.85;">${ballsChips}</div>
-      <div style="flex-shrink:0;padding:8px 14px;background:linear-gradient(135deg, #10b981 0%, #059669 100%);color:#fff;font-weight:800;font-size:15px;border-radius:10px;box-shadow:0 3px 8px rgba(16,185,129,0.3);white-space:nowrap;">${overStats.runs}/${overStats.wkts}</div>
+      <div style="flex-shrink:0;padding:5px 10px;background:linear-gradient(135deg, #10b981 0%, #059669 100%);color:#fff;font-weight:800;font-size:13px;border-radius:8px;box-shadow:0 2px 6px rgba(16,185,129,0.3);white-space:nowrap;">${overStats.runs}/${overStats.wkts}</div>
     </div>`;
     liveOverDiv.style.display = 'flex';
   } else {
-    liveOverDiv.innerHTML = `<div style="color:#94a3b8;font-size:14px;font-weight:600;text-align:center;width:100%;padding:4px 0;">No balls bowled yet</div>`;
+    liveOverDiv.innerHTML = `<div style="color:#94a3b8;font-size:12px;font-weight:600;text-align:center;width:100%;padding:2px 0;">No balls bowled yet</div>`;
     liveOverDiv.style.display = 'flex';
   }
 
