@@ -1537,7 +1537,7 @@ function updateUI(){
   thisOverWkts = thisOver.wkts;
   
   // Display consolidated Overs/RR/Extras in chip banner
-  document.getElementById("oversExtrasInfo").innerHTML = `Overs: <b>(${overs}.${ballsInOver}/${oversLimit})</b> | RR: <b>${rr}</b> | Ext: <b>${extras}</b>`;
+  document.getElementById("oversExtrasInfo").innerHTML = `O's: <b>(${overs}.${ballsInOver}/${oversLimit})</b> | RR: <b>${rr}</b> | Ext's: <b>${extras}</b>`;
 
   // Update page title with team names
   if (teamA && teamB) {
@@ -3679,38 +3679,47 @@ function showHelpModal() {
   modalContent.innerHTML = `
     <h3 style="margin:0 0 20px;font-size:22px;color:#1f2937;text-align:center;font-weight:800;">🏏 How to Score</h3>
     
-    <div style="color:#374151;line-height:1.6;font-size:14px;">
-      <div style="margin-bottom:14px;padding:14px;background:linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);border-left:4px solid #3b82f6;border-radius:8px;">
-        <div style="font-weight:800;font-size:15px;margin-bottom:6px;color:#1e40af;">📱 Score Buttons</div>
-        <ul style="margin:6px 0;padding-left:20px;">
+    <div style="color:#374151;line-height:1.6;font-size:13px;">
+      <div style="margin-bottom:12px;padding:12px;background:linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);border-left:4px solid #3b82f6;border-radius:8px;">
+        <div style="font-weight:800;font-size:14px;margin-bottom:5px;color:#1e40af;">📱 Basic Scoring</div>
+        <ul style="margin:4px 0;padding-left:18px;font-size:12px;">
           <li><strong>0-6</strong> - Runs scored by batsman</li>
-          <li><strong>WD</strong> (Wide) / <strong>NB</strong> (No Ball) - Extras</li>
+          <li><strong>OUT</strong> - Bowled, caught, LBW, stumped, etc.</li>
+          <li><strong>☰ More Options</strong> - Shows RUN OUT, WD+W, NB+W</li>
+        </ul>
+      </div>
+      
+      <div style="margin-bottom:12px;padding:12px;background:linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);border-left:4px solid #f59e0b;border-radius:8px;">
+        <div style="font-weight:800;font-size:14px;margin-bottom:5px;color:#92400e;">⚡ Extras & Wickets</div>
+        <ul style="margin:4px 0;padding-left:18px;font-size:12px;">
+          <li><strong>WD</strong> / <strong>NB</strong> - Then select overthrow runs (+0 to +6)</li>
           <li><strong>LB</strong> (Leg Bye) / <strong>BYE</strong> - Ball didn't hit bat</li>
-          <li>After WD/NB, select extra runs if any were taken</li>
+          <li><strong>WD+W</strong> / <strong>NB+W</strong> - Wide/No Ball with wicket</li>
+          <li><strong>RUN OUT</strong> - Dedicated button for run-out scenarios</li>
         </ul>
       </div>
       
-      <div style="margin-bottom:14px;padding:14px;background:linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);border-left:4px solid #f59e0b;border-radius:8px;">
-        <div style="font-weight:800;font-size:15px;margin-bottom:6px;color:#92400e;">🎯 Recording Wickets</div>
-        <ul style="margin:6px 0;padding-left:20px;">
-          <li>Tap <strong>OUT</strong> - For bowled, caught, LBW, etc.</li>
-          <li>Score runs <strong>then OUT</strong> - For run-outs</li>
-          <li><strong>WD+W</strong> / <strong>NB+W</strong> - Extra ball with wicket</li>
-          <li><strong>UNDO</strong> button reverses last action (unlimited)</li>
+      <div style="margin-bottom:12px;padding:12px;background:linear-gradient(135deg, #fce7f3 0%, #fbcfe8 100%);border-left:4px solid #ec4899;border-radius:8px;">
+        <div style="font-weight:800;font-size:14px;margin-bottom:5px;color:#9f1239;">🔄 Match Controls</div>
+        <ul style="margin:4px 0;padding-left:18px;font-size:12px;">
+          <li><strong>↶ UNDO</strong> - Reverses last action (unlimited)</li>
+          <li><strong>🏁 End Innings</strong> - Complete current innings</li>
+          <li><strong>Reset Match</strong> - Clear all data and start over</li>
         </ul>
       </div>
       
-      <div style="padding:14px;background:linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);border-left:4px solid #10b981;border-radius:8px;">
-        <div style="font-weight:800;font-size:15px;margin-bottom:6px;color:#065f46;">🔗 Share Link</div>
-        <ul style="margin:6px 0;padding-left:20px;">
-          <li>Tap <strong>Share</strong> button at top to get links</li>
-          <li><strong>View Link</strong> - Share with anyone to watch live</li>
-          <li><strong>Editor Link</strong> - Share with co-scorer to edit together</li>
+      <div style="padding:12px;background:linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);border-left:4px solid #10b981;border-radius:8px;">
+        <div style="font-weight:800;font-size:14px;margin-bottom:5px;color:#065f46;">🔗 Sharing</div>
+        <ul style="margin:4px 0;padding-left:18px;font-size:12px;">
+          <li><strong>Share on WhatsApp</strong> - Get view & edit links</li>
+          <li><strong>View Link</strong> - Read-only live scorecard</li>
+          <li><strong>Editor Link</strong> - Co-scorers can edit together</li>
+          <li><strong>Export/Share</strong> - Download or share scorecard</li>
         </ul>
       </div>
     </div>
     
-    <button onclick="closeHelpModal()" style="width:100%;margin-top:20px;padding:12px;background:linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);color:white;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;box-shadow:0 4px 12px rgba(59,130,246,0.3);">Got it!</button>
+    <button onclick="closeHelpModal()" style="width:100%;margin-top:18px;padding:12px;background:linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);color:white;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;box-shadow:0 4px 12px rgba(59,130,246,0.3);">Got it!</button>
   `;
   
   modalOverlay.appendChild(modalContent);
