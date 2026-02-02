@@ -669,11 +669,11 @@
           </div>
           
           <!-- 3-Column Table for Match Summary -->
-          <div style="overflow-x:auto;-webkit-overflow-scrolling:touch;">
-            <table id="matchSummaryTable" style="width:100%;border-collapse:collapse;background:#f8fafc;border-radius:12px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.05);">
+          <div>
+            <table id="matchSummaryTable" style="width:100%;border-collapse:collapse;background:#f8fafc;border-radius:12px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.05);table-layout:fixed;">
               <thead>
                 <tr style="background:linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);color:#fff;">
-                  <th rowspan="2" style="padding:8px 4px;font-size:12px;font-weight:700;text-align:center;border-right:1px solid rgba(255,255,255,0.2);width:40px;vertical-align:middle;">Ovs</th>
+                  <th rowspan="2" style="padding:6px 2px;font-size:11px;font-weight:700;text-align:center;border-right:1px solid rgba(255,255,255,0.2);width:32px;vertical-align:middle;">Ovs</th>
                   <th id="team1Header" style="padding:6px 6px 2px 6px;font-size:13px;font-weight:700;text-align:center;border-right:1px solid rgba(255,255,255,0.2);width:50%;">Team 1</th>
                   <th id="team2Header" style="padding:6px 6px 2px 6px;font-size:13px;font-weight:700;text-align:center;width:50%;">Team 2</th>
                 </tr>
@@ -1622,8 +1622,8 @@
           else if (sym === 4) bgColor = '#10b981';
           else if (sym === 0) bgColor = '#94a3b8';
           else if (typeof sym === 'string' && (sym.includes('WD') || sym.includes('NB') || sym.includes('B+') || sym.includes('LB+'))) bgColor = '#f59e0b';
-          return `<span style="display:inline-block;margin:2px;padding:3px 6px;border-radius:6px;background:${bgColor};color:#fff;font-weight:700;font-size:11px;">${sym}</span>`;
-        }).join('') : '<span style="color:#cbd5e1;font-size:12px;">—</span>';
+          return `<span style="display:inline-block;margin:1px;padding:2px 4px;border-radius:4px;background:${bgColor};color:#fff;font-weight:700;font-size:10px;">${sym}</span>`;
+        }).join('') : '<span style="color:#cbd5e1;font-size:11px;">—</span>';
         
         // Build balls HTML for second innings
         const secondBallsHtml = secondOver ? secondOver.map(sym => {
@@ -1634,13 +1634,13 @@
           else if (sym === 4) bgColor = '#10b981';
           else if (sym === 0) bgColor = '#94a3b8';
           else if (typeof sym === 'string' && (sym.includes('WD') || sym.includes('NB') || sym.includes('B+') || sym.includes('LB+'))) bgColor = '#f59e0b';
-          return `<span style="display:inline-block;margin:2px;padding:3px 6px;border-radius:6px;background:${bgColor};color:#fff;font-weight:700;font-size:11px;">${sym}</span>`;
-        }).join('') : '<span style="color:#cbd5e1;font-size:12px;">—</span>';
+          return `<span style="display:inline-block;margin:1px;padding:2px 4px;border-radius:4px;background:${bgColor};color:#fff;font-weight:700;font-size:10px;">${sym}</span>`;
+        }).join('') : '<span style="color:#cbd5e1;font-size:11px;">—</span>';
         
         tableHtml += `
           <tr style="border-bottom:1px solid #e2e8f0;">
-            <td style="padding:8px 4px;text-align:center;font-weight:700;color:#1f2937;font-size:12px;border-right:1px solid #e2e8f0;background:#f1f5f9;vertical-align:top;">${overNum}</td>
-            <td style="padding:8px 6px;border-right:1px solid #e2e8f0;background:#fff;vertical-align:top;width:50%;">
+            <td style="padding:6px 2px;text-align:center;font-weight:700;color:#1f2937;font-size:11px;border-right:1px solid #e2e8f0;background:#f1f5f9;vertical-align:top;">${overNum}</td>
+            <td style="padding:6px 4px;border-right:1px solid #e2e8f0;background:#fff;vertical-align:top;word-wrap:break-word;">
               ${firstStats ? `<div style="display:flex;align-items:center;justify-content:space-between;font-size:11px;margin-bottom:5px;padding:4px 6px;background:linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);border-radius:6px;border-left:3px solid #3b82f6;">
                 <span style="font-weight:700;color:#1e40af;">${firstCumulativeRuns}/${firstCumulativeWkts}</span>
                 <span style="display:flex;gap:6px;color:#64748b;font-weight:600;font-size:10px;">
@@ -1649,9 +1649,9 @@
                   ${firstStats.extras > 0 ? `<span style="display:inline-flex;align-items:center;gap:2px;background:#fff;padding:2px 5px;border-radius:4px;">\u2795 <strong style="color:#f59e0b;">${firstStats.extras}</strong></span>` : ''}
                 </span>
               </div>` : ''}
-              <div>${firstBallsHtml}</div>
+              <div style="line-height:1.4;">${firstBallsHtml}</div>
             </td>
-            <td style="padding:8px 6px;background:#fff;vertical-align:top;width:50%;">
+            <td style="padding:6px 4px;background:#fff;vertical-align:top;word-wrap:break-word;">
               ${secondStats ? `<div style="display:flex;align-items:center;justify-content:space-between;font-size:11px;margin-bottom:5px;padding:4px 6px;background:linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);border-radius:6px;border-left:3px solid #3b82f6;">
                 <span style="font-weight:700;color:#1e40af;">${secondCumulativeRuns}/${secondCumulativeWkts}</span>
                 <span style="display:flex;gap:6px;color:#64748b;font-weight:600;font-size:10px;">
@@ -1660,7 +1660,7 @@
                   ${secondStats.extras > 0 ? `<span style="display:inline-flex;align-items:center;gap:2px;background:#fff;padding:2px 5px;border-radius:4px;">\u2795 <strong style="color:#f59e0b;">${secondStats.extras}</strong></span>` : ''}
                 </span>
               </div>` : ''}
-              <div>${secondBallsHtml}</div>
+              <div style="line-height:1.4;">${secondBallsHtml}</div>
             </td>
           </tr>
         `;
