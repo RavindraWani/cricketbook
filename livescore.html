@@ -661,35 +661,37 @@
             </div>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
 
-        <!-- Match Summary (shown from start, updates in real-time) -->
-        <div id="matchSummary" style="margin-top:20px;">
-          <div style="font-size:16px;font-weight:700;color:var(--text-primary);margin-bottom:16px;text-align:center;">
-            📊 MATCH SUMMARY
-          </div>
-          
-          <!-- 3-Column Table for Match Summary -->
-          <div>
-            <table id="matchSummaryTable" style="width:100%;border-collapse:collapse;background:#f8fafc;border-radius:12px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.05);table-layout:fixed;">
-              <thead>
-                <tr style="background:linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);color:#fff;">
-                  <th rowspan="2" style="padding:6px 1px;font-size:14px;font-weight:700;text-align:center;border-right:1px solid rgba(255,255,255,0.2);width:26px;vertical-align:middle;">⏱</th>
-                  <th id="team1Header" style="padding:6px 6px 2px 6px;font-size:13px;font-weight:700;text-align:center;border-right:1px solid rgba(255,255,255,0.2);width:50%;">Team 1</th>
-                  <th id="team2Header" style="padding:6px 6px 2px 6px;font-size:13px;font-weight:700;text-align:center;width:50%;">Team 2</th>
-                </tr>
-                <tr style="background:linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);color:#fff;">
-                  <th id="team1Stats" style="padding:4px 8px 8px 8px;font-size:11px;font-weight:600;text-align:center;border-right:1px solid rgba(255,255,255,0.2);opacity:0.95;letter-spacing:0.3px;line-height:1.6;">—</th>
-                  <th id="team2Stats" style="padding:4px 8px 8px 8px;font-size:11px;font-weight:600;text-align:center;opacity:0.95;letter-spacing:0.3px;line-height:1.6;">—</th>
-                </tr>
-              </thead>
-              <tbody id="matchSummaryBody">
-                <tr>
-                  <td colspan="3" style="text-align:center;color:#94a3b8;padding:20px;font-size:13px;">No overs bowled yet</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
+  <!-- Match Summary - Full Width Section -->
+  <div id="matchSummary" style="margin-top:24px;">
+    <div style="max-width:480px;margin:0 auto;padding:20px 0;background:var(--card-bg);border-top:3px solid var(--table-border);border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+      <div style="font-size:18px;font-weight:800;color:var(--text-primary);margin-bottom:20px;text-align:center;letter-spacing:0.5px;">
+        📊 MATCH SUMMARY
+      </div>
+      
+      <!-- 3-Column Table for Match Summary -->
+      <div style="padding:0 16px;">
+        <table id="matchSummaryTable" style="width:100%;border-collapse:collapse;background:var(--table-bg);border-radius:12px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.06);table-layout:fixed;">
+          <thead>
+            <tr style="background:linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);color:#fff;">
+              <th rowspan="2" style="padding:6px 1px;font-size:14px;font-weight:700;text-align:center;border-right:1px solid rgba(255,255,255,0.2);width:26px;vertical-align:middle;">⏱</th>
+              <th id="team1Header" style="padding:6px 6px 2px 6px;font-size:13px;font-weight:700;text-align:center;border-right:1px solid rgba(255,255,255,0.2);width:50%;">Team 1</th>
+              <th id="team2Header" style="padding:6px 6px 2px 6px;font-size:13px;font-weight:700;text-align:center;width:50%;">Team 2</th>
+            </tr>
+            <tr style="background:linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);color:#fff;">
+              <th id="team1Stats" style="padding:4px 8px 8px 8px;font-size:11px;font-weight:600;text-align:center;border-right:1px solid rgba(255,255,255,0.2);opacity:0.95;letter-spacing:0.3px;line-height:1.6;">—</th>
+              <th id="team2Stats" style="padding:4px 8px 8px 8px;font-size:11px;font-weight:600;text-align:center;opacity:0.95;letter-spacing:0.3px;line-height:1.6;">—</th>
+            </tr>
+          </thead>
+          <tbody id="matchSummaryBody">
+            <tr>
+              <td colspan="3" style="text-align:center;color:#94a3b8;padding:20px;font-size:13px;">No overs bowled yet</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
@@ -1546,21 +1548,21 @@
       
       // Update team stats row with better formatting
       document.getElementById('team1Stats').innerHTML = `
-        <div style="display:flex;justify-content:center;align-items:center;gap:8px;flex-wrap:wrap;">
-          <span style="display:inline-flex;align-items:center;gap:3px;">⏱ <strong>${team1Overs}</strong></span>
+        <div style="display:flex;justify-content:center;align-items:center;gap:4px;flex-wrap:wrap;">
+          <span style="display:inline-flex;align-items:center;gap:2px;">⏱ <strong>${team1Overs}</strong></span>
           <span style="opacity:0.6;">•</span>
-          <span style="display:inline-flex;align-items:center;gap:3px;">📈 <strong>${team1RR}</strong></span>
+          <span style="display:inline-flex;align-items:center;gap:2px;">📈 <strong>${team1RR}</strong></span>
           <span style="opacity:0.6;">•</span>
-          <span style="display:inline-flex;align-items:center;gap:3px;">➕ <strong>${team1Extras}</strong></span>
+          <span style="display:inline-flex;align-items:center;gap:2px;">➕ <strong>${team1Extras}</strong></span>
         </div>
       `;
       document.getElementById('team2Stats').innerHTML = data.inSecond ? `
-        <div style="display:flex;justify-content:center;align-items:center;gap:8px;flex-wrap:wrap;">
-          <span style="display:inline-flex;align-items:center;gap:3px;">⏱ <strong>${team2Overs}</strong></span>
+        <div style="display:flex;justify-content:center;align-items:center;gap:4px;flex-wrap:wrap;">
+          <span style="display:inline-flex;align-items:center;gap:2px;">⏱ <strong>${team2Overs}</strong></span>
           <span style="opacity:0.6;">•</span>
-          <span style="display:inline-flex;align-items:center;gap:3px;">📈 <strong>${team2RR}</strong></span>
+          <span style="display:inline-flex;align-items:center;gap:2px;">📈 <strong>${team2RR}</strong></span>
           <span style="opacity:0.6;">•</span>
-          <span style="display:inline-flex;align-items:center;gap:3px;">➕ <strong>${team2Extras}</strong></span>
+          <span style="display:inline-flex;align-items:center;gap:2px;">➕ <strong>${team2Extras}</strong></span>
         </div>
       ` : '—';
       
