@@ -77,6 +77,8 @@
     --text-primary: #1f2937;
     --text-secondary: #6b7280;
     --text-tertiary: #94a3b8;
+    --table-bg: #f8fafc;
+    --table-border: #e2e8f0;
     --nav-text: #ffffff;
     --badge-bg: rgba(255, 255, 255, 0.15);
     --badge-border: rgba(255, 255, 255, 0.1);
@@ -102,6 +104,8 @@
     --text-primary: #f1f5f9;
     --text-secondary: #cbd5e1;
     --text-tertiary: #64748b;
+    --table-bg: #0f172a;
+    --table-border: #334155;
     --nav-text: #f1f5f9;
     --badge-bg: rgba(255, 255, 255, 0.1);
     --badge-border: rgba(255, 255, 255, 0.05);
@@ -141,6 +145,17 @@
     box-shadow:0 10px 40px rgba(0,0,0,.12), 0 2px 8px rgba(0,0,0,.08);
     position:relative;
     transition: background 0.3s ease, border-color 0.3s ease;
+  }
+  .card-no-padding {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 20px;
+    padding: 0 5px;
+    box-shadow: 0 10px 40px rgba(0,0,0,.12), 0 2px 8px rgba(0,0,0,.08);
+    position: relative;
+    color: var(--text-primary);
+    overflow: hidden;
+    transition: background 0.3s ease, border-color 0.3s ease, color 0.3s ease;
   }
   #game.card {
     max-width:480px;
@@ -1592,35 +1607,7 @@
       <a href="javascript:void(0)" onclick="deleteCurrentMatch()" style="color:#fff;text-decoration:none;font-size:14px;font-weight:700;padding:10px 0;border-radius:10px;background:linear-gradient(135deg, #dc2626 0%, #991b1b 100%);border:none;display:flex;align-items:center;justify-content:center;transition:all 0.2s ease;text-align:center;box-shadow:0 2px 8px rgba(220,38,38,0.4);" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 4px 12px rgba(220,38,38,0.5)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 2px 8px rgba(220,38,38,0.4)'">🗑️ Delete Match</a>
     </div>
 
-    <!-- Match Summary -->
-    <div id="matchSummary" style="margin-top:20px;">
-      <div style="font-size:16px;font-weight:700;color:var(--text-primary);margin-bottom:16px;text-align:center;">
-        📊 MATCH SUMMARY
-      </div>
-      
-      <!-- 3-Column Table for Match Summary -->
-      <div style="overflow-x:auto;-webkit-overflow-scrolling:touch;">
-        <table id="matchSummaryTable" style="width:100%;border-collapse:collapse;background:#f8fafc;border-radius:12px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.05);">
-          <thead>
-            <tr style="background:linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);color:#fff;">
-              <th rowspan="2" style="padding:8px 4px;font-size:12px;font-weight:700;text-align:center;border-right:1px solid rgba(255,255,255,0.2);width:40px;vertical-align:middle;">Ovs</th>
-              <th id="team1Header" style="padding:6px 6px 2px 6px;font-size:13px;font-weight:700;text-align:center;border-right:1px solid rgba(255,255,255,0.2);width:50%;">Team 1</th>
-              <th id="team2Header" style="padding:6px 6px 2px 6px;font-size:13px;font-weight:700;text-align:center;width:50%;">Team 2</th>
-            </tr>
-            <tr style="background:linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);color:#fff;">
-              <th id="team1Stats" style="padding:2px 6px 6px 6px;font-size:10px;font-weight:600;text-align:center;border-right:1px solid rgba(255,255,255,0.2);opacity:0.9;">—</th>
-              <th id="team2Stats" style="padding:2px 6px 6px 6px;font-size:10px;font-weight:600;text-align:center;opacity:0.9;">—</th>
-            </tr>
-          </thead>
-          <tbody id="matchSummaryBody">
-            <tr>
-              <td colspan="3" style="text-align:center;color:#94a3b8;padding:20px;font-size:13px;">No overs bowled yet</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
+   
     <!-- Action Buttons -->
     <div style="margin-top:12px;padding:12px 0;border-top:1px solid #e5e7eb;display:grid;grid-template-columns:1fr 1fr;gap:8px 12px;">
       <!-- WhatsApp Viewer Link Button -->
@@ -1663,7 +1650,157 @@
         <span>Export/Share</span>
       </a>
     </div>
+  </div>
 
+  <!-- Win Probability (Compact Design) -->
+  <div id="winProbabilityCompact" style="margin-top:20px;margin-bottom:12px;padding:0 16px 12px 16px;background:var(--card-bg);border-radius:10px;box-shadow:0 2px 6px rgba(0,0,0,0.08);display:none;">
+    <!-- Header -->
+    <div style="font-size:9px;color:var(--text-secondary);font-weight:700;text-align:center;padding-top:12px;margin-bottom:8px;letter-spacing:0.5px;">
+      📊 WIN PROBABILITY
+    </div>
+    
+    <!-- Visual Progress Bar -->
+    <div style="height:10px;background:linear-gradient(90deg, #e2e8f0 0%, #e2e8f0 100%);border-radius:20px;overflow:hidden;position:relative;box-shadow:inset 0 2px 4px rgba(0,0,0,0.1);margin-bottom:8px;">
+      <div id="winProbBar" style="height:100%;background:linear-gradient(90deg, #3b82f6 0%, #8b5cf6 100%);width:50%;transition:width 0.5s ease;border-radius:20px;box-shadow:0 0 8px rgba(59,130,246,0.5);"></div>
+    </div>
+    
+    <!-- Team Percentages Row -->
+    <div style="display:flex;justify-content:space-between;align-items:center;">
+      <!-- Team 1 -->
+      <div style="flex:1;text-align:left;">
+        <span style="font-size:10px;color:var(--text-secondary);font-weight:600;" id="winTeam1Name">Team A</span>
+        <span style="font-size:14px;font-weight:900;margin-left:4px;background:linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;" id="winTeam1Prob">50%</span>
+      </div>
+      
+      <!-- Match Phase -->
+      <div style="font-size:8px;color:var(--text-tertiary);font-weight:600;text-align:center;flex:0 0 auto;padding:0 8px;" id="matchPhase">—</div>
+      
+      <!-- Team 2 -->
+      <div style="flex:1;text-align:right;">
+        <span style="font-size:14px;font-weight:900;margin-right:4px;background:linear-gradient(135deg, #8b5cf6 0%, #3b82f6 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;" id="winTeam2Prob">50%</span>
+        <span style="font-size:10px;color:var(--text-secondary);font-weight:600;" id="winTeam2Name">Team B</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Live Stats Comparison -->
+  <div id="liveStatsComparison" style="margin-top:20px;display:none;">
+    <!-- Row 1: Sixes, Fours, Threes, Twos -->
+    <div style="background:var(--card-bg);border-radius:10px;padding:10px 12px;box-shadow:0 2px 6px rgba(0,0,0,0.08);margin-bottom:8px;display:flex;justify-content:space-around;align-items:center;gap:6px;">
+      <!-- Sixes -->
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;">
+        <div style="font-size:9px;color:var(--text-secondary);font-weight:600;">🚀 SIXES</div>
+        <div style="display:flex;gap:3px;align-items:center;">
+          <span style="font-size:15px;font-weight:900;color:#8b5cf6;" id="team1Sixes">0</span>
+          <span style="font-size:10px;color:var(--text-secondary);">-</span>
+          <span style="font-size:15px;font-weight:900;color:#8b5cf6;" id="team2Sixes">0</span>
+        </div>
+      </div>
+      
+      <!-- Fours -->
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;">
+        <div style="font-size:9px;color:var(--text-secondary);font-weight:600;">⚡ FOURS</div>
+        <div style="display:flex;gap:3px;align-items:center;">
+          <span style="font-size:15px;font-weight:900;color:#3b82f6;" id="team1Fours">0</span>
+          <span style="font-size:10px;color:var(--text-secondary);">-</span>
+          <span style="font-size:15px;font-weight:900;color:#3b82f6;" id="team2Fours">0</span>
+        </div>
+      </div>
+      
+      <!-- Threes -->
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;">
+        <div style="font-size:9px;color:var(--text-secondary);font-weight:600;">3️⃣ 3s</div>
+        <div style="display:flex;gap:3px;align-items:center;">
+          <span style="font-size:15px;font-weight:900;color:#06b6d4;" id="team1Threes">0</span>
+          <span style="font-size:10px;color:var(--text-secondary);">-</span>
+          <span style="font-size:15px;font-weight:900;color:#06b6d4;" id="team2Threes">0</span>
+        </div>
+      </div>
+      
+      <!-- Twos -->
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;">
+        <div style="font-size:9px;color:var(--text-secondary);font-weight:600;">2️⃣ 2s</div>
+        <div style="display:flex;gap:3px;align-items:center;">
+          <span style="font-size:15px;font-weight:900;color:#14b8a6;" id="team1Twos">0</span>
+          <span style="font-size:10px;color:var(--text-secondary);">-</span>
+          <span style="font-size:15px;font-weight:900;color:#14b8a6;" id="team2Twos">0</span>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Row 2: Singles, Wickets, Dots, Extras -->
+    <div style="background:var(--card-bg);border-radius:10px;padding:10px 12px;box-shadow:0 2px 6px rgba(0,0,0,0.08);margin-bottom:12px;display:flex;justify-content:space-around;align-items:center;gap:6px;">
+      <!-- Singles -->
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;">
+        <div style="font-size:9px;color:var(--text-secondary);font-weight:600;">1️⃣ 1s</div>
+        <div style="display:flex;gap:3px;align-items:center;">
+          <span style="font-size:15px;font-weight:900;color:#84cc16;" id="team1Singles">0</span>
+          <span style="font-size:10px;color:var(--text-secondary);">-</span>
+          <span style="font-size:15px;font-weight:900;color:#84cc16;" id="team2Singles">0</span>
+        </div>
+      </div>
+      
+      <!-- Wickets -->
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;">
+        <div style="font-size:9px;color:var(--text-secondary);font-weight:600;">🎯 Ws</div>
+        <div style="display:flex;gap:3px;align-items:center;">
+          <span style="font-size:15px;font-weight:900;color:#dc2626;" id="team1Wickets">0</span>
+          <span style="font-size:10px;color:var(--text-secondary);">-</span>
+          <span style="font-size:15px;font-weight:900;color:#dc2626;" id="team2Wickets">0</span>
+        </div>
+      </div>
+      
+      <!-- Dot Balls -->
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;">
+        <div style="font-size:9px;color:var(--text-secondary);font-weight:600;">⏸️ DOTS</div>
+        <div style="display:flex;gap:3px;align-items:center;">
+          <span style="font-size:15px;font-weight:900;color:#f59e0b;" id="team1Dots">0</span>
+          <span style="font-size:10px;color:var(--text-secondary);">-</span>
+          <span style="font-size:15px;font-weight:900;color:#f59e0b;" id="team2Dots">0</span>
+        </div>
+      </div>
+      
+      <!-- Extras -->
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;">
+        <div style="font-size:9px;color:var(--text-secondary);font-weight:600;">➕ EXTRAS</div>
+        <div style="display:flex;gap:3px;align-items:center;">
+          <span style="font-size:15px;font-weight:900;color:#10b981;" id="team1ExtrasDisplay">0</span>
+          <span style="font-size:10px;color:var(--text-secondary);">-</span>
+          <span style="font-size:15px;font-weight:900;color:#10b981;" id="team2ExtrasDisplay">0</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Match Summary -->
+  <div id="matchSummary" style="display:none;margin-top:20px;">
+    <div class="card-no-padding">
+      <div style="font-size:18px;font-weight:800;color:var(--text-primary);margin-bottom:0;padding:20px 20px 16px 20px;text-align:center;letter-spacing:0.5px;">
+        📊 MATCH SUMMARY
+      </div>
+      
+      <!-- 3-Column Table for Match Summary -->
+      <div>
+        <table id="matchSummaryTable" style="width:100%;border-collapse:collapse;background:var(--table-bg);border-radius:12px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.06);table-layout:fixed;">
+          <thead>
+            <tr style="background:linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);color:#fff;">
+              <th rowspan="2" style="padding:6px 1px;font-size:14px;font-weight:700;text-align:center;border-right:1px solid rgba(255,255,255,0.2);width:26px;vertical-align:middle;">⏱</th>
+              <th id="team1Header" style="padding:6px 6px 2px 6px;font-size:13px;font-weight:700;text-align:center;border-right:1px solid rgba(255,255,255,0.2);width:50%;">Team 1</th>
+              <th id="team2Header" style="padding:6px 6px 2px 6px;font-size:13px;font-weight:700;text-align:center;width:50%;">Team 2</th>
+            </tr>
+            <tr style="background:linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);color:#fff;">
+              <th id="team1Stats" style="padding:4px 8px 8px 8px;font-size:11px;font-weight:600;text-align:center;border-right:1px solid rgba(255,255,255,0.2);opacity:0.95;letter-spacing:0.3px;line-height:1.6;">—</th>
+              <th id="team2Stats" style="padding:4px 8px 8px 8px;font-size:11px;font-weight:600;text-align:center;opacity:0.95;letter-spacing:0.3px;line-height:1.6;">—</th>
+            </tr>
+          </thead>
+          <tbody id="matchSummaryBody">
+            <tr>
+              <td colspan="3" style="text-align:center;color:var(--text-tertiary);padding:20px;font-size:13px;">No overs bowled yet</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
   </div>
 
 </div>
@@ -1940,6 +2077,9 @@ function updateUI(){
   
   // Update match summary display
   updateMatchSummary();
+  
+  // Update live stats and win probability
+  updateLiveStats();
 }
 
 // Update Match Summary Table
@@ -1962,9 +2102,25 @@ function updateMatchSummary() {
   document.getElementById('team1Header').textContent = `${teamA || 'Team 1'} - ${team1Runs}/${team1Wkts}`;
   document.getElementById('team2Header').textContent = `${teamB || 'Team 2'} - ${team2Runs}/${team2Wkts}`;
   
-  // Update team stats row
-  document.getElementById('team1Stats').textContent = `(${team1Overs} ovs) | RR: ${team1RR} | Exts: ${team1Extras}`;
-  document.getElementById('team2Stats').textContent = inSecond ? `(${team2Overs} ovs) | RR: ${team2RR} | Exts: ${team2Extras}` : '—';
+  // Update team stats row with better formatting
+  document.getElementById('team1Stats').innerHTML = `
+    <div style="display:flex;justify-content:center;align-items:center;gap:4px;flex-wrap:wrap;">
+      <span style="display:inline-flex;align-items:center;gap:2px;">⏱ <strong>${team1Overs}</strong></span>
+      <span style="opacity:0.6;">•</span>
+      <span style="display:inline-flex;align-items:center;gap:2px;">📈 <strong>${team1RR}</strong></span>
+      <span style="opacity:0.6;">•</span>
+      <span style="display:inline-flex;align-items:center;gap:2px;">➕ <strong>${team1Extras}</strong></span>
+    </div>
+  `;
+  document.getElementById('team2Stats').innerHTML = inSecond ? `
+    <div style="display:flex;justify-content:center;align-items:center;gap:4px;flex-wrap:wrap;">
+      <span style="display:inline-flex;align-items:center;gap:2px;">⏱ <strong>${team2Overs}</strong></span>
+      <span style="opacity:0.6;">•</span>
+      <span style="display:inline-flex;align-items:center;gap:2px;">📈 <strong>${team2RR}</strong></span>
+      <span style="opacity:0.6;">•</span>
+      <span style="display:inline-flex;align-items:center;gap:2px;">➕ <strong>${team2Extras}</strong></span>
+    </div>
+  ` : '—';
   
   // Get all overs for both innings
   const firstOvers = [...(first.overs || [])];
@@ -1985,7 +2141,7 @@ function updateMatchSummary() {
   const maxOvers = Math.max(firstOvers.length, secondOvers.length);
   
   if (maxOvers === 0) {
-    document.getElementById('matchSummaryBody').innerHTML = '<tr><td colspan="3" style="text-align:center;color:#94a3b8;padding:20px;font-size:13px;">No overs bowled yet</td></tr>';
+    document.getElementById('matchSummaryBody').innerHTML = '<tr><td colspan="3" style="text-align:center;color:var(--text-tertiary);padding:20px;font-size:13px;">No overs bowled yet</td></tr>';
     return;
   }
   
@@ -2020,41 +2176,299 @@ function updateMatchSummary() {
       const isWicket = /W$/.test(sym) || /\+W$/.test(sym);
       let bgColor = '#3b82f6';
       if (isWicket) bgColor = '#e31d1d';
-      else if (sym === 6 || sym === '6') bgColor = '#f59e0b';
-      else if (sym === 4 || sym === '4') bgColor = '#10b981';
-      else if (sym === 0 || sym === '0') bgColor = '#94a3b8';
+      else if (sym === 6) bgColor = '#f59e0b';
+      else if (sym === 4) bgColor = '#10b981';
+      else if (sym === 0) bgColor = '#94a3b8';
       else if (typeof sym === 'string' && (sym.includes('WD') || sym.includes('NB') || sym.includes('B+') || sym.includes('LB+'))) bgColor = '#f59e0b';
-      return `<span style="display:inline-block;margin:2px;padding:3px 6px;border-radius:6px;background:${bgColor};color:#fff;font-weight:700;font-size:11px;">${sym}</span>`;
-    }).join('') : '<span style="color:#cbd5e1;font-size:12px;">—</span>';
+      return `<span style="display:inline-block;margin:1px;padding:2px 4px;border-radius:4px;background:${bgColor};color:#fff;font-weight:700;font-size:10px;">${sym}</span>`;
+    }).join('') : '<span style="color:#cbd5e1;font-size:11px;">—</span>';
     
     // Build balls HTML for second innings
     const secondBallsHtml = secondOver ? secondOver.map(sym => {
       const isWicket = /W$/.test(sym) || /\+W$/.test(sym);
       let bgColor = '#3b82f6';
       if (isWicket) bgColor = '#e31d1d';
-      else if (sym === 6 || sym === '6') bgColor = '#f59e0b';
-      else if (sym === 4 || sym === '4') bgColor = '#10b981';
-      else if (sym === 0 || sym === '0') bgColor = '#94a3b8';
+      else if (sym === 6) bgColor = '#f59e0b';
+      else if (sym === 4) bgColor = '#10b981';
+      else if (sym === 0) bgColor = '#94a3b8';
       else if (typeof sym === 'string' && (sym.includes('WD') || sym.includes('NB') || sym.includes('B+') || sym.includes('LB+'))) bgColor = '#f59e0b';
-      return `<span style="display:inline-block;margin:2px;padding:3px 6px;border-radius:6px;background:${bgColor};color:#fff;font-weight:700;font-size:11px;">${sym}</span>`;
-    }).join('') : '<span style="color:#cbd5e1;font-size:12px;">—</span>';
+      return `<span style="display:inline-block;margin:1px;padding:2px 4px;border-radius:4px;background:${bgColor};color:#fff;font-weight:700;font-size:10px;">${sym}</span>`;
+    }).join('') : '<span style="color:#cbd5e1;font-size:11px;">—</span>';
     
     tableHtml += `
-      <tr style="border-bottom:1px solid #e2e8f0;">
-        <td style="padding:8px 4px;text-align:center;font-weight:700;color:#1f2937;font-size:12px;border-right:1px solid #e2e8f0;background:#f1f5f9;vertical-align:top;">${overNum}</td>
-        <td style="padding:8px 6px;border-right:1px solid #e2e8f0;background:#fff;vertical-align:top;width:50%;">
-          ${firstStats ? `<div style="font-size:10px;color:#64748b;font-weight:600;margin-bottom:4px;">(${firstCumulativeRuns}/${firstCumulativeWkts}) R:${firstStats.runs} | W:${firstStats.wkts}</div>` : ''}
-          <div>${firstBallsHtml}</div>
+      <tr style="border-bottom:1px solid var(--table-border);">
+        <td style="padding:6px 2px;text-align:center;font-weight:700;color:var(--text-primary);font-size:11px;border-right:1px solid var(--table-border);background:var(--card-bg);vertical-align:top;">${overNum}</td>
+        <td style="padding:6px 4px;border-right:1px solid var(--table-border);background:var(--card-bg);vertical-align:top;word-wrap:break-word;">
+          ${firstStats ? `<div style="display:flex;align-items:center;flex-wrap:wrap;gap:4px;font-size:10px;margin-bottom:4px;padding:3px 4px;background:var(--table-bg);border-radius:4px;border-left:2px solid #3b82f6;">
+            <span style="font-weight:700;color:var(--text-primary);font-size:11px;">${firstCumulativeRuns}/${firstCumulativeWkts}</span>
+            <span style="display:inline-flex;align-items:center;gap:1px;background:var(--card-bg);padding:1px 3px;border-radius:3px;">🎯<strong style="color:#059669;font-size:9px;">${firstStats.runs}</strong></span>
+            ${firstStats.wkts > 0 ? `<span style="display:inline-flex;align-items:center;gap:1px;background:var(--card-bg);padding:1px 3px;border-radius:3px;">🔴<strong style="color:#dc2626;font-size:9px;">${firstStats.wkts}</strong></span>` : ''}
+            ${firstStats.extras > 0 ? `<span style="display:inline-flex;align-items:center;gap:1px;background:var(--card-bg);padding:1px 3px;border-radius:3px;">➕<strong style="color:#f59e0b;font-size:9px;">${firstStats.extras}</strong></span>` : ''}
+          </div>` : ''}
+          <div style="line-height:1.4;">${firstBallsHtml}</div>
         </td>
-        <td style="padding:8px 6px;background:#fff;vertical-align:top;width:50%;">
-          ${secondStats ? `<div style="font-size:10px;color:#64748b;font-weight:600;margin-bottom:4px;">(${secondCumulativeRuns}/${secondCumulativeWkts}) R:${secondStats.runs} | W:${secondStats.wkts}</div>` : ''}
-          <div>${secondBallsHtml}</div>
+        <td style="padding:6px 4px;background:var(--card-bg);vertical-align:top;word-wrap:break-word;">
+          ${secondStats ? `<div style="display:flex;align-items:center;flex-wrap:wrap;gap:4px;font-size:10px;margin-bottom:4px;padding:3px 4px;background:var(--table-bg);border-radius:4px;border-left:2px solid #3b82f6;">
+            <span style="font-weight:700;color:var(--text-primary);font-size:11px;">${secondCumulativeRuns}/${secondCumulativeWkts}</span>
+            <span style="display:inline-flex;align-items:center;gap:1px;background:var(--card-bg);padding:1px 3px;border-radius:3px;">🎯<strong style="color:#059669;font-size:9px;">${secondStats.runs}</strong></span>
+            ${secondStats.wkts > 0 ? `<span style="display:inline-flex;align-items:center;gap:1px;background:var(--card-bg);padding:1px 3px;border-radius:3px;">🔴<strong style="color:#dc2626;font-size:9px;">${secondStats.wkts}</strong></span>` : ''}
+            ${secondStats.extras > 0 ? `<span style="display:inline-flex;align-items:center;gap:1px;background:var(--card-bg);padding:1px 3px;border-radius:3px;">➕<strong style="color:#f59e0b;font-size:9px;">${secondStats.extras}</strong></span>` : ''}
+          </div>` : ''}
+          <div style="line-height:1.4;">${secondBallsHtml}</div>
         </td>
       </tr>
     `;
   }
   
   document.getElementById('matchSummaryBody').innerHTML = tableHtml;
+}
+
+// Calculate batting statistics for an innings
+function calculateBattingStats(inn) {
+  let sixes = 0;
+  let fours = 0;
+  let threes = 0;
+  let twos = 0;
+  let singles = 0;
+  let dots = 0;
+  
+  // Helper function to process ball
+  const processBall = (ball) => {
+    if (typeof ball === 'string') {
+      // Extract numeric value from ball notation
+      let runs = 0;
+      
+      // Check for wicket balls (can have runs)
+      if (ball.includes('W+')) {
+        const match = ball.match(/W\+(\d+)/);
+        if (match) runs = parseInt(match[1]);
+      }
+      // Check for wide with runs
+      else if (ball.includes('WD+')) {
+        const match = ball.match(/WD\+(\d+)/);
+        if (match) runs = parseInt(match[1]);
+      }
+      // Check for no ball with runs
+      else if (ball.includes('NB+')) {
+        const match = ball.match(/NB\+(\d+)/);
+        if (match) runs = parseInt(match[1]);
+      }
+      // Check for byes/leg byes (don't count as batting stats)
+      else if (ball.includes('B+') || ball.includes('LB+')) {
+        return; // Skip byes and leg byes
+      }
+      // Regular ball or just wicket
+      else if (ball === 'W' || ball === 'WD' || ball === 'NB') {
+        return; // No runs off the bat
+      }
+      // Numeric value
+      else {
+        runs = parseInt(ball) || 0;
+      }
+      
+      // Count stats
+      if (runs === 6) sixes++;
+      else if (runs === 4) fours++;
+      else if (runs === 3) threes++;
+      else if (runs === 2) twos++;
+      else if (runs === 1) singles++;
+      else if (runs === 0 && ball !== 'WD' && ball !== 'NB' && !ball.includes('WD') && !ball.includes('NB') && !ball.includes('B+') && !ball.includes('LB+')) {
+        dots++;
+      }
+    } else if (typeof ball === 'number') {
+      if (ball === 6) sixes++;
+      else if (ball === 4) fours++;
+      else if (ball === 3) threes++;
+      else if (ball === 2) twos++;
+      else if (ball === 1) singles++;
+      else if (ball === 0) dots++;
+    }
+  };
+  
+  // Process completed overs
+  if (inn && inn.overs && inn.overs.length > 0) {
+    inn.overs.forEach(over => {
+      if (over && over.length > 0) {
+        over.forEach(processBall);
+      }
+    });
+  }
+  
+  // Process current over
+  if (inn && inn.curOver && inn.curOver.length > 0) {
+    inn.curOver.forEach(processBall);
+  }
+  
+  return { sixes, fours, threes, twos, singles, dots };
+}
+
+// Update live stats comparison section
+function updateLiveStats() {
+  const liveStatsSection = document.getElementById('liveStatsComparison');
+  
+  // Show section only if match has started
+  const hasStarted = (first && first.legalBalls > 0) || (second && second.legalBalls > 0);
+  if (!hasStarted) {
+    liveStatsSection.style.display = 'none';
+    return;
+  }
+  
+  liveStatsSection.style.display = 'block';
+  
+  // Calculate stats for both teams
+  const team1Stats = calculateBattingStats(first);
+  const team2Stats = calculateBattingStats(second);
+  
+  const team1Extras = calculateExtrasForInnings(first);
+  const team2Extras = calculateExtrasForInnings(second);
+  
+  // Update stat values
+  document.getElementById('team1Sixes').textContent = team1Stats.sixes;
+  document.getElementById('team2Sixes').textContent = team2Stats.sixes;
+  document.getElementById('team1Fours').textContent = team1Stats.fours;
+  document.getElementById('team2Fours').textContent = team2Stats.fours;
+  document.getElementById('team1Threes').textContent = team1Stats.threes;
+  document.getElementById('team2Threes').textContent = team2Stats.threes;
+  document.getElementById('team1Twos').textContent = team1Stats.twos;
+  document.getElementById('team2Twos').textContent = team2Stats.twos;
+  document.getElementById('team1Singles').textContent = team1Stats.singles;
+  document.getElementById('team2Singles').textContent = team2Stats.singles;
+  document.getElementById('team1Wickets').textContent = first.wkts || 0;
+  document.getElementById('team2Wickets').textContent = second.wkts || 0;
+  document.getElementById('team1Dots').textContent = team1Stats.dots;
+  document.getElementById('team2Dots').textContent = team2Stats.dots;
+  document.getElementById('team1ExtrasDisplay').textContent = team1Extras;
+  document.getElementById('team2ExtrasDisplay').textContent = team2Extras;
+  
+  // Update Win Probability
+  updateWinProbability();
+}
+
+// Calculate and update Win Probability
+function updateWinProbability() {
+  // Update team names
+  document.getElementById('winTeam1Name').textContent = teamA || 'Team A';
+  document.getElementById('winTeam2Name').textContent = teamB || 'Team B';
+  
+  let team1Prob = 50;
+  let team2Prob = 50;
+  let phaseText = '—';
+  
+  // Check if match is completed
+  const isMatchCompleted = matchCompleted || (first.done && second.done);
+  
+  if (isMatchCompleted) {
+    // Match completed - 100% to winner
+    if (resultText) {
+      if (resultText.includes(teamA)) {
+        team1Prob = 100;
+        team2Prob = 0;
+      } else if (resultText.includes(teamB)) {
+        team1Prob = 0;
+        team2Prob = 100;
+      }
+    }
+    phaseText = 'Match Completed';
+  } else if (inSecond && second) {
+    // Second innings - chasing scenario
+    const targetScore = (first.runs || 0) + 1;
+    const currentScore = second.runs || 0;
+    const wicketsLost = second.wkts || 0;
+    const ballsRemaining = (oversLimit * 6) - (second.legalBalls || 0);
+    const runsNeeded = targetScore - currentScore;
+    
+    if (runsNeeded <= 0) {
+      // Team 2 has won
+      team1Prob = 0;
+      team2Prob = 100;
+      phaseText = 'Target Achieved';
+    } else if (wicketsLost >= wicketsLimit || ballsRemaining <= 0) {
+      // Team 1 has won (all out or overs completed)
+      team1Prob = 100;
+      team2Prob = 0;
+      phaseText = 'Target Failed';
+    } else {
+      // Calculate win probability based on chase
+      const requiredRunRate = ballsRemaining > 0 ? (runsNeeded * 6) / ballsRemaining : 999;
+      const currentRunRate = (second.legalBalls || 0) > 0 ? 
+                              (currentScore * 6) / second.legalBalls : 0;
+      
+      // Wickets factor (each wicket reduces probability significantly)
+      const wicketsInHand = wicketsLimit - wicketsLost;
+      const wicketsFactor = wicketsInHand / wicketsLimit;
+      
+      // Balls remaining factor
+      const ballsFactor = ballsRemaining / (oversLimit * 6);
+      
+      // Required run rate factor (comparing with typical achievable rate of 10)
+      const rrFactor = Math.max(0, Math.min(1, 1 - (requiredRunRate - 6) / 10));
+      
+      // Weighted calculation
+      team2Prob = Math.round(
+        (wicketsFactor * 40) + 
+        (ballsFactor * 30) + 
+        (rrFactor * 30)
+      );
+      
+      // Clamp between 1-99 during play
+      team2Prob = Math.max(1, Math.min(99, team2Prob));
+      team1Prob = 100 - team2Prob;
+      
+      // Determine phase
+      const oversCompleted = Math.floor((second.legalBalls || 0) / 6);
+      if (oversCompleted < 6) {
+        phaseText = '⚡ Powerplay';
+      } else if (oversCompleted < oversLimit - 4) {
+        phaseText = '🏃 Middle Overs';
+      } else {
+        phaseText = '🔥 Death Overs';
+      }
+    }
+  } else if (first) {
+    // First innings - predict based on score
+    const currentScore = first.runs || 0;
+    const wicketsLost = first.wkts || 0;
+    const ballsBowled = first.legalBalls || 0;
+    const totalBalls = oversLimit * 6;
+    const ballsRemaining = totalBalls - ballsBowled;
+    
+    if (first.done || inSecond) {
+      // First innings complete - estimate based on par score
+      const parScore = oversLimit * 7; // Rough par: 7 runs per over
+      const scoreDiff = currentScore - parScore;
+      
+      // Convert score difference to probability
+      team1Prob = 50 + Math.round(scoreDiff / 2);
+      team1Prob = Math.max(10, Math.min(90, team1Prob));
+      team2Prob = 100 - team1Prob;
+      phaseText = 'Innings Break';
+    } else {
+      // Innings in progress - project final score
+      const currentRR = ballsBowled > 0 ? (currentScore * 6) / ballsBowled : 0;
+      const projectedScore = Math.round(currentScore + (currentRR * ballsRemaining / 6));
+      const parScore = oversLimit * 7;
+      
+      team1Prob = 50 + Math.round((projectedScore - parScore) / 3);
+      team1Prob = Math.max(20, Math.min(80, team1Prob));
+      team2Prob = 100 - team1Prob;
+      
+      // Determine phase
+      const oversCompleted = Math.floor(ballsBowled / 6);
+      if (oversCompleted < 6) {
+        phaseText = '⚡ Powerplay';
+      } else if (oversCompleted < oversLimit - 4) {
+        phaseText = '🏃 Middle Overs';
+      } else {
+        phaseText = '🔥 Death Overs';
+      }
+    }
+  }
+  
+  // Update UI
+  document.getElementById('winTeam1Prob').textContent = `${team1Prob}%`;
+  document.getElementById('winTeam2Prob').textContent = `${team2Prob}%`;
+  document.getElementById('winProbBar').style.width = `${team1Prob}%`;
+  document.getElementById('matchPhase').textContent = phaseText;
 }
 
 // Helper to calculate overs from legal balls
@@ -2128,40 +2542,40 @@ function calculateExtrasForInnings(inn) {
   return extras;
 }
 
-// Helper to calculate runs/wickets for an over
+// Helper to calculate runs/wickets/extras for an over
 function overRunsAndWktsHelper(arr) {
-  let runs = 0, wkts = 0;
+  let runs = 0, wkts = 0, extras = 0;
   arr.forEach(sym => {
     if (typeof sym === 'string') {
       // New format with + signs
       if (/^([0-9]+)\+W$/.test(sym)) { runs += parseInt(sym); wkts += 1; }
       else if (/^W$/.test(sym)) { wkts += 1; }
-      else if (/^WD\+([0-9]+)\+W$/.test(sym)) { runs += 1 + parseInt(sym.match(/^WD\+([0-9]+)\+W$/)[1]); wkts += 1; }
-      else if (/^WD\+W$/.test(sym)) { runs += 1; wkts += 1; }
-      else if (/^NB\+([0-9]+)\+W$/.test(sym)) { runs += 1 + parseInt(sym.match(/^NB\+([0-9]+)\+W$/)[1]); wkts += 1; }
-      else if (/^NB\+W$/.test(sym)) { runs += 1; wkts += 1; }
-      else if (/^B\+([0-9]+)\+W$/.test(sym)) { runs += parseInt(sym.match(/^B\+([0-9]+)\+W$/)[1]); wkts += 1; }
+      else if (/^WD\+([0-9]+)\+W$/.test(sym)) { const extra = 1 + parseInt(sym.match(/^WD\+([0-9]+)\+W$/)[1]); runs += extra; wkts += 1; extras += extra; }
+      else if (/^WD\+W$/.test(sym)) { runs += 1; wkts += 1; extras += 1; }
+      else if (/^NB\+([0-9]+)\+W$/.test(sym)) { const extra = 1 + parseInt(sym.match(/^NB\+([0-9]+)\+W$/)[1]); runs += extra; wkts += 1; extras += extra; }
+      else if (/^NB\+W$/.test(sym)) { runs += 1; wkts += 1; extras += 1; }
+      else if (/^B\+([0-9]+)\+W$/.test(sym)) { const extra = parseInt(sym.match(/^B\+([0-9]+)\+W$/)[1]); runs += extra; wkts += 1; extras += extra; }
       else if (/^B\+W$/.test(sym)) { runs += 0; wkts += 1; }
       // Old format (backward compatibility)
       else if (/^([0-9]+)W$/.test(sym)) { runs += parseInt(sym); wkts += 1; }
-      else if (/^WD\+([0-9]+)W$/.test(sym)) { runs += 1 + parseInt(sym.match(/^WD\+([0-9]+)W$/)[1]); wkts += 1; }
-      else if (/^WDW$/.test(sym)) { runs += 1; wkts += 1; }
-      else if (/^NB\+([0-9]+)W$/.test(sym)) { runs += 1 + parseInt(sym.match(/^NB\+([0-9]+)W$/)[1]); wkts += 1; }
-      else if (/^NBW$/.test(sym)) { runs += 1; wkts += 1; }
-      else if (/^B\+([0-9]+)W$/.test(sym)) { runs += parseInt(sym.match(/^B\+([0-9]+)W$/)[1]); wkts += 1; }
+      else if (/^WD\+([0-9]+)W$/.test(sym)) { const extra = 1 + parseInt(sym.match(/^WD\+([0-9]+)W$/)[1]); runs += extra; wkts += 1; extras += extra; }
+      else if (/^WDW$/.test(sym)) { runs += 1; wkts += 1; extras += 1; }
+      else if (/^NB\+([0-9]+)W$/.test(sym)) { const extra = 1 + parseInt(sym.match(/^NB\+([0-9]+)W$/)[1]); runs += extra; wkts += 1; extras += extra; }
+      else if (/^NBW$/.test(sym)) { runs += 1; wkts += 1; extras += 1; }
+      else if (/^B\+([0-9]+)W$/.test(sym)) { const extra = parseInt(sym.match(/^B\+([0-9]+)W$/)[1]); runs += extra; wkts += 1; extras += extra; }
       else if (/^BW$/.test(sym)) { runs += 0; wkts += 1; }
       // Normal balls
       else if (/^[0-9]$/.test(sym)) runs += parseInt(sym);
-      else if (/^NB$/.test(sym) || /^WD$/.test(sym)) runs += 1;
-      else if (/^NB\+([0-9]+)$/.test(sym)) runs += 1 + parseInt(sym.match(/^NB\+([0-9]+)$/)[1]);
-      else if (/^WD\+([0-9]+)$/.test(sym)) runs += 1 + parseInt(sym.match(/^WD\+([0-9]+)$/)[1]);
-      else if (/^B\+([0-9]+)$/.test(sym)) runs += parseInt(sym.match(/^B\+([0-9]+)$/)[1]);
-      else if (/^LB\+([0-9]+)$/.test(sym)) runs += parseInt(sym.match(/^LB\+([0-9]+)$/)[1]);
+      else if (/^NB$/.test(sym) || /^WD$/.test(sym)) { runs += 1; extras += 1; }
+      else if (/^NB\+([0-9]+)$/.test(sym)) { const extra = 1 + parseInt(sym.match(/^NB\+([0-9]+)$/)[1]); runs += extra; extras += extra; }
+      else if (/^WD\+([0-9]+)$/.test(sym)) { const extra = 1 + parseInt(sym.match(/^WD\+([0-9]+)$/)[1]); runs += extra; extras += extra; }
+      else if (/^B\+([0-9]+)$/.test(sym)) { const extra = parseInt(sym.match(/^B\+([0-9]+)$/)[1]); runs += extra; extras += extra; }
+      else if (/^LB\+([0-9]+)$/.test(sym)) { const extra = parseInt(sym.match(/^LB\+([0-9]+)$/)[1]); runs += extra; extras += extra; }
     } else if (typeof sym === 'number') {
       runs += sym;
     }
   });
-  return {runs, wkts};
+  return {runs, wkts, extras};
 }
 
 // ========== Firebase Sync Functions ==========
@@ -2320,6 +2734,9 @@ function listenForUpdates() {
       if (document.getElementById('setup').style.display !== 'none') {
         document.getElementById('setup').style.display = 'none';
         document.getElementById('game').style.display = 'block';
+        document.getElementById('winProbabilityCompact').style.display = 'block';
+        document.getElementById('liveStatsComparison').style.display = 'block';
+        document.getElementById('matchSummary').style.display = 'block';
       }
       
       // Update edit mode UI (enable/disable buttons based on permission)
@@ -2603,6 +3020,11 @@ function getTournamentLink() {
 }
 
 function shareViewerLink() {
+  // GA tracking
+  if (typeof gtag !== 'undefined') {
+    gtag('event', 'cta_click', {'event_category': 'Scorer Action', 'event_label': 'Share Viewer Link', 'value': 1});
+  }
+  
   if (!firebaseEnabled) {
     alert('⚠️ Firebase not configured!\n\nPlease add your Firebase configuration to enable live sync and viewer mode.');
     return;
@@ -2640,6 +3062,11 @@ function shareViewerLink() {
 }
 
 function shareScorerLink() {
+  // GA tracking
+  if (typeof gtag !== 'undefined') {
+    gtag('event', 'cta_click', {'event_category': 'Scorer Action', 'event_label': 'Share Scorer Link', 'value': 1});
+  }
+  
   if (!firebaseEnabled) {
     alert('⚠️ Firebase not configured!\n\nPlease add your Firebase configuration to enable live sync and viewer mode.');
     return;
@@ -2688,6 +3115,11 @@ function shareScorerLink() {
 }
 
 function shareTournamentLink() {
+  // GA tracking
+  if (typeof gtag !== 'undefined') {
+    gtag('event', 'cta_click', {'event_category': 'Scorer Action', 'event_label': 'Share Tournament Link', 'value': 1});
+  }
+  
   if (!firebaseEnabled) {
     alert('⚠️ Firebase not configured!\n\nPlease add your Firebase configuration to enable live sync and viewer mode.');
     return;
@@ -2939,6 +3371,12 @@ function pushUndo() {
 function undoLastAction() {
   if (!checkCanEdit("undo")) return;
   if (undoStack.length === 0) return;
+  
+  // GA tracking
+  if (typeof gtag !== 'undefined') {
+    gtag('event', 'cta_click', {'event_category': 'Scorer Action', 'event_label': 'Undo', 'value': 1});
+  }
+  
   const prev = undoStack.pop();
   first = JSON.parse(JSON.stringify(prev.first));
   second = JSON.parse(JSON.stringify(prev.second));
@@ -2974,6 +3412,12 @@ function addLegalRun(r){
   if (!checkCanEdit("add runs")) return;
   const inn = currentInnings();
   if (inn.done || pendingExtra || currentMatchOver()) return;
+  
+  // GA tracking
+  if (typeof gtag !== 'undefined') {
+    gtag('event', 'cta_click', {'event_category': 'Scorer Action', 'event_label': `Run Button - ${r}`, 'value': r});
+  }
+  
   pushUndo();
   inn.runs += r;
   addSymbol(inn, String(r));
@@ -3068,6 +3512,11 @@ function startExtra(type){
     cancelExtra();
   }
   
+  // GA tracking
+  if (typeof gtag !== 'undefined') {
+    gtag('event', 'cta_click', {'event_category': 'Scorer Action', 'event_label': `Extra - ${type}`, 'value': 1});
+  }
+  
   pushUndo();
   if (type === 'NB' || type === 'WD'){
     // Base 1 extra run, NOT a legal ball
@@ -3109,6 +3558,12 @@ function startExtra(type){
 function applyExtra(runs){
   const inn = currentInnings();
   if (!pendingExtra || currentMatchOver()) return;
+  
+  // GA tracking
+  if (typeof gtag !== 'undefined') {
+    gtag('event', 'cta_click', {'event_category': 'Scorer Action', 'event_label': `Extra Runs - ${pendingExtra.type}+${runs}`, 'value': runs});
+  }
+  
   pushUndo();
   if (pendingExtra.type === 'NB' || pendingExtra.type === 'WD'){
     // Add bat runs; still NOT a legal ball
@@ -3243,6 +3698,11 @@ async function checkTournamentExists() {
 
 /* Switch team names */
 function switchTeamNames() {
+  // GA tracking
+  if (typeof gtag !== 'undefined') {
+    gtag('event', 'cta_click', {'event_category': 'Scorer Action', 'event_label': 'Switch Team Names', 'value': 1});
+  }
+  
   const teamAInput = document.getElementById("teamA");
   const teamBInput = document.getElementById("teamB");
   
@@ -3561,6 +4021,9 @@ async function startMatch(){
   
   document.getElementById("setup").style.display="none";
   document.getElementById("game").style.display="block";
+  document.getElementById("winProbabilityCompact").style.display="block";
+  document.getElementById("liveStatsComparison").style.display="block";
+  document.getElementById("matchSummary").style.display="block";
   matchStarted = true;
   updateUI();
   
@@ -3581,6 +4044,11 @@ async function startMatch(){
 // Viewer tracking functionality removed for simplicity and performance
 
 function endInnings(){
+  // GA tracking
+  if (typeof gtag !== 'undefined') {
+    gtag('event', 'cta_click', {'event_category': 'Scorer Action', 'event_label': 'End Innings', 'value': 1});
+  }
+  
   const inn = currentInnings();
   inn.done = true;
   switchInnings();
@@ -3631,6 +4099,11 @@ function resetAll(){
 function startNewMatch(){
   if (!confirm('🆕 Start a new match?\n\nThis will clear the current match and take you back to the setup page.')) {
     return;
+  }
+  
+  // GA tracking
+  if (typeof gtag !== 'undefined') {
+    gtag('event', 'cta_click', {'event_category': 'Scorer Action', 'event_label': 'Start New Match', 'value': 1});
   }
   
   // Clear localStorage session
@@ -3797,6 +4270,11 @@ function getScoreboardText() {
 }
 
 function exportScoreboard() {
+  // GA tracking
+  if (typeof gtag !== 'undefined') {
+    gtag('event', 'cta_click', {'event_category': 'Scorer Action', 'event_label': 'Export Scoreboard', 'value': 1});
+  }
+  
   const text = getScoreboardText();
   // Try Web Share API (for WhatsApp, etc.)
   if (navigator.share) {
@@ -3839,6 +4317,12 @@ function quickWicket() {
     alert(`Maximum wickets (${wicketsLimit}) already reached!`);
     return;
   }
+  
+  // GA tracking
+  if (typeof gtag !== 'undefined') {
+    gtag('event', 'cta_click', {'event_category': 'Scorer Action', 'event_label': 'Quick Wicket', 'value': 1});
+  }
+  
   pushUndo();
   let symbol = 'W';
   inn.wkts++;
@@ -3944,6 +4428,11 @@ function showWicketPanel(e) {
 function showRunOutModal() {
   const inn = currentInnings();
   if (inn.done || pendingExtra || currentMatchOver()) return;
+  
+  // GA tracking
+  if (typeof gtag !== 'undefined') {
+    gtag('event', 'cta_click', {'event_category': 'Scorer Action', 'event_label': 'Run Out', 'value': 1});
+  }
   
   // Check if wickets limit reached
   if (inn.wkts >= wicketsLimit) {
@@ -4197,6 +4686,11 @@ function showWicketExtraModal(extraType) {
   const inn = currentInnings();
   if (inn.done || pendingExtra || currentMatchOver()) return;
   
+  // GA tracking
+  if (typeof gtag !== 'undefined') {
+    gtag('event', 'cta_click', {'event_category': 'Scorer Action', 'event_label': `Wicket Extra - ${extraType}+W`, 'value': 1});
+  }
+  
   // Check if wickets limit reached
   if (inn.wkts >= wicketsLimit) {
     alert(`Maximum wickets (${wicketsLimit}) already reached!`);
@@ -4348,6 +4842,11 @@ function confirmWicketExtra(extraType) {
 
 // Toggle more options menu
 function showMoreOptions() {
+  // GA tracking
+  if (typeof gtag !== 'undefined') {
+    gtag('event', 'cta_click', {'event_category': 'Scorer Action', 'event_label': 'Show More Options', 'value': 1});
+  }
+  
   const moreRow = document.getElementById('moreRunsRow');
   if (moreRow.style.display === 'none' || !moreRow.style.display) {
     moreRow.style.display = 'block';
@@ -4675,6 +5174,11 @@ function resumeSavedMatch() {
 }
 
 function deleteCurrentMatch() {
+  // GA tracking
+  if (typeof gtag !== 'undefined') {
+    gtag('event', 'cta_click', {'event_category': 'Scorer Action', 'event_label': 'Delete Match', 'value': 1});
+  }
+  
   if (!matchId) {
     alert('❌ No match is currently loaded');
     return;
@@ -4907,6 +5411,9 @@ window.addEventListener('DOMContentLoaded', () => {
     // Hide setup screen and show game view
     document.getElementById('setup').style.display = 'none';
     document.getElementById('game').style.display = 'block';
+    document.getElementById('winProbabilityCompact').style.display = 'block';
+    document.getElementById('liveStatsComparison').style.display = 'block';
+    document.getElementById('matchSummary').style.display = 'block';
     
     // Hide all scoring buttons
     document.querySelectorAll('.btn-run, .btn-wkt, .btn-extra, .btn-muted, .btn-more').forEach(btn => {
