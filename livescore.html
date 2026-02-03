@@ -1553,7 +1553,7 @@
           const projectedScore = Math.round(currentScore + (currentRR * ballsRemaining / 6));
           const parScore = data.oversLimit * 7;
           
-          team1Prob = 50 + Math.round((projectedScore - parScore) / 3);
+          team1Prob = Math.round(50 + ((projectedScore - parScore) / 3));
           team1Prob = Math.max(20, Math.min(80, team1Prob));
           team2Prob = 100 - team1Prob;
           
@@ -1570,9 +1570,9 @@
       }
       
       // Update UI
-      document.getElementById('winTeam1Prob').textContent = `${team1Prob}%`;
-      document.getElementById('winTeam2Prob').textContent = `${team2Prob}%`;
-      document.getElementById('winProbBar').style.width = `${team1Prob}%`;
+      document.getElementById('winTeam1Prob').textContent = `${Math.round(team1Prob)}%`;
+      document.getElementById('winTeam2Prob').textContent = `${Math.round(team2Prob)}%`;
+      document.getElementById('winProbBar').style.width = `${Math.round(team1Prob)}%`;
       document.getElementById('matchPhase').textContent = phaseText;
     }
 

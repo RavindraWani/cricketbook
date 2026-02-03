@@ -20,8 +20,8 @@
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 
 <!-- Primary Meta Tags -->
-<meta name="description" content="Professional cricket scorer tool - record runs, wickets, extras, and overs in real-time. Easy-to-use interface with undo, ball-by-ball tracking, and instant sharing capabilities." />
-<meta name="keywords" content="cricket scorer, cricket scoring tool, record cricket match, cricket ball by ball scorer, cricket wicket tracker, cricket runs tracker, cricket overs scorer, cricket match recorder, digital cricket scoring, professional cricket scorer, cricket scorekeeper app" />
+<meta name="description" content="Easy-to-use cricket scorer tool - record runs, wickets, extras, and overs in real-time. Simple interface with undo, ball-by-ball tracking, and instant sharing for local matches." />
+<parameter name="keywords" content="cricket scorer, cricket scoring tool, record cricket match, cricket ball by ball scorer, cricket wicket tracker, cricket runs tracker, cricket overs scorer, cricket match recorder, digital cricket scoring, local cricket scorer, cricket scorekeeper app" />
 <meta name="author" content="CricketBook" />
 <meta name="robots" content="index, follow" />
 <meta name="language" content="English" />
@@ -183,7 +183,7 @@
   .btn-action{background:var(--accent3)}
   .btn-wkt{background:var(--danger)}
   .btn-muted{background:#334155}
-  .btn-undo{background:#f43f5e !important; color:white !important;}
+  .btn-undo{color:white !important;}
   .btn-extra-nb{background:#035fd7 !important; color:#fff !important;} /* Orange for No Ball */
   .btn-extra-wd{background:#68ce02 !important; color:#222 !important;} /* Yellow for Wide */
   .btn-extra-lb{background:#6366f1 !important; color:#fff !important;} /* Indigo for Leg Bye */
@@ -1546,8 +1546,8 @@
       <div id="moreRunsRow" style="display:block;margin-top:0px;">
         <!-- Extras with Wicket Row -->
         <div class="row" style="gap:6px;">
-          <button class="btn btn-extra" onclick="showWicketExtraModal('WD')" style="flex:1;font-size:13px;padding:10px 0;background:linear-gradient(135deg, #f59e0b 0%, #d97706 100%);font-weight:800;color:white;border:none;border-radius:10px;box-shadow:0 3px 10px rgba(245,158,11,0.3);transition:all 0.15s ease;" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 5px 14px rgba(245,158,11,0.4)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 3px 10px rgba(245,158,11,0.3)'">WD+W</button>
-          <button class="btn btn-extra" onclick="showWicketExtraModal('NB')" style="flex:1;font-size:13px;padding:10px 0;background:linear-gradient(135deg, #ef4444 0%, #dc2626 100%);font-weight:800;color:white;border:none;border-radius:10px;box-shadow:0 3px 10px rgba(239,68,68,0.3);transition:all 0.15s ease;" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 5px 14px rgba(239,68,68,0.4)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 3px 10px rgba(239,68,68,0.3)'">NB+W</button>
+          <button class="btn btn-extra" onclick="showWicketExtraModal('WD')" style="flex:1;font-size:13px;padding:10px 0;background:linear-gradient(135deg, #f59e0b 0%, #d97706 100%);font-weight:800;color:white;border:none;border-radius:10px;box-shadow:0 3px 10px rgba(245,158,11,0.3);transition:all 0.15s ease;" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 5px 14px rgba(245,158,11,0.4)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 3px 10px rgba(245,158,11,0.3)'">WD+WKT</button>
+          <button class="btn btn-extra" onclick="showWicketExtraModal('NB')" style="flex:1;font-size:13px;padding:10px 0;background:linear-gradient(135deg, #ef4444 0%, #dc2626 100%);font-weight:800;color:white;border:none;border-radius:10px;box-shadow:0 3px 10px rgba(239,68,68,0.3);transition:all 0.15s ease;" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 5px 14px rgba(239,68,68,0.4)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 3px 10px rgba(239,68,68,0.3)'">NB+WKT</button>
           <button class="btn btn-wkt" onclick="showRunOutModal()" style="flex:1;font-size:13px;padding:10px 0;background:linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);font-weight:800;color:white;border:none;border-radius:10px;box-shadow:0 3px 10px rgba(139,92,246,0.3);transition:all 0.15s ease;" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 5px 14px rgba(139,92,246,0.4)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 3px 10px rgba(139,92,246,0.3)'">RUN OUT</button>
         </div>
       </div>
@@ -1601,7 +1601,7 @@
       <button class="btn btn-action" style="width:100%;font-size:14px;padding:10px 0;background:linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);border:none;border-radius:10px;font-weight:700;box-shadow:0 2px 8px rgba(59,130,246,0.3);transition:all 0.2s ease;" onclick="endInnings()" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 4px 12px rgba(59,130,246,0.4)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 2px 8px rgba(59,130,246,0.3)'">🏁 End Innings</button>
       
       <!-- Undo Button (spans 2 rows) -->
-      <button class="btn btn-undo" style="width:100%;font-size:18px;padding:10px 0;background:linear-gradient(135deg, #f43f5e 0%, #e11d48 100%);border:none;border-radius:10px;font-weight:800;box-shadow:0 2px 8px rgba(244,63,94,0.3);transition:all 0.2s ease;grid-row:span 2;letter-spacing:0.5px;" onclick="undoLastAction()" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 4px 12px rgba(244,63,94,0.4)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 2px 8px rgba(244,63,94,0.3)'"><span style="font-size:24px;">↶</span> Undo</button>
+      <button class="btn btn-undo" style="width:100%;font-size:18px;padding:10px 0;background:linear-gradient(135deg, #f97316 0%, #dc2626 50%, #991b1b 100%);border:none;border-radius:10px;font-weight:800;box-shadow:0 4px 12px rgba(249,115,22,0.5), inset 0 1px 2px rgba(255,255,255,0.2);transition:all 0.3s ease;grid-row:span 2;letter-spacing:0.5px;position:relative;overflow:hidden;" onclick="undoLastAction()" onmouseover="this.style.transform='translateY(-2px) scale(1.02)';this.style.boxShadow='0 8px 20px rgba(249,115,22,0.6), inset 0 1px 2px rgba(255,255,255,0.3)'" onmouseout="this.style.transform='translateY(0) scale(1)';this.style.boxShadow='0 4px 12px rgba(249,115,22,0.5), inset 0 1px 2px rgba(255,255,255,0.2)'"><span style="font-size:24px;">↶</span> Undo</button>
       
       <!-- Delete Match Button -->
       <a href="javascript:void(0)" onclick="deleteCurrentMatch()" style="color:#fff;text-decoration:none;font-size:14px;font-weight:700;padding:10px 0;border-radius:10px;background:linear-gradient(135deg, #dc2626 0%, #991b1b 100%);border:none;display:flex;align-items:center;justify-content:center;transition:all 0.2s ease;text-align:center;box-shadow:0 2px 8px rgba(220,38,38,0.4);" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 4px 12px rgba(220,38,38,0.5)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 2px 8px rgba(220,38,38,0.4)'">🗑️ Delete Match</a>
@@ -2489,7 +2489,7 @@ function updateWinProbability() {
       const projectedScore = Math.round(currentScore + (currentRR * ballsRemaining / 6));
       const parScore = oversLimit * 7;
       
-      team1Prob = 50 + Math.round((projectedScore - parScore) / 3);
+      team1Prob = Math.round(50 + ((projectedScore - parScore) / 3));
       team1Prob = Math.max(20, Math.min(80, team1Prob));
       team2Prob = 100 - team1Prob;
       
@@ -2506,9 +2506,9 @@ function updateWinProbability() {
   }
   
   // Update UI
-  document.getElementById('winTeam1Prob').textContent = `${team1Prob}%`;
-  document.getElementById('winTeam2Prob').textContent = `${team2Prob}%`;
-  document.getElementById('winProbBar').style.width = `${team1Prob}%`;
+  document.getElementById('winTeam1Prob').textContent = `${Math.round(team1Prob)}%`;
+  document.getElementById('winTeam2Prob').textContent = `${Math.round(team2Prob)}%`;
+  document.getElementById('winProbBar').style.width = `${Math.round(team1Prob)}%`;
   document.getElementById('matchPhase').textContent = phaseText;
 }
 
@@ -5225,7 +5225,7 @@ function deleteCurrentMatch() {
     return;
   }
   
-  if (!confirm('⚠️ Delete this match permanently?\n\n' + teamA + ' vs ' + teamB + '\n\nThis will:\n✗ Remove from Firebase server\n✗ Delete all match data\n✗ Clear from local storage\n\n⚠️ This action cannot be undone!')) {
+  if (!confirm('⚠️ Delete this match permanently?\n\n' + teamA + ' vs ' + teamB + '\n\n⚠️ This action cannot be undone!')) {
     return;
   }
   
@@ -5329,7 +5329,7 @@ function deleteCurrentMatch() {
 }
 
 function terminateSavedMatchById(matchId) {
-  if (!confirm('⚠️ Are you sure you want to delete this saved match?\n\nThis will:\n✓ Remove the match from Firebase server\n✓ Clear from local storage\n\nThis action cannot be undone.')) {
+  if (!confirm('⚠️ Are you sure you want to delete this saved match?\n\n⚠️ This action cannot be undone.')) {
     return;
   }
   
