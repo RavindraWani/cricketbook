@@ -1268,6 +1268,14 @@
       button.style.opacity = '0.5';
       button.style.cursor = 'not-allowed';
     });
+    
+    // Also disable anchor links (like Delete Match button)
+    const links = document.querySelectorAll('#game a[onclick]');
+    links.forEach(link => {
+      link.style.opacity = '0.5';
+      link.style.cursor = 'not-allowed';
+      link.style.pointerEvents = 'none';
+    });
   }
   
   // Enable all interactive buttons in edit mode
@@ -1278,6 +1286,14 @@
       button.disabled = false;
       button.style.opacity = '1';
       button.style.cursor = 'pointer';
+    });
+    
+    // Also enable anchor links (like Delete Match button)
+    const links = document.querySelectorAll('#game a[onclick]');
+    links.forEach(link => {
+      link.style.opacity = '1';
+      link.style.cursor = 'pointer';
+      link.style.pointerEvents = 'auto';
     });
   }
   
@@ -3623,6 +3639,7 @@ function startExtra(type){
     gtag('event', 'cta_click', {'event_category': 'Scorer Action', 'event_label': `Extra - ${type}`, 'value': 1});
   }
   
+  // Save undo state before making changes
   pushUndo();
   if (type === 'NB' || type === 'WD'){
     // Base 1 extra run, NOT a legal ball
@@ -3670,7 +3687,7 @@ function applyExtra(runs){
     gtag('event', 'cta_click', {'event_category': 'Scorer Action', 'event_label': `Extra Runs - ${pendingExtra.type}+${runs}`, 'value': runs});
   }
   
-  pushUndo();
+  // No pushUndo() - already saved in startExtra()
   if (pendingExtra.type === 'NB' || pendingExtra.type === 'WD'){
     // Add bat runs; still NOT a legal ball
     inn.runs += runs;
@@ -3694,7 +3711,10 @@ function applyExtra(runs){
 function cancelExtra(){
   const inn = currentInnings();
   if (!pendingExtra) return;
-  pushUndo();
+  // Remove the undo entry from startExtra() since we're cancelling
+  if (undoStack.length > 0) {
+    undoStack.pop();
+  }
   if (pendingExtra.type === 'NB' || pendingExtra.type === 'WD'){
     // We had already added base 1 and a symbol; roll both back
     inn.runs -= 1;
