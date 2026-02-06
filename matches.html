@@ -770,9 +770,23 @@
       <a href="about.html">ℹ️ About</a>
     </nav>
     
+    <!-- Breadcrumb Navigation -->
+    <div id="breadcrumb" style="display:none;max-width:1200px;margin:0 auto;padding:12px 16px;">
+      <a href="matches.html" style="color:rgba(255,255,255,0.9);text-decoration:none;font-size:13px;font-weight:600;display:inline-flex;align-items:center;gap:6px;transition:all 0.2s;" onmouseover="this.style.color='#fff';this.style.transform='translateX(-2px)'" onmouseout="this.style.color='rgba(255,255,255,0.9)';this.style.transform='translateX(0)'">
+        ← Back to All My Matches
+      </a>
+    </div>
+    
     <div class="header">
-      <h1>🏏 CricketBook</h1>
-      <p>All Matches</p>
+      <h1 id="pageHeader">🏏 CricketBook</h1>
+      <p id="pageSubheader">All Matches</p>
+      <div id="tournamentStats" style="display:none;margin-top:8px;font-size:13px;opacity:0.9;font-weight:500;"></div>
+      <div id="shareButtonContainer" style="display:none;margin-top:12px;">
+        <button onclick="shareTournamentLink()" style="background:rgba(255,255,255,0.2);border:2px solid rgba(255,255,255,0.3);color:#fff;padding:8px 16px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;transition:all 0.2s;display:inline-flex;align-items:center;gap:6px;backdrop-filter:blur(10px);" onmouseover="this.style.background='rgba(255,255,255,0.3)';this.style.transform='translateY(-2px)';this.style.boxShadow='0 4px 12px rgba(0,0,0,0.2)'" onmouseout="this.style.background='rgba(255,255,255,0.2)';this.style.transform='translateY(0)';this.style.boxShadow='none'">
+          <span style="font-size:16px;">🔗</span>
+          <span>Share Tournament</span>
+        </button>
+      </div>
     </div>
     
     <div class="loading" id="loading">Loading matches...</div>
@@ -908,6 +922,79 @@
       loadMatches();
     }
     
+    // Update page header with tournament name
+    function updatePageHeader(matchesArray) {
+      if (!matchesArray || matchesArray.length === 0) return;
+      
+      // Calculate match stats
+      const totalMatches = matchesArray.length;
+      const completedMatches = matchesArray.filter(m => m.matchCompleted || (m.resultText && m.resultText.trim() !== '')).length;
+      const liveMatches = matchesArray.filter(m => !m.matchCompleted && (!m.resultText || m.resultText.trim() === '')).length;
+      
+      // Get tournament name from first match (all should be same tournament if org ID provided)
+      const tournamentName = matchesArray[0]?.tournamentName;
+      const urlOrgId = new URLSearchParams(window.location.search).get('org');
+      
+      if (tournamentName && tournamentName.trim() !== '') {
+        // Tournament matches - customize header
+        document.getElementById('pageHeader').innerHTML = `🏆 ${tournamentName}`;
+        document.getElementById('pageSubheader').textContent = 'Tournament Dashboard';
+        
+        // Show tournament stats
+        document.getElementById('tournamentStats').innerHTML = `${totalMatches} ${totalMatches === 1 ? 'Match' : 'Matches'} • ${completedMatches} Completed • ${liveMatches} Live`;
+        document.getElementById('tournamentStats').style.display = 'block';
+        
+        // Show share button
+        document.getElementById('shareButtonContainer').style.display = 'block';
+        
+        // Show breadcrumb only if viewing via org parameter (shared link)
+        if (urlOrgId) {
+          document.getElementById('breadcrumb').style.display = 'block';
+        }
+        
+        // Update page title
+        document.title = `${tournamentName} - Tournament Dashboard | CricketBook`;
+      } else {
+        // Quick matches - check if multiple tournaments
+        const tournamentNames = new Set();
+        matchesArray.forEach(match => {
+          if (match.tournamentName && match.tournamentName.trim() !== '') {
+            tournamentNames.add(match.tournamentName);
+          }
+        });
+        
+        if (tournamentNames.size === 1) {
+          // Single tournament in history
+          const name = Array.from(tournamentNames)[0];
+          document.getElementById('pageHeader').innerHTML = `🏆 ${name}`;
+          document.getElementById('pageSubheader').textContent = 'Tournament Dashboard';
+          
+          // Show tournament stats
+          document.getElementById('tournamentStats').innerHTML = `${totalMatches} ${totalMatches === 1 ? 'Match' : 'Matches'} • ${completedMatches} Completed • ${liveMatches} Live`;
+          document.getElementById('tournamentStats').style.display = 'block';
+          
+          // Show share button
+          document.getElementById('shareButtonContainer').style.display = 'block';
+          
+          document.title = `${name} - Tournament Dashboard | CricketBook`;
+        } else if (tournamentNames.size > 1) {
+          // Multiple tournaments
+          document.getElementById('pageHeader').textContent = '🏏 My Tournaments';
+          document.getElementById('pageSubheader').textContent = `${tournamentNames.size} Active Tournaments`;
+          
+          // Show overall stats
+          document.getElementById('tournamentStats').innerHTML = `${totalMatches} Total Matches • ${completedMatches} Completed • ${liveMatches} Live`;
+          document.getElementById('tournamentStats').style.display = 'block';
+        } else {
+          // Only quick matches (no tournament names)
+          document.getElementById('tournamentStats').innerHTML = `${totalMatches} ${totalMatches === 1 ? 'Match' : 'Matches'} • ${completedMatches} Completed • ${liveMatches} Live`;
+          document.getElementById('tournamentStats').style.display = 'block';
+        }
+        // Hide breadcrumb for personal view
+        document.getElementById('breadcrumb').style.display = 'none';
+      }
+    }
+    
     function loadMatches() {
     // Use polling instead of continuous listener to reduce active connections
     const pollMatches = () => {
@@ -977,6 +1064,9 @@
       
       // Store matches globally for export
       allMatchesData = matchesArray;
+      
+      // Update header with tournament name if available
+      updatePageHeader(matchesArray);
       
       // Show export button if there are matches
       if (matchesArray.length > 0) {
@@ -1617,6 +1707,85 @@
       document.body.removeChild(link);
       
       console.log('✅ Exported ' + allMatchesData.length + ' matches to CSV');
+    }
+    
+    // Share tournament link function
+    function shareTournamentLink() {
+      // Get current org ID from URL or localStorage
+      const urlParams = new URLSearchParams(window.location.search);
+      const orgId = urlParams.get('org') || localStorage.getItem('cricketbook_org_id');
+      
+      if (!orgId) {
+        alert('⚠️ No tournament to share. Please start a tournament match first.');
+        return;
+      }
+      
+      // Get tournament name from page header
+      const pageHeader = document.getElementById('pageHeader').textContent;
+      const tournamentName = pageHeader.replace('🏆 ', '').replace('🏏 ', '').trim();
+      
+      // Construct share link
+      const baseUrl = window.location.origin + window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/') + 1);
+      const shareLink = `${baseUrl}matches.html?org=${orgId}`;
+      
+      // Prepare share content
+      const shareTitle = `${tournamentName} - Tournament Dashboard`;
+      const shareMessage = `🏆 *${tournamentName}* - Live Tournament\n\n📋 View all matches, schedules & live scores\n\n👉 Tournament Dashboard:\n${shareLink}\n\n⚡ Powered by CricketBook`;
+      
+      // Try native share API first (mobile)
+      if (navigator.share) {
+        navigator.share({
+          title: shareTitle,
+          text: shareMessage,
+          url: shareLink
+        }).then(() => {
+          console.log('✅ Tournament link shared successfully');
+        }).catch(err => {
+          if (err.name !== 'AbortError') {
+            console.log('Share cancelled or failed, falling back to copy');
+            copyToClipboard(shareLink, shareMessage);
+          }
+        });
+      } else {
+        // Fallback to copy to clipboard
+        copyToClipboard(shareLink, shareMessage);
+      }
+    }
+    
+    // Copy to clipboard helper
+    function copyToClipboard(link, message) {
+      // Try to copy the full message
+      const textToCopy = message;
+      
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(textToCopy)
+          .then(() => {
+            alert('✅ Tournament link copied to clipboard!\n\nShare it with your team members and viewers.');
+          })
+          .catch(() => {
+            // Fallback for older browsers
+            fallbackCopy(textToCopy);
+          });
+      } else {
+        fallbackCopy(textToCopy);
+      }
+    }
+    
+    // Fallback copy method
+    function fallbackCopy(text) {
+      const textArea = document.createElement('textarea');
+      textArea.value = text;
+      textArea.style.position = 'fixed';
+      textArea.style.left = '-9999px';
+      document.body.appendChild(textArea);
+      textArea.select();
+      try {
+        document.execCommand('copy');
+        alert('✅ Tournament link copied to clipboard!\n\nShare it with your team members and viewers.');
+      } catch (err) {
+        alert('⚠️ Could not copy automatically. Please copy this link manually:\n\n' + text);
+      }
+      document.body.removeChild(textArea);
     }
     
     // Clean up connections when leaving page
