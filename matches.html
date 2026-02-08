@@ -1295,25 +1295,13 @@
           minute: '2-digit'
         }) : '';
         
-        // Format start date
+        // Format start date - ultra compact format for mobile
         const startDate = match.timestamp ? new Date(match.timestamp) : null;
-        const startDateStr = startDate ? startDate.toLocaleDateString('en-US', { 
-          month: 'short', 
-          day: 'numeric',
-          year: 'numeric',
-          hour: '2-digit',
-          minute: '2-digit'
-        }) : 'N/A';
+        const startDateStr = startDate ? `${startDate.getDate()}/${startDate.getMonth()+1} ${String(startDate.getHours()).padStart(2,'0')}:${String(startDate.getMinutes()).padStart(2,'0')}` : 'N/A';
         
-        // Format end date and calculate duration
+        // Format end date - ultra compact format for mobile
         const endDate = match.lastUpdated ? new Date(match.lastUpdated) : null;
-        const endDateStr = endDate ? endDate.toLocaleDateString('en-US', { 
-          month: 'short', 
-          day: 'numeric',
-          year: 'numeric',
-          hour: '2-digit',
-          minute: '2-digit'
-        }) : 'N/A';
+        const endDateStr = endDate ? `${endDate.getDate()}/${endDate.getMonth()+1} ${String(endDate.getHours()).padStart(2,'0')}:${String(endDate.getMinutes()).padStart(2,'0')}` : 'N/A';
         
         // Calculate duration
         let durationStr = '';
@@ -1374,8 +1362,8 @@
                   ${hasResult ? '<div style="color:#10b981;font-weight:600;margin-top:6px;padding:4px 8px;background:rgba(16,185,129,0.1);border-radius:6px;display:inline-block;">🏆 ' + match.resultText + '</div>' : ''}
                 </div>
                 <div class="match-meta" style="margin-top: 8px;">
-                  <span>📅 Start: ${startDateStr}</span>
-                  ${completed ? `<span>🏁 End: ${endDateStr}</span>` : ''}
+                  <span>📅 ${startDateStr}</span>
+                  ${completed ? `<span>🏁 ${endDateStr}</span>` : ''}
                   ${durationStr ? `<span>${durationStr}</span>` : ''}
                 </div>
               </div>

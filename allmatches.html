@@ -725,6 +725,7 @@
       font-weight: 600;
       font-size: 12px;
       margin-top: 6px;
+      margin-bottom: 6px;
       padding: 8px 10px;
       background: rgba(16,185,129,0.1);
       border-radius: 6px;
@@ -1569,23 +1570,13 @@
         ? '<span class="badge badge-quick">⚡ Quick</span>'
         : '<span class="badge badge-tournament">🏆 ' + (match.matchType || 'Tournament') + '</span>';
       
-      // Format start date - compact format
+      // Format start date - ultra compact format for mobile
       const startDate = match.timestamp ? new Date(match.timestamp) : null;
-      const startDateStr = startDate ? startDate.toLocaleDateString('en-US', { 
-        month: 'short', 
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
-      }) : 'N/A';
+      const startDateStr = startDate ? `${startDate.getDate()}/${startDate.getMonth()+1} ${String(startDate.getHours()).padStart(2,'0')}:${String(startDate.getMinutes()).padStart(2,'0')}` : 'N/A';
       
-      // Format end date and calculate duration - compact format
+      // Format end date - ultra compact format for mobile
       const endDate = match.lastUpdated ? new Date(match.lastUpdated) : null;
-      const endDateStr = endDate ? endDate.toLocaleDateString('en-US', { 
-        month: 'short', 
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
-      }) : 'N/A';
+      const endDateStr = endDate ? `${endDate.getDate()}/${endDate.getMonth()+1} ${String(endDate.getHours()).padStart(2,'0')}:${String(endDate.getMinutes()).padStart(2,'0')}` : 'N/A';
       
       // Calculate duration
       let durationStr = '';
@@ -1643,8 +1634,8 @@
           ${hasResult ? `<div class="match-result">🏆 ${match.resultText}</div>` : ''}
           
           <div class="match-meta">
-            <span>📅 Start: ${startDateStr}</span><br>
-            ${completed ? `<span>🏁 End: ${endDateStr}</span><br>` : ''}
+            <span>📅 ${startDateStr}</span>
+            ${completed ? `<span>🏁 ${endDateStr}</span>` : ''}
             ${durationStr ? `<span>${durationStr}</span>` : ''}
           </div>
         </div>
