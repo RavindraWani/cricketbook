@@ -790,6 +790,7 @@
   let editToken = null;  // Secret token for editing
   let canEditMatch = false;  // Whether current user can edit
   let isLoadingFromFirebase = false;  // Flag to prevent save loop when loading
+  let matchStartTime = null;  // Store match start time (set once, never changes)
   
   // ========== Password Hashing Utility ==========
   // Simple SHA-256 hashing for password security
@@ -980,6 +981,7 @@
         teamB: teamB,
         tournamentName: document.getElementById('tournamentName')?.value || '',
         timestamp: Date.now(),
+        matchStartTime: matchStartTime,  // Preserve original start time
         matchCompleted: matchCompleted,
         resultText: resultText
       };
@@ -2689,6 +2691,11 @@ function updateUI(){
 function saveMatchState() {
   if (!db || !matchId) return;
   
+  // Preserve original start time - only set once when match starts
+  if (!matchStartTime) {
+    matchStartTime = new Date().toISOString();
+  }
+  
   const matchData = {
     teamA: teamA,
     teamB: teamB,
@@ -2703,7 +2710,7 @@ function saveMatchState() {
     resultText: resultText,
     matchCompleted: matchCompleted,
     lastUpdated: Date.now(),
-    timestamp: new Date().toISOString(),
+    timestamp: matchStartTime,  // Use preserved start time
     organizationId: organizationId,  // Store org ID with match data
     editToken: editToken  // Store edit token for protection
   };
@@ -2827,6 +2834,12 @@ function listenForUpdates() {
       resultText = data.resultText;
       matchCompleted = data.matchCompleted || false;
       matchStarted = true;
+      
+      // Preserve the original match start time from Firebase
+      if (data.timestamp && !matchStartTime) {
+        matchStartTime = data.timestamp;
+        console.log("⏰ Loaded match start time from Firebase:", matchStartTime);
+      }
       
       // Restore tournament name and match type to input fields (for display purposes)
       if (data.tournamentName && document.getElementById('tournamentName')) {
@@ -3608,32 +3621,21 @@ function showExtraModal(extraType) {
   
   // Create modal content
   const modalContent = document.createElement('div');
-  modalContent.style.cssText = 'background:white;border-radius:20px;padding:24px;max-width:400px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,0.4);';
+  modalContent.style.cssText = 'background:white;border-radius:16px;padding:20px;max-width:380px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,0.4);';
   modalContent.onclick = function(e) { e.stopPropagation(); };
   
   let contentHTML = `
-    <h3 style="margin:0 0 16px;font-size:20px;color:#1f2937;text-align:center;">${extraNames[extraType]}</h3>
+    <h3 style="margin:0 0 10px;font-size:17px;color:#1f2937;text-align:center;">${extraNames[extraType]} - ${extraType === 'WD' || extraType === 'NB' ? 'Additional runs' : 'Runs scored'}</h3>
     
     <div style="margin-bottom:16px;">
-      <label style="display:block;font-size:14px;font-weight:600;color:#4b5563;margin-bottom:12px;text-align:center;">${extraType === 'WD' || extraType === 'NB' ? 'Select extra runs (excluding penalty):' : 'Select runs taken:'}</label>
-      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:10px;">
+      <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:8px;">
   `;
   
-  // Add run buttons (0, 1, 2, 3)
-  [0, 1, 2, 3].forEach(r => {
-    contentHTML += `<button onclick="confirmExtraModal('${extraType}', ${r})" style="padding:16px;background:linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%);border:none;border-radius:12px;font-size:20px;font-weight:700;cursor:pointer;transition:all 0.2s;box-shadow:0 2px 4px rgba(0,0,0,0.1);" onmouseover="this.style.transform='scale(1.05)';this.style.boxShadow='0 4px 8px rgba(0,0,0,0.15)'" onmouseout="this.style.transform='scale(1)';this.style.boxShadow='0 2px 4px rgba(0,0,0,0.1)'">${r}</button>`;
-  });
-  
-  contentHTML += `
-      </div>
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;">
-  `;
-  
-  // Add run buttons (4, 5, 6)
-  [4, 5, 6].forEach(r => {
+  // Add all run buttons (6-0) in reverse order
+  [6, 5, 4, 3, 2, 1, 0].forEach(r => {
     const bgColor = r === 4 ? 'linear-gradient(135deg, #10b981 0%, #059669 100%)' : r === 6 ? 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)' : 'linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%)';
     const textColor = r === 4 || r === 6 ? 'white' : '#1f2937';
-    contentHTML += `<button onclick="confirmExtraModal('${extraType}', ${r})" style="padding:16px;background:${bgColor};border:none;border-radius:12px;font-size:20px;font-weight:700;color:${textColor};cursor:pointer;transition:all 0.2s;box-shadow:0 2px 4px rgba(0,0,0,0.1);" onmouseover="this.style.transform='scale(1.05)';this.style.boxShadow='0 4px 8px rgba(0,0,0,0.15)'" onmouseout="this.style.transform='scale(1)';this.style.boxShadow='0 2px 4px rgba(0,0,0,0.1)'">${r}</button>`;
+    contentHTML += `<button onclick="confirmExtraModal('${extraType}', ${r})" style="padding:14px 8px;background:${bgColor};border:none;border-radius:10px;font-size:18px;font-weight:700;color:${textColor};cursor:pointer;transition:all 0.2s;box-shadow:0 2px 4px rgba(0,0,0,0.1);" onmouseover="this.style.transform='scale(1.05)';this.style.boxShadow='0 4px 8px rgba(0,0,0,0.15)'" onmouseout="this.style.transform='scale(1)';this.style.boxShadow='0 2px 4px rgba(0,0,0,0.1)'">${r}</button>`;
   });
   
   contentHTML += `
@@ -4135,6 +4137,12 @@ async function startMatch(){
   editToken = generateEditToken();
   canEditMatch = true; // Creator always has edit permission
   console.log('🔐 Generated edit token for match protection');
+  
+  // Set match start time (will be preserved throughout the match)
+  if (!matchStartTime) {
+    matchStartTime = new Date().toISOString();
+    console.log('⏰ Match start time set:', matchStartTime);
+  }
   
   // Generate match ID based on team names (only if not already set from URL)
   if (!matchId) {
