@@ -1592,28 +1592,28 @@
         </div>
       </div>
 
-      <!-- First Row: 0 1 4 6 -->
+      <!-- First Row: + 3 4 6 -->
       <div class="row" style="margin-bottom:8px;gap:6px;">
-        <button class="btn" onclick="addLegalRun(0)" style="flex:1;font-size:28px;padding:18px 0;background:#f1f5f9;color:#1e293b;font-weight:900;border:2px solid #cbd5e1;border-radius:14px;box-shadow:0 2px 4px rgba(0,0,0,0.06);transition:all 0.15s ease;" onmouseover="this.style.background='#e2e8f0';this.style.transform='scale(1.05)';this.style.boxShadow='0 4px 8px rgba(0,0,0,0.12)'" onmouseout="this.style.background='#f1f5f9';this.style.transform='scale(1)';this.style.boxShadow='0 2px 4px rgba(0,0,0,0.06)'" ontouchstart="this.style.transform='scale(0.95)'" ontouchend="this.style.transform='scale(1)'">0</button>
-        <button class="btn" onclick="addLegalRun(1)" style="flex:1;font-size:28px;padding:18px 0;background:#f1f5f9;color:#1e293b;font-weight:900;border:2px solid #cbd5e1;border-radius:14px;box-shadow:0 2px 4px rgba(0,0,0,0.06);transition:all 0.15s ease;" onmouseover="this.style.background='#e2e8f0';this.style.transform='scale(1.05)';this.style.boxShadow='0 4px 8px rgba(0,0,0,0.12)'" onmouseout="this.style.background='#f1f5f9';this.style.transform='scale(1)';this.style.boxShadow='0 2px 4px rgba(0,0,0,0.06)'" ontouchstart="this.style.transform='scale(0.95)'" ontouchend="this.style.transform='scale(1)'">1</button>
+        <button class="btn" onclick="showCustomRunsModal()" style="flex:1;font-size:28px;padding:18px 0;background:linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);color:#fff;font-weight:900;border:none;border-radius:14px;box-shadow:0 4px 12px rgba(99,102,241,0.35);transition:all 0.15s ease;" onmouseover="this.style.transform='scale(1.05)';this.style.boxShadow='0 6px 16px rgba(99,102,241,0.45)'" onmouseout="this.style.transform='scale(1)';this.style.boxShadow='0 4px 12px rgba(99,102,241,0.35)'" ontouchstart="this.style.transform='scale(0.95)'" ontouchend="this.style.transform='scale(1)'">+</button>
+        <button class="btn" onclick="addLegalRun(3)" style="flex:1;font-size:28px;padding:18px 0;background:#f1f5f9;color:#1e293b;font-weight:900;border:2px solid #cbd5e1;border-radius:14px;box-shadow:0 2px 4px rgba(0,0,0,0.06);transition:all 0.15s ease;" onmouseover="this.style.background='#e2e8f0';this.style.transform='scale(1.05)';this.style.boxShadow='0 4px 8px rgba(0,0,0,0.12)'" onmouseout="this.style.background='#f1f5f9';this.style.transform='scale(1)';this.style.boxShadow='0 2px 4px rgba(0,0,0,0.06)'" ontouchstart="this.style.transform='scale(0.95)'" ontouchend="this.style.transform='scale(1)'">3</button>
         <button class="btn" onclick="addLegalRun(4)" style="flex:1;font-size:28px;padding:18px 0;background:linear-gradient(135deg, #10b981 0%, #059669 100%);color:#fff;font-weight:900;border:none;border-radius:14px;box-shadow:0 4px 12px rgba(16,185,129,0.35);transition:all 0.15s ease;" onmouseover="this.style.transform='scale(1.05)';this.style.boxShadow='0 6px 16px rgba(16,185,129,0.45)'" onmouseout="this.style.transform='scale(1)';this.style.boxShadow='0 4px 12px rgba(16,185,129,0.35)'" ontouchstart="this.style.transform='scale(0.95)'" ontouchend="this.style.transform='scale(1)'">4</button>
         <button class="btn" onclick="addLegalRun(6)" style="flex:1;font-size:28px;padding:18px 0;background:linear-gradient(135deg, #f59e0b 0%, #d97706 100%);color:#fff;font-weight:900;border:none;border-radius:14px;box-shadow:0 4px 12px rgba(245,158,11,0.35);transition:all 0.15s ease;" onmouseover="this.style.transform='scale(1.05)';this.style.boxShadow='0 6px 16px rgba(245,158,11,0.45)'" onmouseout="this.style.transform='scale(1)';this.style.boxShadow='0 4px 12px rgba(245,158,11,0.35)'" ontouchstart="this.style.transform='scale(0.95)'" ontouchend="this.style.transform='scale(1)'">6</button>
       </div>
 
-      <!-- Second Row: 2 3 5 ☰ -->
+      <!-- Second Row: = 2 1 0 -->
       <div class="row" style="margin-bottom:8px;gap:6px;">
+        <button class="btn btn-muted" onclick="showMoreOptions()" style="flex:1;font-size:28px;padding:18px 0;background:#475569;color:#fff;font-weight:900;border:none;border-radius:14px;box-shadow:0 4px 12px rgba(71,85,105,0.25);transition:all 0.15s ease;" onmouseover="this.style.background='#334155';this.style.transform='scale(1.05)';this.style.boxShadow='0 6px 16px rgba(71,85,105,0.35)'" onmouseout="this.style.background='#475569';this.style.transform='scale(1)';this.style.boxShadow='0 4px 12px rgba(71,85,105,0.25)'" ontouchstart="this.style.transform='scale(0.95)'" ontouchend="this.style.transform='scale(1)'">=</button>
         <button class="btn" onclick="addLegalRun(2)" style="flex:1;font-size:28px;padding:18px 0;background:#f1f5f9;color:#1e293b;font-weight:900;border:2px solid #cbd5e1;border-radius:14px;box-shadow:0 2px 4px rgba(0,0,0,0.06);transition:all 0.15s ease;" onmouseover="this.style.background='#e2e8f0';this.style.transform='scale(1.05)';this.style.boxShadow='0 4px 8px rgba(0,0,0,0.12)'" onmouseout="this.style.background='#f1f5f9';this.style.transform='scale(1)';this.style.boxShadow='0 2px 4px rgba(0,0,0,0.06)'" ontouchstart="this.style.transform='scale(0.95)'" ontouchend="this.style.transform='scale(1)'">2</button>
-        <button class="btn" onclick="addLegalRun(3)" style="flex:1;font-size:28px;padding:18px 0;background:#f1f5f9;color:#1e293b;font-weight:900;border:2px solid #cbd5e1;border-radius:14px;box-shadow:0 2px 4px rgba(0,0,0,0.06);transition:all 0.15s ease;" onmouseover="this.style.background='#e2e8f0';this.style.transform='scale(1.05)';this.style.boxShadow='0 4px 8px rgba(0,0,0,0.12)'" onmouseout="this.style.background='#f1f5f9';this.style.transform='scale(1)';this.style.boxShadow='0 2px 4px rgba(0,0,0,0.06)'" ontouchstart="this.style.transform='scale(0.95)'" ontouchend="this.style.transform='scale(1)'">3</button>
-        <button class="btn" onclick="addLegalRun(5)" style="flex:1;font-size:28px;padding:18px 0;background:#f1f5f9;color:#1e293b;font-weight:900;border:2px solid #cbd5e1;border-radius:14px;box-shadow:0 2px 4px rgba(0,0,0,0.06);transition:all 0.15s ease;" onmouseover="this.style.background='#e2e8f0';this.style.transform='scale(1.05)';this.style.boxShadow='0 4px 8px rgba(0,0,0,0.12)'" onmouseout="this.style.background='#f1f5f9';this.style.transform='scale(1)';this.style.boxShadow='0 2px 4px rgba(0,0,0,0.06)'" ontouchstart="this.style.transform='scale(0.95)'" ontouchend="this.style.transform='scale(1)'">5</button>
-        <button class="btn btn-muted" onclick="showMoreOptions()" style="flex:1;font-size:20px;padding:18px 0;background:#475569;color:#fff;font-weight:900;border:none;border-radius:14px;box-shadow:0 4px 12px rgba(71,85,105,0.25);transition:all 0.15s ease;" onmouseover="this.style.background='#334155';this.style.transform='scale(1.05)';this.style.boxShadow='0 6px 16px rgba(71,85,105,0.35)'" onmouseout="this.style.background='#475569';this.style.transform='scale(1)';this.style.boxShadow='0 4px 12px rgba(71,85,105,0.25)'" ontouchstart="this.style.transform='scale(0.95)'" ontouchend="this.style.transform='scale(1)'">☰</button>
+        <button class="btn" onclick="addLegalRun(1)" style="flex:1;font-size:28px;padding:18px 0;background:#f1f5f9;color:#1e293b;font-weight:900;border:2px solid #cbd5e1;border-radius:14px;box-shadow:0 2px 4px rgba(0,0,0,0.06);transition:all 0.15s ease;" onmouseover="this.style.background='#e2e8f0';this.style.transform='scale(1.05)';this.style.boxShadow='0 4px 8px rgba(0,0,0,0.12)'" onmouseout="this.style.background='#f1f5f9';this.style.transform='scale(1)';this.style.boxShadow='0 2px 4px rgba(0,0,0,0.06)'" ontouchstart="this.style.transform='scale(0.95)'" ontouchend="this.style.transform='scale(1)'">1</button>
+        <button class="btn" onclick="addLegalRun(0)" style="flex:1;font-size:28px;padding:18px 0;background:#f1f5f9;color:#1e293b;font-weight:900;border:2px solid #cbd5e1;border-radius:14px;box-shadow:0 2px 4px rgba(0,0,0,0.06);transition:all 0.15s ease;" onmouseover="this.style.background='#e2e8f0';this.style.transform='scale(1.05)';this.style.boxShadow='0 4px 8px rgba(0,0,0,0.12)'" onmouseout="this.style.background='#f1f5f9';this.style.transform='scale(1)';this.style.boxShadow='0 2px 4px rgba(0,0,0,0.06)'" ontouchstart="this.style.transform='scale(0.95)'" ontouchend="this.style.transform='scale(1)'">0</button>
       </div>
 
       <!-- Additional Options Row (Visible by Default) -->
       <div id="moreRunsRow" style="display:block;margin-top:0px;">
         <!-- Extras with Wicket Row -->
         <div class="row" style="gap:6px;">
-          <button class="btn btn-extra" onclick="showWicketExtraModal('WD')" style="flex:1;font-size:13px;padding:10px 0;background:linear-gradient(135deg, #f59e0b 0%, #d97706 100%);font-weight:800;color:white;border:none;border-radius:10px;box-shadow:0 3px 10px rgba(245,158,11,0.3);transition:all 0.15s ease;" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 5px 14px rgba(245,158,11,0.4)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 3px 10px rgba(245,158,11,0.3)'">WD+W</button>
-          <button class="btn btn-extra" onclick="showWicketExtraModal('NB')" style="flex:1;font-size:13px;padding:10px 0;background:linear-gradient(135deg, #ef4444 0%, #dc2626 100%);font-weight:800;color:white;border:none;border-radius:10px;box-shadow:0 3px 10px rgba(239,68,68,0.3);transition:all 0.15s ease;" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 5px 14px rgba(239,68,68,0.4)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 3px 10px rgba(239,68,68,0.3)'">NB+W</button>
+          <button class="btn btn-extra" onclick="showWicketExtraModal('WD')" style="flex:1;font-size:13px;padding:10px 0;background:linear-gradient(135deg, #f59e0b 0%, #d97706 100%);font-weight:800;color:white;border:none;border-radius:10px;box-shadow:0 3px 10px rgba(245,158,11,0.3);transition:all 0.15s ease;" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 5px 14px rgba(245,158,11,0.4)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 3px 10px rgba(245,158,11,0.3)'">WD+WKT</button>
+          <button class="btn btn-extra" onclick="showWicketExtraModal('NB')" style="flex:1;font-size:13px;padding:10px 0;background:linear-gradient(135deg, #ef4444 0%, #dc2626 100%);font-weight:800;color:white;border:none;border-radius:10px;box-shadow:0 3px 10px rgba(239,68,68,0.3);transition:all 0.15s ease;" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 5px 14px rgba(239,68,68,0.4)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 3px 10px rgba(239,68,68,0.3)'">NB+WKT</button>
           <button class="btn btn-wkt" onclick="showRunOutModal()" style="flex:1;font-size:13px;padding:10px 0;background:linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);font-weight:800;color:white;border:none;border-radius:10px;box-shadow:0 3px 10px rgba(139,92,246,0.3);transition:all 0.15s ease;" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 5px 14px rgba(139,92,246,0.4)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 3px 10px rgba(139,92,246,0.3)'">RUN OUT</button>
         </div>
       </div>
@@ -4574,30 +4574,29 @@ function showRunOutModal() {
   
   // Create modal content
   const modalContent = document.createElement('div');
-  modalContent.style.cssText = 'background:white;border-radius:20px;padding:24px;max-width:400px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,0.4);';
+  modalContent.style.cssText = 'background:white;border-radius:16px;padding:16px;max-width:360px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,0.4);';
   modalContent.onclick = function(e) { e.stopPropagation(); };
   
   let contentHTML = `
-    <h3 style="margin:0 0 16px;font-size:20px;color:#1f2937;text-align:center;">🏃 Run Out</h3>
+    <h3 style="margin:0 0 12px;font-size:17px;color:#1f2937;text-align:center;font-weight:700;">🏃 Run Out</h3>
     
-    <div style="margin-bottom:16px;">
-      <label style="display:block;font-size:14px;font-weight:600;color:#4b5563;margin-bottom:8px;">Runs completed before run out:</label>
+    <div style="margin-bottom:12px;">
       <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;">
   `;
   
-  // Add run buttons (0, 1, 2, 3)
-  [0, 1, 2, 3].forEach(r => {
-    contentHTML += `<button onclick="document.getElementById('runOutRuns').value=${r}" style="padding:12px;background:#e5e7eb;border:none;border-radius:10px;font-size:16px;font-weight:700;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.background='#d1d5db'" onmouseout="this.style.background='#e5e7eb'">${r}</button>`;
+  // Add run buttons (3, 2, 1, 0)
+  [3, 2, 1, 0].forEach(r => {
+    contentHTML += `<button onclick="document.getElementById('runOutRuns').value=${r}" style="padding:10px;background:#e5e7eb;border:none;border-radius:8px;font-size:15px;font-weight:700;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.background='#d1d5db'" onmouseout="this.style.background='#e5e7eb'">${r}</button>`;
   });
   
   contentHTML += `
       </div>
-      <input type="number" id="runOutRuns" min="0" value="0" style="width:100%;padding:10px;border:2px solid #e5e7eb;border-radius:10px;font-size:16px;margin-top:8px;text-align:center;font-weight:600;" />
+      <input type="number" id="runOutRuns" min="0" value="0" style="width:100%;padding:8px;border:2px solid #e5e7eb;border-radius:8px;font-size:15px;margin-top:8px;text-align:center;font-weight:600;" />
     </div>
     
-    <div style="display:flex;gap:12px;margin-top:20px;">
-      <button onclick="closeRunOutModal()" style="flex:1;padding:12px;background:#e5e7eb;color:#1f2937;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;">Cancel</button>
-      <button onclick="confirmRunOut()" style="flex:1;padding:12px;background:#ef4444;color:white;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;">Record Run Out</button>
+    <div style="display:flex;gap:8px;margin-top:12px;">
+      <button onclick="closeRunOutModal()" style="flex:1;padding:10px;background:#e5e7eb;color:#1f2937;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;">Cancel</button>
+      <button onclick="confirmRunOut()" style="flex:1;padding:10px;background:#ef4444;color:white;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;">Record Run Out</button>
     </div>
   `;
   
@@ -4728,7 +4727,7 @@ function showHelpModal() {
           <li><strong>0, 1, 2, 3, 5</strong> - Regular runs off bat</li>
           <li><strong>4, 6</strong> - Boundaries (auto-detected)</li>
           <li><strong>OUT</strong> - Wicket (bowled, caught, LBW, stumped, etc.)</li>
-          <li><strong>☰ More</strong> - RUN OUT, WD+W, NB+W combos</li>
+          <li><strong>☰ More</strong> - RUN OUT, WD+WKT, NB+WKT combos</li>
         </ul>
       </div>
       
@@ -4737,7 +4736,7 @@ function showHelpModal() {
         <ul style="margin:4px 0;padding-left:18px;font-size:12px;">
           <li><strong>WD</strong> (Wide) / <strong>NB</strong> (No Ball) - Tap, then select overthrow runs (0-6)</li>
           <li><strong>LB</strong> (Leg Bye) / <strong>BYE</strong> - Ball missed bat, choose runs (0-6)</li>
-          <li><strong>WD+W</strong> / <strong>NB+W</strong> - Extra with wicket (from ☰ menu)</li>
+          <li><strong>WD+WKT</strong> / <strong>NB+WKT</strong> - Extra with wicket (from ☰ menu)</li>
           <li><strong>RUN OUT</strong> - Dedicated run-out button with runs selector</li>
         </ul>
       </div>
@@ -4774,7 +4773,90 @@ function closeHelpModal() {
   if (modal) modal.remove();
 }
 
-// Show modal for extras with wicket (WD+W, NB+W)
+// Show modal for custom runs input
+function showCustomRunsModal() {
+  const inn = currentInnings();
+  if (inn.done || pendingExtra || currentMatchOver()) return;
+  
+  // Create modal overlay
+  const modalOverlay = document.createElement('div');
+  modalOverlay.id = 'customRunsModalOverlay';
+  modalOverlay.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.7);z-index:10000;display:flex;align-items:center;justify-content:center;padding:20px;';
+  modalOverlay.onclick = function(e) {
+    if (e.target.id === 'customRunsModalOverlay') closeCustomRunsModal();
+  };
+  
+  // Create modal content
+  const modalContent = document.createElement('div');
+  modalContent.style.cssText = 'background:white;border-radius:16px;padding:16px;max-width:360px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,0.4);';
+  modalContent.onclick = function(e) { e.stopPropagation(); };
+  
+  modalContent.innerHTML = `
+    <h3 style="margin:0 0 12px;font-size:17px;color:#1f2937;text-align:center;font-weight:700;">➕ Custom Runs</h3>
+    
+    <div style="margin-bottom:12px;">
+      <input type="number" id="customRunsInput" min="0" max="99" value="" placeholder="Enter runs (0-99)" style="width:100%;padding:10px;border:2px solid #6366f1;border-radius:8px;font-size:16px;text-align:center;font-weight:700;outline:none;" autofocus />
+    </div>
+    
+    <div style="margin-bottom:12px;">
+      <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;">
+        <button onclick="document.getElementById('customRunsInput').value=5" style="padding:10px;background:#e5e7eb;border:none;border-radius:8px;font-size:15px;font-weight:700;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.background='#d1d5db'" onmouseout="this.style.background='#e5e7eb'">5</button>
+        <button onclick="document.getElementById('customRunsInput').value=7" style="padding:10px;background:#e5e7eb;border:none;border-radius:8px;font-size:15px;font-weight:700;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.background='#d1d5db'" onmouseout="this.style.background='#e5e7eb'">7</button>
+        <button onclick="document.getElementById('customRunsInput').value=8" style="padding:10px;background:#e5e7eb;border:none;border-radius:8px;font-size:15px;font-weight:700;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.background='#d1d5db'" onmouseout="this.style.background='#e5e7eb'">8</button>
+        <button onclick="document.getElementById('customRunsInput').value=9" style="padding:10px;background:#e5e7eb;border:none;border-radius:8px;font-size:15px;font-weight:700;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.background='#d1d5db'" onmouseout="this.style.background='#e5e7eb'">9</button>
+        <button onclick="document.getElementById('customRunsInput').value=10" style="padding:10px;background:#e5e7eb;border:none;border-radius:8px;font-size:15px;font-weight:700;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.background='#d1d5db'" onmouseout="this.style.background='#e5e7eb'">10</button>
+      </div>
+    </div>
+    
+    <div style="display:flex;gap:8px;margin-top:12px;">
+      <button onclick="closeCustomRunsModal()" style="flex:1;padding:10px;background:#e5e7eb;color:#1f2937;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;">Cancel</button>
+      <button onclick="confirmCustomRuns()" style="flex:1;padding:10px;background:#6366f1;color:white;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;">Add Runs</button>
+    </div>
+  `;
+  
+  modalContent.innerHTML = modalContent.innerHTML;
+  modalOverlay.appendChild(modalContent);
+  document.body.appendChild(modalOverlay);
+  
+  // Focus input and allow Enter key to confirm
+  setTimeout(() => {
+    const input = document.getElementById('customRunsInput');
+    if (input) {
+      input.focus();
+      input.select();
+      input.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+          confirmCustomRuns();
+        }
+      });
+    }
+  }, 100);
+}
+
+function closeCustomRunsModal() {
+  const modal = document.getElementById('customRunsModalOverlay');
+  if (modal) modal.remove();
+}
+
+function confirmCustomRuns() {
+  const runsInput = document.getElementById('customRunsInput');
+  const runs = parseInt(runsInput.value);
+  
+  if (isNaN(runs) || runs < 0) {
+    alert('Please enter a valid number of runs (0 or more)');
+    return;
+  }
+  
+  if (runs > 99) {
+    alert('Maximum runs per ball is 99');
+    return;
+  }
+  
+  closeCustomRunsModal();
+  addLegalRun(runs);
+}
+
+// Show modal for extras with wicket (WD+WKT, NB+WKT)
 function showWicketExtraModal(extraType) {
   const inn = currentInnings();
   if (inn.done || pendingExtra || currentMatchOver()) return;
@@ -4800,41 +4882,40 @@ function showWicketExtraModal(extraType) {
   
   // Create modal content
   const modalContent = document.createElement('div');
-  modalContent.style.cssText = 'background:white;border-radius:20px;padding:24px;max-width:400px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,0.4);';
+  modalContent.style.cssText = 'background:white;border-radius:16px;padding:16px;max-width:360px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,0.4);';
   modalContent.onclick = function(e) { e.stopPropagation(); };
   
   let contentHTML = `
-    <h3 style="margin:0 0 16px;font-size:20px;color:#1f2937;text-align:center;">${extraNames[extraType]} + Wicket</h3>
+    <h3 style="margin:0 0 12px;font-size:17px;color:#1f2937;text-align:center;font-weight:700;">${extraNames[extraType]} + Wicket</h3>
     
-    <div style="margin-bottom:16px;">
-      <label style="display:block;font-size:14px;font-weight:600;color:#4b5563;margin-bottom:8px;">Extra runs taken (excluding ${extraType} penalty):</label>
+    <div style="margin-bottom:12px;">
       <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;">
   `;
   
-  // Add run buttons (always 0, 1, 2, 3)
-  [0, 1, 2, 3].forEach(r => {
-    contentHTML += `<button onclick="document.getElementById('wicketExtraRuns').value=${r}" style="padding:12px;background:#e5e7eb;border:none;border-radius:10px;font-size:16px;font-weight:700;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.background='#d1d5db'" onmouseout="this.style.background='#e5e7eb'">${r}</button>`;
+  // Add run buttons (always 3, 2, 1, 0)
+  [3, 2, 1, 0].forEach(r => {
+    contentHTML += `<button onclick="document.getElementById('wicketExtraRuns').value=${r}" style="padding:10px;background:#e5e7eb;border:none;border-radius:8px;font-size:15px;font-weight:700;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.background='#d1d5db'" onmouseout="this.style.background='#e5e7eb'">${r}</button>`;
   });
   
   contentHTML += `
       </div>
-      <input type="number" id="wicketExtraRuns" min="0" value="0" style="width:100%;padding:10px;border:2px solid #e5e7eb;border-radius:10px;font-size:16px;margin-top:8px;text-align:center;font-weight:600;" />
+      <input type="number" id="wicketExtraRuns" min="0" value="0" style="width:100%;padding:8px;border:2px solid #e5e7eb;border-radius:8px;font-size:15px;margin-top:8px;text-align:center;font-weight:600;" />
     </div>
   `;
   
   // Add NB ball counting option
   if (extraType === 'NB') {
     contentHTML += `
-    <div style="margin-bottom:16px;">
-      <label style="display:block;font-size:14px;font-weight:600;color:#4b5563;margin-bottom:8px;">⚙️ Ball counting:</label>
-      <div style="display:flex;flex-direction:column;gap:8px;">
-        <label style="display:flex;align-items:center;gap:8px;padding:10px;background:#f8fafc;border-radius:10px;cursor:pointer;border:2px solid #e5e7eb;" onclick="document.getElementById('nbCountNo').checked=true">
-          <input type="radio" id="nbCountNo" name="nbCount" value="no" checked style="width:18px;height:18px;">
-          <span style="font-size:14px;color:#1f2937;">Don't count ball (standard rule)</span>
+    <div style="margin-bottom:12px;">
+      <label style="display:block;font-size:13px;font-weight:600;color:#4b5563;margin-bottom:6px;">⚙️ Ball counting:</label>
+      <div style="display:flex;flex-direction:column;gap:6px;">
+        <label style="display:flex;align-items:center;gap:6px;padding:8px;background:#f8fafc;border-radius:8px;cursor:pointer;border:1px solid #e5e7eb;" onclick="document.getElementById('nbCountNo').checked=true">
+          <input type="radio" id="nbCountNo" name="nbCount" value="no" checked style="width:16px;height:16px;">
+          <span style="font-size:13px;color:#1f2937;">Don't count ball (standard)</span>
         </label>
-        <label style="display:flex;align-items:center;gap:8px;padding:10px;background:#f8fafc;border-radius:10px;cursor:pointer;border:2px solid #e5e7eb;" onclick="document.getElementById('nbCountYes').checked=true">
-          <input type="radio" id="nbCountYes" name="nbCount" value="yes" style="width:18px;height:18px;">
-          <span style="font-size:14px;color:#1f2937;">Count as legal delivery</span>
+        <label style="display:flex;align-items:center;gap:6px;padding:8px;background:#f8fafc;border-radius:8px;cursor:pointer;border:1px solid #e5e7eb;" onclick="document.getElementById('nbCountYes').checked=true">
+          <input type="radio" id="nbCountYes" name="nbCount" value="yes" style="width:16px;height:16px;">
+          <span style="font-size:13px;color:#1f2937;">Count as legal delivery</span>
         </label>
       </div>
     </div>
@@ -4842,9 +4923,9 @@ function showWicketExtraModal(extraType) {
   }
   
   contentHTML += `
-    <div style="display:flex;gap:12px;margin-top:20px;">
-      <button onclick="closeWicketExtraModal()" style="flex:1;padding:12px;background:#e5e7eb;color:#1f2937;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;">Cancel</button>
-      <button onclick="confirmWicketExtra('${extraType}')" style="flex:1;padding:12px;background:#ef4444;color:white;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;">Record Wicket</button>
+    <div style="display:flex;gap:8px;margin-top:12px;">
+      <button onclick="closeWicketExtraModal()" style="flex:1;padding:10px;background:#e5e7eb;color:#1f2937;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;">Cancel</button>
+      <button onclick="confirmWicketExtra('${extraType}')" style="flex:1;padding:10px;background:#ef4444;color:white;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;">Record Wicket</button>
     </div>
   `;
   
