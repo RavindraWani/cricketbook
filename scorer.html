@@ -4795,10 +4795,6 @@ function showCustomRunsModal() {
     <h3 style="margin:0 0 12px;font-size:17px;color:#1f2937;text-align:center;font-weight:700;">➕ Custom Runs</h3>
     
     <div style="margin-bottom:12px;">
-      <input type="number" id="customRunsInput" min="0" max="99" value="" placeholder="Enter runs (0-99)" style="width:100%;padding:10px;border:2px solid #6366f1;border-radius:8px;font-size:16px;text-align:center;font-weight:700;outline:none;" autofocus />
-    </div>
-    
-    <div style="margin-bottom:12px;">
       <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;">
         <button onclick="document.getElementById('customRunsInput').value=5" style="padding:10px;background:#e5e7eb;border:none;border-radius:8px;font-size:15px;font-weight:700;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.background='#d1d5db'" onmouseout="this.style.background='#e5e7eb'">5</button>
         <button onclick="document.getElementById('customRunsInput').value=7" style="padding:10px;background:#e5e7eb;border:none;border-radius:8px;font-size:15px;font-weight:700;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.background='#d1d5db'" onmouseout="this.style.background='#e5e7eb'">7</button>
@@ -4807,6 +4803,11 @@ function showCustomRunsModal() {
         <button onclick="document.getElementById('customRunsInput').value=10" style="padding:10px;background:#e5e7eb;border:none;border-radius:8px;font-size:15px;font-weight:700;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.background='#d1d5db'" onmouseout="this.style.background='#e5e7eb'">10</button>
       </div>
     </div>
+        
+    <div style="margin-bottom:12px;">
+      <input type="number" id="customRunsInput" min="0" max="99" value="" placeholder="Enter runs (0-99)" style="width:100%;padding:10px;border:2px solid #6366f1;border-radius:8px;font-size:16px;text-align:center;font-weight:700;outline:none;" />
+    </div>
+
     
     <div style="display:flex;gap:8px;margin-top:12px;">
       <button onclick="closeCustomRunsModal()" style="flex:1;padding:10px;background:#e5e7eb;color:#1f2937;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;">Cancel</button>
@@ -4818,12 +4819,10 @@ function showCustomRunsModal() {
   modalOverlay.appendChild(modalContent);
   document.body.appendChild(modalOverlay);
   
-  // Focus input and allow Enter key to confirm
+  // Allow Enter key to confirm
   setTimeout(() => {
     const input = document.getElementById('customRunsInput');
     if (input) {
-      input.focus();
-      input.select();
       input.addEventListener('keypress', function(e) {
         if (e.key === 'Enter') {
           confirmCustomRuns();
