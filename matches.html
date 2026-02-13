@@ -200,23 +200,59 @@
       gap: 8px;
     }
     
+    .matches-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+      margin-bottom: 0;
+    }
+    
+    @media (min-width: 768px) {
+      .matches-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+      }
+    }
+    
+    @media (min-width: 1024px) {
+      .matches-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+      }
+    }
+    
+    @media (min-width: 1400px) {
+      .matches-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+      }
+    }
+    
     .card {
       background: var(--card-bg);
       border: 1px solid var(--card-border);
       border-radius: 16px;
-      padding: 16px;
+      padding: 20px;
       box-shadow: 0 10px 40px rgba(0,0,0,.12), 0 2px 8px rgba(0,0,0,.08);
-      margin-bottom: 10px;
+      margin-bottom: 0;
       transition: all 0.3s ease;
+      cursor: pointer;
+      min-height: 150px;
     }
     
     .card:hover {
-      transform: translateY(-2px);
+      transform: translateY(-4px);
       box-shadow: 0 15px 50px rgba(0,0,0,.15), 0 4px 12px rgba(0,0,0,.1);
+      border-color: #3b82f6;
+    }
+    
+    .card:active {
+      transform: translateY(-1px);
     }
     
     [data-theme="dark"] .card:hover {
       box-shadow: 0 15px 50px rgba(0,0,0,.3), 0 4px 12px rgba(0,0,0,.2);
+      border-color: #60a5fa;
     }
     
     .ongoing-card {
@@ -479,6 +515,19 @@
         width: 100%;
         right: -100%;
       }
+      
+      .card {
+        padding: 16px;
+        min-height: auto;
+      }
+      
+      h1, .page-title {
+        font-size: 24px;
+      }
+      
+      .section-title {
+        font-size: 16px;
+      }
     }
     
     .new-match-btn {
@@ -720,7 +769,7 @@
     function updateThemeIcon(theme) {
       const themeToggle = document.getElementById('themeToggle');
       if (themeToggle) {
-        themeToggle.textContent = theme === 'dark' ? '🌞' : '🌜';
+        themeToggle.textContent = theme === 'dark' ? '☀️' : '🌜';
         themeToggle.title = theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode';
       }
     }
@@ -754,7 +803,7 @@
       <a href="index.html" class="nav-title">🏏 CricketBook</a>
       <div style="display: flex; align-items: center;">
         <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Toggle Dark Mode">
-          🌜
+          ☀️
         </button>
         <button class="nav-toggle" onclick="toggleNav()">
           <span class="hamburger">☰</span>
@@ -764,9 +813,9 @@
     </div>
     <nav class="nav-links" id="navLinks">
       <a href="index.html">🏠 Home</a>
-      <a href="livescore.html">📺 Live Score</a>
+      <a href="livescore.html">🏏 Live Score</a>
       <a href="matches.html" class="active">📋 My Matches</a>
-      <a href="allmatches.html">🌍 All Matches</a>
+      <a href="allmatches.html">📊 All Matches</a>
       <a href="about.html">ℹ️ About</a>
     </nav>
     
@@ -911,7 +960,7 @@
     if (!organizationId && userMatches.length === 0) {
       // No org ID and no match history - show welcome message
       console.warn('⚠️ No Organization ID found and no match history. Please start a match first.');
-      document.getElementById('loading').innerHTML = '<div class="empty-state"><div class="empty-state-icon">🏏</div><div style="font-size:20px;font-weight:800;margin-bottom:8px;color:#1f2937;">Welcome to CricketBook!</div><div style="color:#6b7280;font-size:14px;line-height:1.6;margin-bottom:20px;">Your match history will appear here once you start scoring.<br>Let\'s get started with your first cricket match!</div><a href="index.html" class="btn new-match-btn" style="max-width:320px;margin:0 auto;background:linear-gradient(135deg, #667eea 0%, #764ba2 100%);color:white;padding:12px 28px;border-radius:12px;text-decoration:none;display:inline-block;font-weight:700;box-shadow:0 4px 12px rgba(102,126,234,0.3);transition:all 0.2s;">🏠 Go to Home & Start Match</a></div>';
+      document.getElementById('loading').innerHTML = '<div class="empty-state"><div class="empty-state-icon">🏏</div><div style="font-size:20px;font-weight:800;margin-bottom:8px;color:#1f2937;">Welcome to CricketBook!</div><div style="color:#6b7280;font-size:14px;line-height:1.6;margin-bottom:20px;">Your match history will appear here once you start scoring.<br>Let\'s get started with your first cricket match!</div><a href="index.html" class="btn new-match-btn" style="max-width:320px;margin:0 auto;background:linear-gradient(135deg, #667eea 0%, #764ba2 100%);color:white;padding:12px 28px;border-radius:12px;text-decoration:none;display:inline-block;font-weight:700;box-shadow:0 4px 12px rgba(102,126,234,0.3);transition:all 0.2s;">� Go to Home & Start Match</a></div>';
       document.getElementById('loading').style.display = 'block';
       document.getElementById('content').style.display = 'none';
     } else {
@@ -922,7 +971,7 @@
       loadMatches();
     }
     
-    // Update page header with tournament name
+    // Update page header
     function updatePageHeader(matchesArray) {
       if (!matchesArray || matchesArray.length === 0) return;
       
@@ -931,12 +980,12 @@
       const completedMatches = matchesArray.filter(m => m.matchCompleted || (m.resultText && m.resultText.trim() !== '')).length;
       const liveMatches = matchesArray.filter(m => !m.matchCompleted && (!m.resultText || m.resultText.trim() === '')).length;
       
-      // Get tournament name from first match (all should be same tournament if org ID provided)
-      const tournamentName = matchesArray[0]?.tournamentName;
+      // Check if viewing specific tournament
       const urlOrgId = new URLSearchParams(window.location.search).get('org');
       
-      if (tournamentName && tournamentName.trim() !== '') {
-        // Tournament matches - customize header
+      if (urlOrgId) {
+        // Viewing specific tournament - show tournament name in header
+        const tournamentName = matchesArray[0]?.tournamentName || 'Tournament';
         document.getElementById('pageHeader').innerHTML = `🏆 ${tournamentName}`;
         document.getElementById('pageSubheader').textContent = 'Tournament Dashboard';
         
@@ -944,54 +993,27 @@
         document.getElementById('tournamentStats').innerHTML = `${totalMatches} ${totalMatches === 1 ? 'Match' : 'Matches'} • ${completedMatches} Completed • ${liveMatches} Live`;
         document.getElementById('tournamentStats').style.display = 'block';
         
-        // Show share button
+        // Show share button and breadcrumb
         document.getElementById('shareButtonContainer').style.display = 'block';
-        
-        // Show breadcrumb only if viewing via org parameter (shared link)
-        if (urlOrgId) {
-          document.getElementById('breadcrumb').style.display = 'block';
-        }
+        document.getElementById('breadcrumb').style.display = 'block';
         
         // Update page title
         document.title = `${tournamentName} - Tournament Dashboard | CricketBook`;
       } else {
-        // Quick matches - check if multiple tournaments
-        const tournamentNames = new Set();
-        matchesArray.forEach(match => {
-          if (match.tournamentName && match.tournamentName.trim() !== '') {
-            tournamentNames.add(match.tournamentName);
-          }
-        });
+        // Main matches page - generic header
+        document.getElementById('pageHeader').textContent = '🏏 My Matches';
+        document.getElementById('pageSubheader').textContent = 'All Cricket Matches';
         
-        if (tournamentNames.size === 1) {
-          // Single tournament in history
-          const name = Array.from(tournamentNames)[0];
-          document.getElementById('pageHeader').innerHTML = `🏆 ${name}`;
-          document.getElementById('pageSubheader').textContent = 'Tournament Dashboard';
-          
-          // Show tournament stats
-          document.getElementById('tournamentStats').innerHTML = `${totalMatches} ${totalMatches === 1 ? 'Match' : 'Matches'} • ${completedMatches} Completed • ${liveMatches} Live`;
-          document.getElementById('tournamentStats').style.display = 'block';
-          
-          // Show share button
-          document.getElementById('shareButtonContainer').style.display = 'block';
-          
-          document.title = `${name} - Tournament Dashboard | CricketBook`;
-        } else if (tournamentNames.size > 1) {
-          // Multiple tournaments
-          document.getElementById('pageHeader').textContent = '🏏 My Tournaments';
-          document.getElementById('pageSubheader').textContent = `${tournamentNames.size} Active Tournaments`;
-          
-          // Show overall stats
-          document.getElementById('tournamentStats').innerHTML = `${totalMatches} Total Matches • ${completedMatches} Completed • ${liveMatches} Live`;
-          document.getElementById('tournamentStats').style.display = 'block';
-        } else {
-          // Only quick matches (no tournament names)
-          document.getElementById('tournamentStats').innerHTML = `${totalMatches} ${totalMatches === 1 ? 'Match' : 'Matches'} • ${completedMatches} Completed • ${liveMatches} Live`;
-          document.getElementById('tournamentStats').style.display = 'block';
-        }
-        // Hide breadcrumb for personal view
+        // Show overall stats
+        document.getElementById('tournamentStats').innerHTML = `${totalMatches} Total Matches • ${completedMatches} Completed • ${liveMatches} Live`;
+        document.getElementById('tournamentStats').style.display = 'block';
+        
+        // Hide breadcrumb and share button on main page
         document.getElementById('breadcrumb').style.display = 'none';
+        document.getElementById('shareButtonContainer').style.display = 'none';
+        
+        // Generic page title
+        document.title = 'My Cricket Matches | CricketBook';
       }
     }
     
@@ -1018,7 +1040,7 @@
       // If no orgIds found, show empty state
       if (orgIds.size === 0) {
         console.log('⚠️ No organization IDs found in history');
-        document.getElementById('loading').innerHTML = '<div class="empty-state"><div class="empty-state-icon">🏏</div><div style="font-size:18px;font-weight:700;margin-bottom:8px;color:#1f2937;">No Matches Found</div><div style="color:#6b7280;font-size:14px;line-height:1.6;margin-bottom:20px;">Your match history is empty right now.<br>Start scoring your first match and build your cricket record!</div><a href="index.html" style="background:linear-gradient(135deg, #667eea 0%, #764ba2 100%);color:white;padding:12px 28px;border-radius:12px;text-decoration:none;display:inline-block;font-weight:700;box-shadow:0 4px 12px rgba(102,126,234,0.3);transition:all 0.2s;">🏠 Go to Home & Start Scoring</a></div>';
+        document.getElementById('loading').innerHTML = '<div class="empty-state"><div class="empty-state-icon">🏏</div><div style="font-size:18px;font-weight:700;margin-bottom:8px;color:#1f2937;">No Matches Found</div><div style="color:#6b7280;font-size:14px;line-height:1.6;margin-bottom:20px;">Your match history is empty right now.<br>Start scoring your first match and build your cricket record!</div><a href="index.html" style="background:linear-gradient(135deg, #667eea 0%, #764ba2 100%);color:white;padding:12px 28px;border-radius:12px;text-decoration:none;display:inline-block;font-weight:700;box-shadow:0 4px 12px rgba(102,126,234,0.3);transition:all 0.2s;">� Go to Home & Start Scoring</a></div>';
         document.getElementById('loading').style.display = 'block';
         document.getElementById('content').style.display = 'none';
         return;
@@ -1043,14 +1065,14 @@
         console.log('📊 Loaded total matches from Firebase:', Object.keys(allMatches).length);
         
         if (Object.keys(allMatches).length === 0) {
-          document.getElementById('loading').innerHTML = '<div class="empty-state"><div class="empty-state-icon">🏏</div><div style="font-size:18px;font-weight:700;margin-bottom:8px;color:#1f2937;">No Matches Found</div><div style="color:#6b7280;font-size:14px;line-height:1.6;margin-bottom:20px;">Your match history is empty right now.<br>Start scoring your first match and build your cricket record!</div><a href="index.html" style="background:linear-gradient(135deg, #667eea 0%, #764ba2 100%);color:white;padding:12px 28px;border-radius:12px;text-decoration:none;display:inline-block;font-weight:700;box-shadow:0 4px 12px rgba(102,126,234,0.3);transition:all 0.2s;">🏠 Go to Home & Start Scoring</a></div>';
+          document.getElementById('loading').innerHTML = '<div class="empty-state"><div class="empty-state-icon">🏏</div><div style="font-size:18px;font-weight:700;margin-bottom:8px;color:#1f2937;">No Matches Found</div><div style="color:#6b7280;font-size:14px;line-height:1.6;margin-bottom:20px;">Your match history is empty right now.<br>Start scoring your first match and build your cricket record!</div><a href="index.html" style="background:linear-gradient(135deg, #667eea 0%, #764ba2 100%);color:white;padding:12px 28px;border-radius:12px;text-decoration:none;display:inline-block;font-weight:700;box-shadow:0 4px 12px rgba(102,126,234,0.3);transition:all 0.2s;">� Go to Home & Start Scoring</a></div>';
           document.getElementById('loading').style.display = 'block';
           document.getElementById('content').style.display = 'none';
           return;
         }
       
       // Convert to array and sort by lastUpdated timestamp (newest first)
-      const matchesArray = Object.keys(allMatches).map(matchId => ({
+      let matchesArray = Object.keys(allMatches).map(matchId => ({
         matchId: matchId,
         ...allMatches[matchId]
       })).sort((a, b) => {
@@ -1064,6 +1086,34 @@
       
       // Store matches globally for export
       allMatchesData = matchesArray;
+      
+      // Check if viewing specific tournament (org parameter)
+      const urlOrgId = new URLSearchParams(window.location.search).get('org');
+      
+      if (urlOrgId) {
+        // Filter matches for specific tournament only
+        matchesArray = matchesArray.filter(m => m.organizationId === urlOrgId);
+        console.log(`🎯 Filtered to ${matchesArray.length} matches for org: ${urlOrgId}`);
+        
+        // If no matches found for this org, show message
+        if (matchesArray.length === 0) {
+          document.getElementById('loading').innerHTML = `
+            <div class="empty-state">
+              <div class="empty-state-icon">🏏</div>
+              <div style="font-size:18px;font-weight:700;margin-bottom:8px;color:#1f2937;">No Matches Found for This Tournament</div>
+              <div style="color:#6b7280;font-size:14px;line-height:1.6;margin-bottom:20px;">
+                This tournament doesn't have any matches yet or you don't have access to view them.
+              </div>
+              <a href="matches.html" style="background:linear-gradient(135deg, #667eea 0%, #764ba2 100%);color:white;padding:12px 28px;border-radius:12px;text-decoration:none;display:inline-block;font-weight:700;box-shadow:0 4px 12px rgba(102,126,234,0.3);transition:all 0.2s;">
+                ← View All My Matches
+              </a>
+            </div>
+          `;
+          document.getElementById('loading').style.display = 'block';
+          document.getElementById('content').style.display = 'none';
+          return; // Exit early
+        }
+      }
       
       // Update header with tournament name if available
       updatePageHeader(matchesArray);
@@ -1104,8 +1154,14 @@
         document.getElementById('ongoingSection').style.display = 'none';
       }
       
-      // Calculate and display points table for League matches
-      calculatePointsTable(matchesArray);
+      // Only show league table when viewing specific tournament (with org parameter)
+      if (urlOrgId) {
+        // Calculate and display points table for League matches
+        calculatePointsTable(matchesArray);
+      } else {
+        // Hide league table on main page (no org parameter)
+        document.getElementById('pointsTableSection').style.display = 'none';
+      }
       
       // Update last updated timestamp
       const now = new Date();
@@ -1260,7 +1316,141 @@
         return;
       }
       
-      container.innerHTML = matches.map(match => {
+      // Check if we're on main page (no org parameter) - then group by tournament
+      const urlOrgId = new URLSearchParams(window.location.search).get('org');
+      
+      if (!urlOrgId) {
+        // Group matches by tournament (main page view)
+        const tournamentGroups = {};
+        const quickMatches = [];
+        
+        matches.forEach(match => {
+          const orgId = match.organizationId || 'unknown';
+          const tournamentName = match.tournamentName || '';
+          
+          // Separate quick matches (no tournament name)
+          if (!tournamentName || tournamentName.trim() === '') {
+            quickMatches.push(match);
+          } else {
+            // Tournament matches - group by org
+            if (!tournamentGroups[orgId]) {
+              tournamentGroups[orgId] = {
+                tournamentName: tournamentName,
+                organizationId: orgId,
+                matches: []
+              };
+            }
+            tournamentGroups[orgId].matches.push(match);
+          }
+        });
+        
+        // Display tournaments first with clickable headers
+        let html = Object.values(tournamentGroups).map(group => {
+          const totalMatches = group.matches.length;
+          const liveMatches = group.matches.filter(m => !m.matchCompleted && (!m.resultText || m.resultText.trim() === '')).length;
+          const completedMatches = group.matches.filter(m => m.matchCompleted || (m.resultText && m.resultText.trim() !== '')).length;
+          const leagueMatches = group.matches.filter(m => m.matchType && m.matchType.toLowerCase().includes('league')).length;
+          
+          return `
+            <!-- Tournament Group Header - Clickable -->
+          <div onclick="window.location.href='matches.html?org=${group.organizationId}'" 
+               style="background:linear-gradient(135deg, rgba(102,126,234,0.15) 0%, rgba(118,75,162,0.15) 100%);
+                      padding:20px;
+                      border-radius:16px;
+                      margin-bottom:16px;
+                      cursor:pointer;
+                      transition:all 0.3s;
+                      border:2px solid rgba(102,126,234,0.2);
+                      box-shadow:0 4px 12px rgba(0,0,0,0.05);" 
+               onmouseover="this.style.borderColor='#667eea';
+                           this.style.transform='translateX(4px)';
+                           this.style.boxShadow='0 8px 24px rgba(102,126,234,0.3)'" 
+               onmouseout="this.style.borderColor='rgba(102,126,234,0.2)';
+                          this.style.transform='translateX(0)';
+                          this.style.boxShadow='0 4px 12px rgba(0,0,0,0.05)'">
+            <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
+              <div style="flex:1;min-width:200px;">
+                <h3 style="margin:0 0 12px 0;font-size:20px;font-weight:800;color:var(--text-primary);line-height:1.3;">
+                  🏆 ${group.tournamentName}
+                  ${liveMatches > 0 ? '<span style="display:inline-block;background:#ef4444;color:white;padding:4px 10px;border-radius:16px;font-size:11px;margin-left:8px;animation:pulse 2s infinite;">🔴 LIVE</span>' : ''}
+                </h3>
+                <div style="font-size:14px;color:var(--text-secondary);line-height:1.6;">
+                  <span style="font-weight:600;">${totalMatches}</span> matches • 
+                  <span style="color:#10b981;">${completedMatches} completed</span>
+                  ${liveMatches > 0 ? ` • <span style="color:#ef4444;font-weight:600;">${liveMatches} live</span>` : ''}
+                  ${leagueMatches > 0 ? ` • ${leagueMatches} league` : ''}
+                </div>
+              </div>
+              <div style="font-size:15px;font-weight:700;color:#667eea;white-space:nowrap;">
+                View Tournament →
+              </div>
+            </div>
+          </div>
+          
+          <!-- Matches Grid - Show first 3 matches as preview -->
+          <div class="matches-grid">
+            ${group.matches.slice(0, 3).map(match => generateMatchCard(match)).join('')}
+          </div>
+          
+          ${group.matches.length > 3 ? `
+            <div style="text-align:center;margin:24px 0 32px 0;">
+              <a href="matches.html?org=${group.organizationId}" 
+                 style="display:inline-block;
+                        padding:14px 32px;
+                        background:linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                        color:white;
+                        text-decoration:none;
+                        border-radius:12px;
+                        font-weight:700;
+                        font-size:15px;
+                        transition:all 0.3s;
+                        box-shadow:0 4px 12px rgba(102,126,234,0.3);
+                        min-height:48px;
+                        display:inline-flex;
+                        align-items:center;
+                        justify-content:center;" 
+                 onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 20px rgba(102,126,234,0.4)'" 
+                 onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 4px 12px rgba(102,126,234,0.3)'">
+                View All ${group.matches.length} Matches →
+              </a>
+            </div>
+          ` : '<div style="margin-bottom:32px;"></div>'}
+        `;
+      }).join('');
+      
+      // Display Quick Matches section if there are any
+      if (quickMatches.length > 0) {
+        html += `
+          <div style="background:linear-gradient(135deg, rgba(245,158,11,0.15) 0%, rgba(251,191,36,0.15) 100%);
+                      padding:20px;
+                      border-radius:16px;
+                      margin:24px 0 16px 0;
+                      border-left:4px solid #f59e0b;
+                      box-shadow:0 4px 12px rgba(0,0,0,0.05);">
+            <h3 style="margin:0 0 12px 0;font-size:20px;font-weight:800;color:var(--text-primary);">
+              ⚡ Quick Matches
+            </h3>
+            <div style="font-size:14px;color:var(--text-secondary);line-height:1.6;">
+              ${quickMatches.length} ${quickMatches.length === 1 ? 'match' : 'matches'} • No tournament
+            </div>
+          </div>
+          
+          <!-- Display all quick matches in grid -->
+          <div class="matches-grid">
+            ${quickMatches.map(match => generateMatchCard(match)).join('')}
+          </div>
+        `;
+      }
+        
+        container.innerHTML = html;
+      } else {
+        // Single tournament view - show all matches
+        container.innerHTML = matches.map(match => generateMatchCard(match)).join('');
+      }
+    }
+    
+    // Extract match card generation to separate function
+    function generateMatchCard(match) {
         const firstScore = `${match.first?.runs || 0}/${match.first?.wkts || 0}`;
         const firstOvers = calculateOvers(match.first?.legalBalls || 0);
         const secondScore = `${match.second?.runs || 0}/${match.second?.wkts || 0}`;
@@ -1370,7 +1560,6 @@
             </div>
           </div>
         `;
-      }).join('');
     }
     
     function calculateOvers(legalBalls) {
@@ -1565,7 +1754,7 @@
           <tr class="nrr-breakdown ${isOpen}" id="breakdown-${rowId}">
             <td colspan="8">
               <div class="nrr-formula">
-                <div class="nrr-formula-title">📊 NRR Calculation for ${team.team}</div>
+                <div class="nrr-formula-title">� NRR Calculation for ${team.team}</div>
                 <div class="nrr-calc-step"><strong>Runs Scored:</strong> ${team.nrrDetails.runsScored} runs in ${team.nrrDetails.oversPlayed} overs</div>
                 <div class="nrr-calc-step"><strong>Run Rate (For):</strong> ${team.nrrDetails.runsScored} ÷ ${team.nrrDetails.oversPlayed} = <strong>${team.nrrDetails.runRateFor}</strong></div>
                 <div class="nrr-calc-step" style="margin-top:12px;"><strong>Runs Conceded:</strong> ${team.nrrDetails.runsConceded} runs in ${team.nrrDetails.oversBowled} overs</div>
@@ -1718,7 +1907,7 @@
       
       // Prepare share content
       const shareTitle = `${tournamentName} - Tournament Dashboard`;
-      const shareMessage = `🏆 *${tournamentName}* - Live Tournament\n\n📋 View all matches, schedules & live scores\n\n👉 Tournament Dashboard:\n${shareLink}\n\n⚡ Powered by CricketBook`;
+      const shareMessage = `� *${tournamentName}* - Live Tournament\n\n� View all matches, schedules & live scores\n\n� Tournament Dashboard:\n${shareLink}\n\n⚡ Powered by CricketBook`;
       
       // Try native share API first (mobile)
       if (navigator.share) {
@@ -1789,7 +1978,7 @@
   <footer style="text-align:center;padding:24px 0;color:#ffffff;font-size:14px;margin-top:24px;">
     <p style="margin:0 0 8px;">Made with ❤️ for local cricket matches.</p>
     <p style="margin:0 0 8px;opacity:0.9;">© 2026 CricketBook — Realtime Cricket Scoring Tool</p>
-    <p style="margin:0;"><a href="https://www.instagram.com/cricketbook.digital/" target="_blank" rel="noopener noreferrer" style="color:white;text-decoration:none;font-weight:600;opacity:0.95;transition:opacity 0.2s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.95'">📷 Follow us on Instagram</a></p>
+    <p style="margin:0;"><a href="https://www.instagram.com/cricketbook.digital/" target="_blank" rel="noopener noreferrer" style="color:white;text-decoration:none;font-weight:600;opacity:0.95;transition:opacity 0.2s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.95'">� Follow us on Instagram</a></p>
   </footer>
   <script>
     // Register Service Worker for PWA (only works on HTTP/HTTPS)
