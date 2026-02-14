@@ -156,7 +156,7 @@
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
       background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
       min-height: 100vh;
-      padding: 18px;
+      padding: 0;
       color: var(--text-primary);
       transition: background 0.3s ease, color 0.3s ease;
     }
@@ -164,6 +164,28 @@
     .container {
       max-width: 480px;
       margin: 0 auto;
+      padding: 0 18px;
+    }
+    
+    /* Nav and Footer Containers */
+    .nav-container,
+    .footer-container {
+      padding: 0 18px;
+    }
+    
+    /* Footer */
+    .footer {
+      text-align: center;
+      color: white;
+      padding: 16px;
+      opacity: 0.9;
+      max-width: 1200px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    
+    .footer p {
+      font-size: 13px;
     }
     
     .card {
@@ -245,9 +267,12 @@
       justify-content: space-between;
       align-items: center;
       margin-bottom: 15px;
-      padding: 0 5px;
+      padding: 18px 5px;
       position: relative;
       z-index: 1001;
+      max-width: 1200px;
+      margin-left: auto;
+      margin-right: auto;
     }
 
     .nav-title {
@@ -472,9 +497,9 @@
   </script>
 </head>
 <body>
-  <div class="container">
-    <!-- Navigation -->
-    <div class="nav-backdrop" id="navBackdrop" onclick="toggleNav()"></div>
+  <!-- Navigation -->
+  <div class="nav-backdrop" id="navBackdrop" onclick="toggleNav()"></div>
+  <div class="nav-container">
     <div class="nav-header">
       <a href="index.html" class="nav-title">🏏 CricketBook</a>
       <div style="display: flex; align-items: center;">
@@ -487,13 +512,16 @@
         </button>
       </div>
     </div>
-    <nav class="nav-links" id="navLinks">
-      <a href="index.html">🏠 Home</a>
-      <a href="livescore.html" class="active">📺 Live Score</a>
-      <a href="matches.html">📋 My Matches</a>
-      <a href="allmatches.html">🌍 All Matches</a>
-      <a href="about.html">ℹ️ About</a>
-    </nav>
+  </div>
+  <nav class="nav-links" id="navLinks">
+    <a href="index.html">🏠 Home</a>
+    <a href="livescore.html" class="active">📺 Live Score</a>
+    <a href="matches.html">📋 My Matches</a>
+    <a href="allmatches.html">🌍 All Matches</a>
+    <a href="about.html">ℹ️ About</a>
+  </nav>
+  
+  <div class="container">
     
     <div class="loading" id="loading">Loading match data...</div>
     
@@ -1826,13 +1854,51 @@
       }
     });
   </script>
+  </div>
 
   <!-- Footer -->
-  <footer style="text-align:center;padding:24px 0;color:#ffffff;font-size:14px;margin-top:24px;">
-    <p style="margin:0 0 8px;">Made with ❤️ for local cricket matches.</p>
-    <p style="margin:0 0 8px;opacity:0.9;">© 2026 CricketBook — Realtime Cricket Scoring Tool</p>
-    <p style="margin:0;"><a href="https://www.instagram.com/cricketbook.digital/" target="_blank" rel="noopener noreferrer" style="color:white;text-decoration:none;font-weight:600;opacity:0.95;transition:opacity 0.2s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.95'">📷 Follow us on Instagram</a></p>
-  </footer>
+  <div class="footer-container">
+    <div class="footer">
+      <p style="margin:0 0 6px;font-size:13px;">Made with ❤️ for cricket • © 2026 CricketBook</p>
+      <p style="margin:0;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:8px;font-size:13px;">
+        <a href="https://www.instagram.com/cricketbook.digital/" target="_blank" rel="noopener noreferrer" onclick="gtag('event', 'cta_click', {'event_category': 'Footer', 'event_label': 'Instagram', 'value': 1});" style="color:white;text-decoration:none;font-weight:600;opacity:0.95;transition:opacity 0.2s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.95'">📷 Instagram</a>
+        <span style="opacity:0.7;">•</span>
+        <button onclick="sharePageURL()" style="background:none;border:none;color:white;font-weight:600;cursor:pointer;opacity:0.95;transition:opacity 0.2s;padding:0;font-size:13px;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.95'" title="Share this page">🔗 Share</button>
+      </p>
+    </div>
+  </div>
+  
+  <script>
+    // Share page URL function
+    function sharePageURL() {
+      const pageURL = window.location.href;
+      const pageTitle = document.title;
+      
+      if (navigator.share) {
+        navigator.share({
+          title: pageTitle,
+          url: pageURL
+        }).then(() => {
+          console.log('✅ Page shared successfully');
+          gtag('event', 'share', {'event_category': 'Footer', 'event_label': 'Share Page', 'value': 1});
+        }).catch((error) => {
+          console.log('❌ Share failed:', error);
+          fallbackCopyURL(pageURL);
+        });
+      } else {
+        fallbackCopyURL(pageURL);
+      }
+    }
+    
+    function fallbackCopyURL(url) {
+      navigator.clipboard.writeText(url).then(() => {
+        alert('✅ Page URL copied to clipboard!');
+        gtag('event', 'copy_url', {'event_category': 'Footer', 'event_label': 'Copy Page URL', 'value': 1});
+      }).catch(() => {
+        alert('Page URL: ' + url);
+      });
+    }
+  </script>
   <script>
     // Register Service Worker for PWA (only works on HTTP/HTTPS)
     if ('serviceWorker' in navigator && window.location.protocol !== 'file:') {

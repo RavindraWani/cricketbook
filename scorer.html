@@ -394,6 +394,25 @@
     word-break: break-word;
   }
   
+  /* Footer */
+  .footer-container {
+    padding: 0 18px;
+  }
+  
+  .footer {
+    text-align: center;
+    color: white;
+    padding: 16px;
+    opacity: 0.9;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  .footer p {
+    font-size: 13px;
+  }
+  
   .confirmation-modal-footer {
     padding: 10px 12px;
     background: var(--table-bg);
@@ -5658,11 +5677,47 @@ window.addEventListener('DOMContentLoaded', () => {
 </script>
 
 <!-- Footer -->
-<footer style="text-align:center;padding:24px 0;color:#ffffff;font-size:14px;margin-top:24px;">
-  <p style="margin:0 0 8px;">Made with ❤️ for local cricket matches.</p>
-  <p style="margin:0 0 8px;opacity:0.9;">© 2026 CricketBook — Realtime Cricket Scoring Tool</p>
-  <p style="margin:0;"><a href="https://www.instagram.com/cricketbook.digital/" target="_blank" rel="noopener noreferrer" style="color:white;text-decoration:none;font-weight:600;opacity:0.95;transition:opacity 0.2s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.95'">📷 Follow us on Instagram</a></p>
-</footer>
+<div class="footer-container">
+  <div class="footer">
+    <p style="margin:0 0 6px;font-size:13px;">Made with ❤️ for cricket • © 2026 CricketBook</p>
+    <p style="margin:0;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:8px;font-size:13px;">
+      <a href="https://www.instagram.com/cricketbook.digital/" target="_blank" rel="noopener noreferrer" onclick="gtag('event', 'cta_click', {'event_category': 'Footer', 'event_label': 'Instagram', 'value': 1});" style="color:white;text-decoration:none;font-weight:600;opacity:0.95;transition:opacity 0.2s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.95'">📷 Instagram</a>
+      <span style="opacity:0.7;">•</span>
+      <button onclick="sharePageURL()" style="background:none;border:none;color:white;font-weight:600;cursor:pointer;opacity:0.95;transition:opacity 0.2s;padding:0;font-size:13px;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.95'" title="Share this page">🔗 Share</button>
+    </p>
+  </div>
+</div>
+<script>
+  // Share page URL function
+  function sharePageURL() {
+    const pageURL = window.location.href;
+    const pageTitle = document.title;
+    
+    if (navigator.share) {
+      navigator.share({
+        title: pageTitle,
+        url: pageURL
+      }).then(() => {
+        console.log('✅ Page shared successfully');
+        gtag('event', 'share', {'event_category': 'Footer', 'event_label': 'Share Page', 'value': 1});
+      }).catch((error) => {
+        console.log('❌ Share failed:', error);
+        fallbackCopyURL(pageURL);
+      });
+    } else {
+      fallbackCopyURL(pageURL);
+    }
+  }
+  
+  function fallbackCopyURL(url) {
+    navigator.clipboard.writeText(url).then(() => {
+      alert('✅ Page URL copied to clipboard!');
+      gtag('event', 'copy_url', {'event_category': 'Footer', 'event_label': 'Copy Page URL', 'value': 1});
+    }).catch(() => {
+      alert('Page URL: ' + url);
+    });
+  }
+</script>
 <script>
   // Register Service Worker for PWA (only works on HTTP/HTTPS)
   if ('serviceWorker' in navigator && window.location.protocol !== 'file:') {
