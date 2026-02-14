@@ -853,7 +853,7 @@
     
     if (!tournamentName || tournamentName === '') {
       tournamentStatus.style.display = 'none';
-      passwordHelpText.textContent = 'Required for tournaments. Protects your tournament and allows team collaboration.';
+      passwordHelpText.textContent = 'Required for tournaments. Protects your tournament and enables collaboration access.';
       passwordHelpText.style.color = '#64748b';
       return;
     }
@@ -871,13 +871,13 @@
         // Tournament exists
         tournamentStatus.style.display = 'block';
         tournamentStatus.innerHTML = '<div style="padding:8px;background:#fef2f2;border:1px solid #fecaca;border-radius:8px;color:#991b1b;font-size:11px;font-weight:600;">⚠️ Tournament exists! Enter correct password to add matches.</div>';
-        passwordHelpText.textContent = 'This tournament already exists. Enter the correct password to join and add matches.';
+        passwordHelpText.textContent = 'This tournament already exists. Enter the correct password to collaborate and add matches.';
         passwordHelpText.style.color = '#991b1b';
       } else {
         // Tournament doesn't exist - new
         tournamentStatus.style.display = 'block';
         tournamentStatus.innerHTML = '<div style="padding:8px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;color:#166534;font-size:11px;font-weight:600;">✅ Available! Set a password to create this tournament.</div>';
-        passwordHelpText.textContent = 'Create a new tournament with this name. Set a password to protect it.';
+        passwordHelpText.textContent = 'Create a new tournament with this name. Set a password to protect it and enable collaboration.';
         passwordHelpText.style.color = '#166534';
       }
     } catch (error) {
@@ -1504,7 +1504,7 @@
       
       <div id="passwordSection" class="password-section" style="padding:12px;border:2px solid;border-radius:10px;">
         <label style="display:block;font-weight:600;font-size:13px;margin-bottom:3px;">🔐 Tournament Password <span style="color:#ef4444;">*</span></label>
-        <p id="passwordHelpText" class="setup-hint" style="font-size:10px;margin:0 0 6px 0;line-height:1.4;">Required for tournaments. Protects your tournament and allows team collaboration.</p>
+        <p id="passwordHelpText" class="setup-hint" style="font-size:10px;margin:0 0 6px 0;line-height:1.4;">Required for tournaments. Protects your tournament and enables collaboration access.</p>
         <div style="position:relative;">
           <input id="tournamentPassword" type="password" placeholder="Enter password" style="border:2px solid;padding:10px 12px;padding-right:45px;border-radius:12px;width:100%;font-size:14px;transition:border 0.2s;" onfocus="this.style.borderColor='#f59e0b'" onblur="this.style.borderColor=''" oninput="checkPasswordStrength()" />
           <button type="button" onclick="togglePasswordVisibility()" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:16px;padding:0;line-height:1;">👁️</button>
@@ -3831,7 +3831,7 @@ async function checkTournamentExists() {
   
   if (!tournamentName) {
     statusDiv.style.display = 'none';
-    passwordHelpText.textContent = 'Required for named tournaments. Protects your tournament and allows team collaboration. Leave both name and password blank for quick matches.';
+    passwordHelpText.textContent = 'Required for named tournaments. Protects your tournament and enables collaboration access. Leave both name and password blank for quick matches.';
     passwordSection.style.borderColor = '#e2e8f0';
     passwordSection.style.background = '#f8fafc';
     return;
@@ -3853,13 +3853,13 @@ async function checkTournamentExists() {
       if (exists) {
         statusDiv.innerHTML = '<div style="padding:8px 12px;background:#fef3c7;border:1px solid #fbbf24;border-radius:8px;color:#92400e;font-size:12px;font-weight:600;">⚠️ Tournament exists! Enter password to add matches or choose a different name.</div>';
         statusDiv.style.display = 'block';
-        passwordHelpText.textContent = 'Enter the correct password to add matches to this existing tournament.';
+        passwordHelpText.textContent = 'Enter the correct password to collaborate and add matches.';
         passwordSection.style.borderColor = '#fbbf24';
         passwordSection.style.background = '#fef3c7';
       } else {
         statusDiv.innerHTML = '<div style="padding:8px 12px;background:#d1fae5;border:1px solid #10b981;border-radius:8px;color:#065f46;font-size:12px;font-weight:600;">✓ New tournament - set a password to get started!</div>';
         statusDiv.style.display = 'block';
-        passwordHelpText.textContent = 'Set a password to protect your tournament. Share it with your team to allow them to add matches.';
+        passwordHelpText.textContent = 'Set a password to protect your tournament. Share it to enable collaboration and add matches.';
         passwordSection.style.borderColor = '#10b981';
         passwordSection.style.background = '#f0fdf4';
       }
@@ -4806,17 +4806,17 @@ function showSetupFAQ() {
       
       <div style="padding:10px;background:linear-gradient(135deg, #fce7f3 0%, #fbcfe8 100%);border-left:3px solid #ec4899;border-radius:6px;">
         <strong style="color:#9f1239;">🎯 Match Type</strong><br>
-        <small><strong>League:</strong> Points table (single group only) • <strong>Qualifier/Final:</strong> Knockout stages • <strong>Friendly:</strong> No ranking</small>
+        <small><strong>League/Qualifier/Final:</strong> Use as a label for match stage • <strong>Friendly:</strong> Practice match</small>
       </div>
       
       <div style="padding:10px;background:linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);border-left:3px solid #10b981;border-radius:6px;">
         <strong style="color:#065f46;">🏆 Tournament</strong><br>
-        <small><strong>Optional:</strong> Group multiple matches under one tournament name • Set password to protect & allow team access • Required if using League matches</small>
+        <small><strong>Optional:</strong> Group multiple matches under one tournament name • Set password to protect & allow collaboration access</small>
       </div>
       
       <div style="padding:10px;background:linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);border-left:3px solid #16a34a;border-radius:6px;">
         <strong style="color:#15803d;">📌 Important</strong><br>
-        <small>🔹 League matches need Tournament + Password 🔹 League only works as single group 🔹 Password protects your tournament access 🔹 NRR table only for tournament league matches</small>
+        <small>🔹 NRR table is generated only for Tournament League matches 🔹 Tournament is treated as a single group (round-robin)</small>
       </div>
     </div>
     
