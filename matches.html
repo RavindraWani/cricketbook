@@ -795,9 +795,38 @@
     }
     
     .tournament-card-stats {
-      font-size: 14px;
-      color: var(--text-secondary);
-      line-height: 1.6;
+      font-size: 15px;
+      color: #1f2937;
+      line-height: 1.8;
+      font-weight: 700;
+      letter-spacing: 0.4px;
+      word-spacing: 2px;
+      background: linear-gradient(135deg, #e0e7ff 0%, #f0f4ff 100%);
+      padding: 14px 16px;
+      margin: 8px -16px 0 -16px;
+      display: block;
+      width: calc(100% + 32px);
+      border-bottom: 2px solid #bfdbfe;
+    }
+    
+    /* Remove all colored inline styles in light mode - use consistent dark color */
+    .tournament-card-stats span {
+      color: #1f2937 !important;
+      font-weight: 800 !important;
+    }
+    
+    /* Dark mode */
+    [data-theme="dark"] .tournament-card-stats {
+      color: #f1f5f9;
+      font-weight: 700;
+      background: linear-gradient(135deg, rgba(102, 126, 234, 0.2) 0%, rgba(102, 126, 234, 0.15) 100%);
+      border-bottom-color: rgba(102, 126, 234, 0.4);
+    }
+    
+    [data-theme="dark"] .tournament-card-stats span {
+      color: #f1f5f9 !important;
+      font-weight: 800 !important;
+    }
     }
     
     @media (max-width: 768px) {
@@ -836,9 +865,35 @@
     }
     
     .quick-matches-stats {
-      font-size: 14px;
-      color: var(--text-secondary);
-      line-height: 1.6;
+      font-size: 15px;
+      color: #1f2937;
+      line-height: 1.8;
+      font-weight: 700;
+      letter-spacing: 0.4px;
+      word-spacing: 2px;
+      background: linear-gradient(135deg, #fef3c7 0%, #fef9e7 100%);
+      padding: 14px 16px;
+      margin: 8px -16px 0 -16px;
+      display: block;
+      width: calc(100% + 32px);
+      border-bottom: 2px solid #fcd34d;
+    }
+    
+    .quick-matches-stats span {
+      color: #1f2937 !important;
+      font-weight: 800 !important;
+    }
+    
+    [data-theme="dark"] .quick-matches-stats {
+      color: #f1f5f9;
+      font-weight: 700;
+      background: linear-gradient(135deg, rgba(251, 191, 36, 0.2) 0%, rgba(251, 191, 36, 0.15) 100%);
+      border-bottom-color: rgba(251, 191, 36, 0.4);
+    }
+    
+    [data-theme="dark"] .quick-matches-stats span {
+      color: #f1f5f9 !important;
+      font-weight: 800 !important;
     }
     
     @media (max-width: 768px) {

@@ -1059,6 +1059,17 @@
         </div>
       </div>
       
+      <!-- Maintenance Section -->
+      <div style="background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.3);border-radius:16px;padding:20px;margin-bottom:24px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
+          <div>
+            <h3 style="font-size:16px;font-weight:700;color:#fbbf24;margin:0 0 4px 0;">🧹 Database Maintenance</h3>
+            <p style="font-size:13px;color:#9ca3af;margin:0;">Remove old matches automatically</p>
+          </div>
+          <button class="btn-bulk-delete" onclick="deleteOldMatches()" style="background:linear-gradient(135deg, #f59e0b 0%, #d97706 100%);"><span style="font-size:14px;">⏳</span> Delete 3M Old Matches</button>
+        </div>
+      </div>
+      
       <div class="loading" id="loading">Loading matches...</div>
       
       <!-- Match List -->
@@ -1505,6 +1516,96 @@
       document.getElementById('clearDatesBtn').disabled = true;
       document.getElementById('dateInfo').style.display = 'none';
       applyFilters();
+    }
+    
+    // Delete matches older than 3 months
+    async function deleteOldMatches() {
+      const now = Date.now();
+      const threeMonthsMs = 3 * 30 * 24 * 60 * 60 * 1000; // Approximate 3 months
+      const cutoffDate = now - threeMonthsMs;
+      
+      let oldMatches = [];
+      
+      try {
+        // Show loading
+        const loading = document.getElementById('loading');
+        loading.textContent = '🔍 Scanning for matches older than 3 months...';
+        loading.style.display = 'block';
+        
+        // Get all matches from both paths
+        const [tournaments, quickMatches] = await Promise.all([
+          database.ref('tournaments').once('value'),
+          database.ref('quickMatches').once('value')
+        ]);
+        
+        // Check tournament matches
+        tournaments.forEach(orgSnap => {
+          orgSnap.child('matches').forEach(matchSnap => {
+            const match = matchSnap.val();
+            const matchTime = match.timestamp || match.lastUpdated || 0;
+            
+            if (matchTime < cutoffDate) {
+              oldMatches.push({
+                path: `tournaments/${orgSnap.key}/matches/${matchSnap.key}`,
+                date: new Date(matchTime).toLocaleDateString(),
+                name: `${match.teamA || 'Team A'} vs ${match.teamB || 'Team B'}`
+              });
+            }
+          });
+        });
+        
+        // Check quick matches
+        quickMatches.forEach(orgSnap => {
+          orgSnap.child('matches').forEach(matchSnap => {
+            const match = matchSnap.val();
+            const matchTime = match.timestamp || match.lastUpdated || 0;
+            
+            if (matchTime < cutoffDate) {
+              oldMatches.push({
+                path: `quickMatches/${orgSnap.key}/matches/${matchSnap.key}`,
+                date: new Date(matchTime).toLocaleDateString(),
+                name: `${match.teamA || 'Team A'} vs ${match.teamB || 'Team B'} (Quick)`
+              });
+            }
+          });
+        });
+        
+        loading.style.display = 'none';
+        
+        if (oldMatches.length === 0) {
+          alert('✅ No matches older than 3 months found.');
+          return;
+        }
+        
+        // Show confirmation
+        const confirmMsg = `Found ${oldMatches.length} matches older than 3 months. Delete all?\\n\\nMatches to delete:\\n${oldMatches.slice(0, 5).map(m => `• ${m.name} (${m.date})`).join('\\n')}${oldMatches.length > 5 ? `\\n... and ${oldMatches.length - 5} more` : ''}`;
+        
+        if (!confirm(confirmMsg)) {
+          return;
+        }
+        
+        // Delete matches
+        loading.textContent = `🗑️ Deleting ${oldMatches.length} matches...`;
+        loading.style.display = 'block';
+        
+        let deleted = 0;
+        for (const match of oldMatches) {
+          await database.ref(match.path).remove();
+          deleted++;
+          loading.textContent = `🗑️ Deleting ${deleted}/${oldMatches.length} matches...`;
+        }
+        
+        loading.style.display = 'none';
+        alert(`✅ Successfully deleted ${deleted} matches older than 3 months!`);
+        
+        // Reload matches
+        loadMatches();
+        
+      } catch (error) {
+        console.error('❌ Error deleting old matches:', error);
+        document.getElementById('loading').style.display = 'none';
+        alert('❌ Error deleting matches: ' + error.message);
+      }
     }
     
     // Update date info display
