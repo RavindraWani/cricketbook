@@ -2134,14 +2134,13 @@
       
       // Prepare share content
       const shareTitle = `${tournamentName} - Tournament Dashboard`;
-      const shareMessage = `� *${tournamentName}* - Live Tournament\n\n� View all matches, schedules & live scores\n\n� Tournament Dashboard:\n${shareLink}\n\n⚡ Powered by CricketBook`;
+      const shareMessage = `🏆 *${tournamentName}* - Live Tournament\n\n📊 View all matches, schedules & live scores\n\n🔗 Tournament Dashboard:\n${shareLink}\n\n⚡ Powered by CricketBook`;
       
       // Try native share API first (mobile)
       if (navigator.share) {
         navigator.share({
           title: shareTitle,
-          text: shareMessage,
-          url: shareLink
+          text: shareMessage
         }).then(() => {
           console.log('✅ Tournament link shared successfully');
         }).catch(err => {

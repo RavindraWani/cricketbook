@@ -261,6 +261,22 @@
       opacity: 0.5;
     }
     
+    /* Subtle pulse animation for tournament badge */
+    @keyframes subtlePulse {
+      0%, 100% {
+        box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+        transform: scale(1);
+      }
+      50% {
+        box-shadow: 0 4px 16px rgba(102, 126, 234, 0.5);
+        transform: scale(1.02);
+      }
+    }
+    
+    .tournament-link-animated {
+      animation: subtlePulse 3s ease-in-out infinite;
+    }
+    
     /* Navigation */
     .nav-header {
       display: flex;
@@ -529,19 +545,19 @@
       <div class="card">
         <!-- Match Completed Banner -->
         <div id="matchCompletedBanner" style="display:none;text-align:center;margin-bottom:12px;padding:10px 16px;background:linear-gradient(135deg, #10b981 0%, #059669 50%, #047857 100%);border-radius:12px;color:#ffffff;font-size:15px;font-weight:700;letter-spacing:0.5px;box-shadow:0 4px 12px rgba(16,185,129,0.4);">
-          🏏 Match Completed
+          🏆Match Completed
         </div>
         
         <!-- Tournament Header -->
         <div id="tournamentHeader" style="display:none;text-align:center;margin-bottom:16px;">
-          <a id="tournamentLink" href="#" style="display:inline-block;padding:10px 16px;background:linear-gradient(135deg, #667eea 0%, #764ba2 100%);border-radius:12px;color:#ffffff;font-size:14px;font-weight:700;letter-spacing:1px;box-shadow:0 2px 8px rgba(102,126,234,0.3);text-decoration:none;transition:all 0.3s;" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 4px 12px rgba(102,126,234,0.5)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 2px 8px rgba(102,126,234,0.3)'">
-            <span id="tournamentTitle"></span>
+          <a id="tournamentLink" href="#" class="tournament-link-animated" style="display:inline-block;padding:6px 12px;background:linear-gradient(135deg, #667eea 0%, #764ba2 100%);border-radius:8px;color:#ffffff;font-size:12px;font-weight:700;letter-spacing:0.5px;box-shadow:0 0 12px rgba(102,126,234,0.5), 0 0 25px rgba(102,126,234,0.2), 0 2px 8px rgba(0,0,0,0.15);text-decoration:none;transition:all 0.3s;border:1px solid rgba(255,255,255,0.3);" onmouseover="this.style.animation='none';this.style.transform='scale(1.06)'" onmouseout="this.style.animation='subtlePulse 3s ease-in-out infinite';this.style.transform='scale(1)'">
+            <span id="tournamentTitle"></span> →
           </a>
         </div>
         
         <!-- Share Button -->
         <div style="text-align:center;margin-bottom:16px;">
-          <button onclick="shareOnWhatsApp()" style="background:linear-gradient(135deg, #25D366 0%, #128C7E 100%);color:white;border:none;padding:8px 16px;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;box-shadow:0 3px 8px rgba(37,211,102,0.25);transition:all 0.2s;display:inline-flex;align-items:center;gap:6px;">
+          <button onclick="shareOnWhatsApp()" style="background:linear-gradient(135deg, #25D366 0%, #128C7E 100%);color:white;border:none;padding:6px 12px;border-radius:10px;font-size:12px;font-weight:600;cursor:pointer;box-shadow:0 3px 8px rgba(37,211,102,0.25);transition:all 0.2s;display:inline-flex;align-items:center;gap:5px;">
             <span style="font-size:16px;">📱</span>
             Share on WhatsApp
           </button>

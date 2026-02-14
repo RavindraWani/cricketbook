@@ -1446,9 +1446,12 @@
   <div class="setup-section" style="padding:14px;border-radius:14px;margin-bottom:14px;border:2px solid;">
     <label style="display:block;font-weight:700;font-size:14px;margin-bottom:3px;">⚔️ Team Names <span style="color:#ef4444;">*</span></label>
     <p class="setup-hint" style="font-size:11px;margin:0 0 8px 0;line-height:1.4;">Enter team names (first team bats first)</p>
-    <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-      <input id="teamA" placeholder="🏏 Team A (Batting First)" style="border:2px solid;padding:10px 12px;border-radius:12px;width:100%;font-size:14px;transition:border 0.2s;" onfocus="this.style.borderColor='#3b82f6'" onblur="this.style.borderColor=''" />
-      <button id="switchTeamsBtn" onclick="switchTeamNames()" title="Switch teams" style="background:#8b5cf6;color:white;border:none;border-radius:10px;padding:8px;font-size:16px;cursor:pointer;transition:all 0.2s;box-shadow:0 2px 8px rgba(139,92,246,0.25);min-width:38px;height:42px;flex-shrink:0;" onmouseover="this.style.background='#7c3aed';this.style.transform='scale(1.05)';this.style.boxShadow='0 4px 12px rgba(139,92,246,0.35)'" onmouseout="this.style.background='#8b5cf6';this.style.transform='scale(1)';this.style.boxShadow='0 2px 8px rgba(139,92,246,0.25)'">⇅</button>
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;justify-content:space-between;">
+      <div style="display:flex;align-items:center;gap:8px;flex:1;">
+        <input id="teamA" placeholder="🏏 Team A (Batting First)" style="border:2px solid;padding:10px 12px;border-radius:12px;width:100%;font-size:14px;transition:border 0.2s;" onfocus="this.style.borderColor='#3b82f6'" onblur="this.style.borderColor=''" />
+        <button id="switchTeamsBtn" onclick="switchTeamNames()" title="Switch teams" style="background:#8b5cf6;color:white;border:none;border-radius:10px;padding:8px;font-size:16px;cursor:pointer;transition:all 0.2s;box-shadow:0 2px 8px rgba(139,92,246,0.25);min-width:38px;height:42px;flex-shrink:0;" onmouseover="this.style.background='#7c3aed';this.style.transform='scale(1.05)';this.style.boxShadow='0 4px 12px rgba(139,92,246,0.35)'" onmouseout="this.style.background='#8b5cf6';this.style.transform='scale(1)';this.style.boxShadow='0 2px 8px rgba(139,92,246,0.25)'">⇅</button>
+      </div>
+      <button onclick="showSetupFAQ()" style="background:none;border:none;color:#8b5cf6;font-size:18px;cursor:pointer;padding:0;margin:0;font-weight:700;flex-shrink:0;" title="Help">❓</button>
     </div>
     <input id="teamB" placeholder="🎯 Team B (Bowling First)" style="border:2px solid;padding:10px 12px;border-radius:12px;width:100%;font-size:14px;transition:border 0.2s;" onfocus="this.style.borderColor='#3b82f6'" onblur="this.style.borderColor=''" />
   </div>
@@ -4275,15 +4278,6 @@ function startNewMatch(){
   location.reload();
 }
 
-// Warn user if they try to close/refresh after match has started
-window.addEventListener('beforeunload', function(e) {
-  if (matchStarted) {
-    e.preventDefault();
-    e.returnValue = '';
-    return '';
-  }
-});
-
 // ----------- Export/Share Feature -----------
 function getScoreboardText() {
   let message = `📊 MATCH SUMMARY\n`;
@@ -4737,50 +4731,41 @@ function showHelpModal() {
   modalContent.onclick = function(e) { e.stopPropagation(); };
   
   modalContent.innerHTML = `
-    <h3 style="margin:0 0 20px;font-size:22px;color:#1f2937;text-align:center;font-weight:800;">🏏 How to Score</h3>
+    <h3 style="margin:0 0 16px;font-size:20px;color:#1f2937;text-align:center;font-weight:800;">🏏 How to Score</h3>
     
-    <div style="color:#374151;line-height:1.6;font-size:13px;">
-      <div style="margin-bottom:12px;padding:12px;background:linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);border-left:4px solid #3b82f6;border-radius:8px;">
-        <div style="font-weight:800;font-size:14px;margin-bottom:5px;color:#1e40af;">📱 Basic Scoring</div>
-        <ul style="margin:4px 0;padding-left:18px;font-size:12px;">
-          <li><strong>0, 1, 2, 3, 5</strong> - Regular runs off bat</li>
-          <li><strong>4, 6</strong> - Boundaries (auto-detected)</li>
-          <li><strong>OUT</strong> - Wicket (bowled, caught, LBW, stumped, etc.)</li>
-          <li><strong>☰ More</strong> - RUN OUT, WD+WKT, NB+WKT combos</li>
-        </ul>
+    <div style="color:#374151;line-height:1.4;font-size:12px;display:grid;gap:10px;">
+      <div style="padding:10px;background:linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);border-left:3px solid #3b82f6;border-radius:6px;">
+        <strong style="color:#1e40af;">⚡ Runs</strong><br>
+        <strong>+</strong>=Custom • <strong>0,1,2,3</strong>=Regular • <strong>4</strong>=Boundary • <strong>6</strong>=Sixer
       </div>
       
-      <div style="margin-bottom:12px;padding:12px;background:linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);border-left:4px solid #f59e0b;border-radius:8px;">
-        <div style="font-weight:800;font-size:14px;margin-bottom:5px;color:#92400e;">⚡ Extras</div>
-        <ul style="margin:4px 0;padding-left:18px;font-size:12px;">
-          <li><strong>WD</strong> (Wide) / <strong>NB</strong> (No Ball) - Tap, then select overthrow runs (0-6)</li>
-          <li><strong>LB</strong> (Leg Bye) / <strong>BYE</strong> - Ball missed bat, choose runs (0-6)</li>
-          <li><strong>WD+WKT</strong> / <strong>NB+WKT</strong> - Extra with wicket (from ☰ menu)</li>
-          <li><strong>RUN OUT</strong> - Dedicated run-out button with runs selector</li>
-        </ul>
+      <div style="padding:10px;background:linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);border-left:3px solid #f59e0b;border-radius:6px;">
+        <strong style="color:#92400e;">✨ Extras</strong><br>
+        <strong>LB/BYE</strong>=Leg-bye/Bye → select runs • <strong>WD/NB</strong>=Wide/No-ball → select runs
       </div>
       
-      <div style="margin-bottom:12px;padding:12px;background:linear-gradient(135deg, #fce7f3 0%, #fbcfe8 100%);border-left:4px solid #ec4899;border-radius:8px;">
-        <div style="font-weight:800;font-size:14px;margin-bottom:5px;color:#9f1239;">🔄 Match Controls</div>
-        <ul style="margin:4px 0;padding-left:18px;font-size:12px;">
-          <li><strong>↶ UNDO</strong> - Revert last ball (unlimited, click repeatedly if needed)</li>
-          <li><strong>🏁 End Innings</strong> - Manually complete current innings early</li>
-          <li><strong>🗑️ Delete Match</strong> - Permanently remove match & data</li>
-        </ul>
+      <div style="padding:10px;background:linear-gradient(135deg, #fce7f3 0%, #fbcfe8 100%);border-left:3px solid #ec4899;border-radius:6px;">
+        <strong style="color:#9f1239;">OUT</strong><br>
+        Red button = Quick wicket (bowled/caught/LBW) • <strong>=</strong> menu for WD+WKT, NB+WKT, RUN OUT
       </div>
       
-      <div style="padding:12px;background:linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);border-left:4px solid #10b981;border-radius:8px;">
-        <div style="font-weight:800;font-size:14px;margin-bottom:5px;color:#065f46;">🔗 Live Sharing</div>
-        <ul style="margin:4px 0;padding-left:18px;font-size:12px;">
-          <li><strong>WhatsApp Share</strong> - Send live viewer link to fans</li>
-          <li><strong>Scorer Private</strong> - Secure edit link for co-scorers</li>
-          <li><strong>Tournament</strong> - Share tournament page (all matches)</li>
-          <li><strong>Export/Share</strong> - Download or share final scorecard image</li>
-        </ul>
+      <div style="padding:10px;background:linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);border-left:3px solid #10b981;border-radius:6px;">
+        <strong style="color:#065f46;">🔄 Controls</strong><br>
+        <strong>↶ UNDO</strong>=Revert last ball • <strong>🏁 END</strong>=Finish innings • <strong>🗑️ DELETE</strong>=Remove match
+      </div>
+      
+      <div style="padding:10px;background:linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);border-left:3px solid #16a34a;border-radius:6px;">
+        <strong style="color:#15803d;">🔗 Share</strong><br>
+        <strong>WhatsApp</strong>=View link • <strong>Scorer</strong>=Edit link • <strong>Tournament</strong>=All matches • <strong>Export</strong>=Scorecard
+      </div>
+      
+      <div style="padding:10px;background:linear-gradient(135deg, #f3e8ff 0%, #e9d5ff 100%);border-left:3px solid #a855f7;border-radius:6px;">
+        <strong style="color:#6b21a8;">💾 Saved Matches</strong><br>
+        <small>Auto-saved instantly. Return to Scorer anytime to resume & update your match.</small>
       </div>
     </div>
     
-    <button onclick="closeHelpModal()" style="width:100%;margin-top:18px;padding:12px;background:linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);color:white;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;box-shadow:0 4px 12px rgba(59,130,246,0.3);">Got it!</button>
+    <button onclick="closeHelpModal()" style="width:100%;margin-top:12px;padding:10px;background:linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);color:white;border:none;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;box-shadow:0 4px 12px rgba(59,130,246,0.3);">Got it!</button>
   `;
   
   modalOverlay.appendChild(modalContent);
@@ -4789,6 +4774,61 @@ function showHelpModal() {
 
 function closeHelpModal() {
   const modal = document.getElementById('helpModalOverlay');
+  if (modal) modal.remove();
+}
+
+// Setup FAQ Modal
+function showSetupFAQ() {
+  const modalOverlay = document.createElement('div');
+  modalOverlay.id = 'setupFAQModalOverlay';
+  modalOverlay.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.7);backdrop-filter:blur(4px);z-index:10000;display:flex;align-items:center;justify-content:center;padding:20px;';
+  modalOverlay.onclick = function(e) {
+    if (e.target.id === 'setupFAQModalOverlay') closeSetupFAQ();
+  };
+  
+  const modalContent = document.createElement('div');
+  modalContent.style.cssText = 'background:white;border-radius:16px;padding:16px;max-width:420px;width:100%;max-height:80vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,0.4);';
+  modalContent.onclick = function(e) { e.stopPropagation(); };
+  
+  modalContent.innerHTML = `
+    <h3 style="margin:0 0 14px;font-size:18px;color:#1f2937;text-align:center;font-weight:800;">⚙️ Setup Guide</h3>
+    
+    <div style="color:#374151;line-height:1.4;font-size:12px;display:grid;gap:10px;">
+      <div style="padding:10px;background:linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);border-left:3px solid #3b82f6;border-radius:6px;">
+        <strong style="color:#1e40af;">👥 Team Names</strong><br>
+        <small>Team A bats first, Team B bowls first. Use ⇅ button to swap teams.</small>
+      </div>
+      
+      <div style="padding:10px;background:linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);border-left:3px solid #f59e0b;border-radius:6px;">
+        <strong style="color:#92400e;">⚙️ Match Settings</strong><br>
+        <small><strong>Overs:</strong> Total game duration (e.g., 20) • <strong>Wickets:</strong> Max outs allowed (usually 10)</small>
+      </div>
+      
+      <div style="padding:10px;background:linear-gradient(135deg, #fce7f3 0%, #fbcfe8 100%);border-left:3px solid #ec4899;border-radius:6px;">
+        <strong style="color:#9f1239;">🎯 Match Type</strong><br>
+        <small><strong>League:</strong> Points table (single group only) • <strong>Qualifier/Final:</strong> Knockout stages • <strong>Friendly:</strong> No ranking</small>
+      </div>
+      
+      <div style="padding:10px;background:linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);border-left:3px solid #10b981;border-radius:6px;">
+        <strong style="color:#065f46;">🏆 Tournament</strong><br>
+        <small><strong>Optional:</strong> Group multiple matches under one tournament name • Set password to protect & allow team access • Required if using League matches</small>
+      </div>
+      
+      <div style="padding:10px;background:linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);border-left:3px solid #16a34a;border-radius:6px;">
+        <strong style="color:#15803d;">📌 Important</strong><br>
+        <small>🔹 League matches need Tournament + Password 🔹 League only works as single group 🔹 Password protects your tournament access 🔹 NRR table only for tournament league matches</small>
+      </div>
+    </div>
+    
+    <button onclick="closeSetupFAQ()" style="width:100%;margin-top:12px;padding:10px;background:linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);color:white;border:none;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;box-shadow:0 4px 12px rgba(59,130,246,0.3);">Got it!</button>
+  `;
+  
+  modalOverlay.appendChild(modalContent);
+  document.body.appendChild(modalOverlay);
+}
+
+function closeSetupFAQ() {
+  const modal = document.getElementById('setupFAQModalOverlay');
   if (modal) modal.remove();
 }
 
