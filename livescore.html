@@ -445,7 +445,7 @@
     function updateThemeIcon(theme) {
       const themeToggle = document.getElementById('themeToggle');
       if (themeToggle) {
-        themeToggle.textContent = theme === 'dark' ? '🌞' : '🌜';
+        themeToggle.textContent = theme === 'dark' ? '☀️' : '🌜';
         themeToggle.title = theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode';
       }
     }
@@ -505,8 +505,10 @@
         </div>
         
         <!-- Tournament Header -->
-        <div id="tournamentHeader" style="display:none;text-align:center;margin-bottom:16px;padding:10px 16px;background:linear-gradient(135deg, #667eea 0%, #764ba2 100%);border-radius:12px;color:#ffffff;font-size:14px;font-weight:700;letter-spacing:1px;box-shadow:0 2px 8px rgba(102,126,234,0.3);">
-          <span id="tournamentTitle"></span>
+        <div id="tournamentHeader" style="display:none;text-align:center;margin-bottom:16px;">
+          <a id="tournamentLink" href="#" style="display:inline-block;padding:10px 16px;background:linear-gradient(135deg, #667eea 0%, #764ba2 100%);border-radius:12px;color:#ffffff;font-size:14px;font-weight:700;letter-spacing:1px;box-shadow:0 2px 8px rgba(102,126,234,0.3);text-decoration:none;transition:all 0.3s;" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 4px 12px rgba(102,126,234,0.5)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 2px 8px rgba(102,126,234,0.3)'">
+            <span id="tournamentTitle"></span>
+          </a>
         </div>
         
         <!-- Share Button -->
@@ -1035,9 +1037,11 @@
       // Update tournament header if tournament name exists
       const tournamentHeader = document.getElementById('tournamentHeader');
       const tournamentTitle = document.getElementById('tournamentTitle');
+      const tournamentLink = document.getElementById('tournamentLink');
       if (data.tournamentName && data.tournamentName.trim() !== '') {
         const matchTypeText = data.matchType ? ` - ${data.matchType}` : '';
         tournamentTitle.textContent = `#${data.tournamentName}${matchTypeText}`;
+        tournamentLink.href = `matches.html?org=${organizationId}`;
         tournamentHeader.style.display = 'block';
       } else {
         tournamentHeader.style.display = 'none';

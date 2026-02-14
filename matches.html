@@ -157,15 +157,29 @@
       margin: 0 auto;
     }
     
-    .matches-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
+    #recentMatches {
+      display: block;
+      width: 100%;
     }
     
-    @media (max-width: 768px) {
+    .matches-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+      margin-bottom: 0;
+      clear: both;
+    }
+    
+    @media (min-width: 768px) {
       .matches-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+      }
+    }
+    
+    @media (min-width: 1024px) {
+      .matches-grid {
+        gap: 24px;
       }
     }
     
@@ -198,34 +212,6 @@
       display: flex;
       align-items: center;
       gap: 8px;
-    }
-    
-    .matches-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 12px;
-      margin-bottom: 0;
-    }
-    
-    @media (min-width: 768px) {
-      .matches-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 16px;
-      }
-    }
-    
-    @media (min-width: 1024px) {
-      .matches-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 20px;
-      }
-    }
-    
-    @media (min-width: 1400px) {
-      .matches-grid {
-        grid-template-columns: repeat(3, 1fr);
-        gap: 20px;
-      }
     }
     
     .card {
@@ -599,18 +585,23 @@
     .points-table td {
       padding: 14px 8px;
       text-align: center;
-      border-bottom: 1px solid #e5e7eb;
+      border-bottom: 1px solid var(--card-border);
+      color: var(--text-primary);
     }
     
     .points-table td:first-child {
       text-align: left;
       font-weight: 600;
       padding-left: 16px;
-      color: #1f2937;
+      color: var(--text-primary);
     }
     
     .points-table tbody tr:hover {
-      background: #f9fafb;
+      background: rgba(148,163,184,.1);
+    }
+    
+    [data-theme="dark"] .points-table tbody tr:hover {
+      background: rgba(71,85,105,.2);
     }
     
     .points-table tbody tr:last-child td {
@@ -641,7 +632,7 @@
     
     .nrr-breakdown {
       display: none;
-      background: #f9fafb;
+      background: rgba(148,163,184,.08);
       font-size: 12px;
       line-height: 1.6;
     }
@@ -652,11 +643,12 @@
     
     .nrr-breakdown td {
       padding: 16px !important;
-      border-bottom: 1px solid #e5e7eb;
+      border-bottom: 1px solid var(--card-border);
+      color: var(--text-secondary);
     }
     
     .nrr-formula {
-      background: white;
+      background: var(--card-bg);
       padding: 12px;
       border-radius: 8px;
       border-left: 4px solid #667eea;
@@ -672,11 +664,11 @@
     
     .nrr-calc-step {
       margin: 6px 0;
-      color: #4b5563;
+      color: var(--text-secondary);
     }
     
     .nrr-calc-step strong {
-      color: #1f2937;
+      color: var(--text-primary);
     }
     
     .toggle-nrr {
@@ -747,6 +739,112 @@
     
     .theme-toggle:active {
       transform: scale(0.95);
+    }
+    
+    /* Tournament Cards */
+    .tournament-section {
+      margin-bottom: 48px;
+      display: block;
+      clear: both;
+      width: 100%;
+    }
+    
+    .tournament-section:last-child {
+      margin-bottom: 0;
+    }
+    
+    .tournament-header-bar {
+      margin-top: 32px;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid rgba(102,126,234,0.3);
+      cursor: pointer;
+      transition: all 0.3s;
+      display: block;
+      clear: both;
+      width: 100%;
+    }
+    
+    .tournament-section:first-child .tournament-header-bar {
+      margin-top: 0;
+    }
+    
+    .tournament-header-bar:hover {
+      border-bottom-color: #667eea;
+    }
+    
+    .tournament-header-bar:hover .tournament-card-title {
+      color: #667eea;
+    }
+    
+    [data-theme="dark"] .tournament-header-bar {
+      border-bottom-color: rgba(102,126,234,0.4);
+    }
+    
+    .tournament-card-title {
+      margin: 0 0 8px 0;
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--text-primary);
+      line-height: 1.3;
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      transition: color 0.3s;
+    }
+    
+    .tournament-card-stats {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+    
+    @media (max-width: 768px) {
+      .tournament-card-title {
+        font-size: 20px;
+      }
+    }
+    
+    /* Quick Matches Header */
+    .quick-matches-section {
+      margin-bottom: 48px;
+      display: block;
+      clear: both;
+      width: 100%;
+    }
+    
+    .quick-matches-header {
+      margin-top: 32px;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid #f59e0b;
+      display: block;
+      clear: both;
+      width: 100%;
+    }
+    
+    [data-theme="dark"] .quick-matches-header {
+      border-bottom-color: #fbbf24;
+    }
+    
+    .quick-matches-title {
+      margin: 0 0 8px 0;
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--text-primary);
+    }
+    
+    .quick-matches-stats {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+    
+    @media (max-width: 768px) {
+      .quick-matches-title {
+        font-size: 20px;
+      }
     }
   </style>
   <script>
@@ -889,7 +987,7 @@
             Export CSV →
           </a>
         </div>
-        <div id="recentMatches" class="matches-grid"></div>
+        <div id="recentMatches"></div>
       </div>
     </div>
   </div>
@@ -1352,101 +1450,147 @@
           const leagueMatches = group.matches.filter(m => m.matchType && m.matchType.toLowerCase().includes('league')).length;
           
           return `
-            <!-- Tournament Group Header - Clickable -->
-          <div onclick="window.location.href='matches.html?org=${group.organizationId}'" 
-               style="background:linear-gradient(135deg, rgba(102,126,234,0.15) 0%, rgba(118,75,162,0.15) 100%);
-                      padding:20px;
-                      border-radius:16px;
-                      margin-bottom:16px;
-                      cursor:pointer;
-                      transition:all 0.3s;
-                      border:2px solid rgba(102,126,234,0.2);
-                      box-shadow:0 4px 12px rgba(0,0,0,0.05);" 
-               onmouseover="this.style.borderColor='#667eea';
-                           this.style.transform='translateX(4px)';
-                           this.style.boxShadow='0 8px 24px rgba(102,126,234,0.3)'" 
-               onmouseout="this.style.borderColor='rgba(102,126,234,0.2)';
-                          this.style.transform='translateX(0)';
-                          this.style.boxShadow='0 4px 12px rgba(0,0,0,0.05)'">
-            <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
-              <div style="flex:1;min-width:200px;">
-                <h3 style="margin:0 0 12px 0;font-size:20px;font-weight:800;color:var(--text-primary);line-height:1.3;">
-                  🏆 ${group.tournamentName}
-                  ${liveMatches > 0 ? '<span style="display:inline-block;background:#ef4444;color:white;padding:4px 10px;border-radius:16px;font-size:11px;margin-left:8px;animation:pulse 2s infinite;">🔴 LIVE</span>' : ''}
-                </h3>
-                <div style="font-size:14px;color:var(--text-secondary);line-height:1.6;">
-                  <span style="font-weight:600;">${totalMatches}</span> matches • 
-                  <span style="color:#10b981;">${completedMatches} completed</span>
-                  ${liveMatches > 0 ? ` • <span style="color:#ef4444;font-weight:600;">${liveMatches} live</span>` : ''}
-                  ${leagueMatches > 0 ? ` • ${leagueMatches} league` : ''}
-                </div>
-              </div>
-              <div style="font-size:15px;font-weight:700;color:#667eea;white-space:nowrap;">
-                View Tournament →
+          <div class="tournament-section">
+            <!-- Tournament Header -->
+            <div onclick="window.location.href='matches.html?org=${group.organizationId}'" class="tournament-header-bar">
+              <h3 class="tournament-card-title">
+                🏆 ${group.tournamentName}
+                ${liveMatches > 0 ? '<span style="display:inline-block;background:#ef4444;color:white;padding:4px 10px;border-radius:16px;font-size:11px;animation:pulse 2s infinite;">🔴 LIVE</span>' : ''}
+              </h3>
+              <div class="tournament-card-stats">
+                <span style="font-weight:600;">${totalMatches}</span> matches • 
+                <span style="color:#10b981;">${completedMatches} completed</span>
+                ${liveMatches > 0 ? ` • <span style="color:#ef4444;font-weight:600;">${liveMatches} live</span>` : ''}
+                ${leagueMatches > 0 ? ` • ${leagueMatches} league` : ''}
               </div>
             </div>
-          </div>
-          
-          <!-- Matches Grid - Show first 3 matches as preview -->
-          <div class="matches-grid">
-            ${group.matches.slice(0, 3).map(match => generateMatchCard(match)).join('')}
-          </div>
-          
-          ${group.matches.length > 3 ? `
-            <div style="text-align:center;margin:24px 0 32px 0;">
-              <a href="matches.html?org=${group.organizationId}" 
-                 style="display:inline-block;
-                        padding:14px 32px;
-                        background:linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-                        color:white;
-                        text-decoration:none;
-                        border-radius:12px;
-                        font-weight:700;
-                        font-size:15px;
-                        transition:all 0.3s;
-                        box-shadow:0 4px 12px rgba(102,126,234,0.3);
-                        min-height:48px;
-                        display:inline-flex;
-                        align-items:center;
-                        justify-content:center;" 
-                 onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 20px rgba(102,126,234,0.4)'" 
-                 onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 4px 12px rgba(102,126,234,0.3)'">
-                View All ${group.matches.length} Matches →
-              </a>
+            
+            <!-- Matches Grid -->
+            <div class="matches-grid">
+              ${group.matches.slice(0, 4).map(match => generateMatchCard(match)).join('')}
             </div>
-          ` : '<div style="margin-bottom:32px;"></div>'}
+            
+            ${group.matches.length > 4 ? `
+              <div style="text-align:right;margin-top:12px;">
+                <a href="matches.html?org=${group.organizationId}" 
+                   style="display:inline-block;
+                          padding:8px 20px;
+                          background:linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                          color:white;
+                          text-decoration:none;
+                          border-radius:8px;
+                          font-weight:600;
+                          font-size:13px;
+                          transition:all 0.3s;
+                          box-shadow:0 2px 8px rgba(102,126,234,0.3);" 
+                   onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 4px 16px rgba(102,126,234,0.4)'" 
+                   onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 2px 8px rgba(102,126,234,0.3)'">
+                  View All ${group.matches.length} Matches →
+                </a>
+              </div>
+            ` : ''}
+          </div>
         `;
       }).join('');
       
       // Display Quick Matches section if there are any
       if (quickMatches.length > 0) {
+        // Store for later use
+        window.allQuickMatches = quickMatches;
+        
         html += `
-          <div style="background:linear-gradient(135deg, rgba(245,158,11,0.15) 0%, rgba(251,191,36,0.15) 100%);
-                      padding:20px;
-                      border-radius:16px;
-                      margin:24px 0 16px 0;
-                      border-left:4px solid #f59e0b;
-                      box-shadow:0 4px 12px rgba(0,0,0,0.05);">
-            <h3 style="margin:0 0 12px 0;font-size:20px;font-weight:800;color:var(--text-primary);">
-              ⚡ Quick Matches
-            </h3>
-            <div style="font-size:14px;color:var(--text-secondary);line-height:1.6;">
-              ${quickMatches.length} ${quickMatches.length === 1 ? 'match' : 'matches'} • No tournament
+          <div class="quick-matches-section">
+            <div class="quick-matches-header">
+              <h3 class="quick-matches-title">
+                ⚡ Quick Matches
+              </h3>
+              <div class="quick-matches-stats">
+                ${quickMatches.length} ${quickMatches.length === 1 ? 'match' : 'matches'} • No tournament
+              </div>
             </div>
-          </div>
-          
-          <!-- Display all quick matches in grid -->
-          <div class="matches-grid">
-            ${quickMatches.map(match => generateMatchCard(match)).join('')}
+            
+            <!-- Quick Matches Grid -->
+            <div class="matches-grid">
+              ${quickMatches.slice(0, 6).map(match => generateMatchCard(match)).join('')}
+            </div>
+            
+            ${quickMatches.length > 6 ? `
+              <div style="text-align:right;margin-top:20px;">
+                <button onclick="showAllQuickMatches()" 
+                   style="display:inline-block;
+                          padding:8px 20px;
+                          background:linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
+                          color:white;
+                          text-decoration:none;
+                          border:none;
+                          border-radius:8px;
+                          font-weight:600;
+                          font-size:13px;
+                          cursor:pointer;
+                          transition:all 0.3s;
+                          box-shadow:0 2px 8px rgba(245,158,11,0.3);" 
+                   onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 4px 16px rgba(245,158,11,0.4)'" 
+                   onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 2px 8px rgba(245,158,11,0.3)'">
+                  View All ${quickMatches.length} Quick Matches →
+                </button>
+              </div>
+            ` : ''}
           </div>
         `;
       }
         
         container.innerHTML = html;
       } else {
-        // Single tournament view - show all matches
-        container.innerHTML = matches.map(match => generateMatchCard(match)).join('');
+        // Single tournament view - show all matches in grid
+        container.innerHTML = `<div class="matches-grid">${matches.map(match => generateMatchCard(match)).join('')}</div>`;
       }
+    }
+    
+    // Show all quick matches (expand view)
+    function showAllQuickMatches() {
+      // Store all matches globally first
+      if (!window.allQuickMatches) return;
+      
+      const container = document.getElementById('recentMatches');
+      const quickMatchesHtml = `
+        <div class="quick-matches-section">
+          <div class="quick-matches-header">
+            <h3 class="quick-matches-title">
+              ⚡ Quick Matches
+            </h3>
+            <div class="quick-matches-stats">
+              ${window.allQuickMatches.length} ${window.allQuickMatches.length === 1 ? 'match' : 'matches'} • No tournament
+            </div>
+          </div>
+          
+          <!-- Display all quick matches in grid -->
+          <div class="matches-grid">
+            ${window.allQuickMatches.map(match => generateMatchCard(match)).join('')}
+          </div>
+          
+          <div style="text-align:center;margin-top:16px;">
+            <button onclick="loadMatches()" 
+               style="display:inline-block;
+                      padding:12px 28px;
+                      background:linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
+                      color:white;
+                      border:none;
+                      border-radius:12px;
+                      font-weight:700;
+                      font-size:14px;
+                      cursor:pointer;
+                      transition:all 0.3s;
+                      box-shadow:0 4px 12px rgba(107,114,128,0.3);" 
+               onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 20px rgba(107,114,128,0.4)'" 
+               onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 4px 12px rgba(107,114,128,0.3)'">
+              ← Back to All Matches
+            </button>
+          </div>
+        </div>
+      `;
+      
+      container.innerHTML = quickMatchesHtml;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
     
     // Extract match card generation to separate function
