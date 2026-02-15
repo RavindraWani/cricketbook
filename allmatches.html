@@ -711,8 +711,8 @@
     }
     
     .match-scores {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
+      display: flex;
+      flex-direction: column;
       gap: 8px;
       font-size: 13px;
       margin-bottom: 6px;
@@ -727,16 +727,18 @@
     .team-name {
       color: var(--text-secondary);
       font-weight: 600;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      max-width: 100px;
+      white-space: normal;
+      overflow: visible;
+      text-overflow: clip;
+      max-width: none;
     }
     
     .score-value {
       color: var(--text-primary);
       font-weight: 700;
       white-space: nowrap;
+      margin-left: 8px;
+      flex-shrink: 0;
     }
     
     .match-meta {
@@ -1645,9 +1647,9 @@
       
       return `
         <div class="match-item ${statusClass}" data-match-id="${match.matchId}" data-org-id="${match.organizationId}">
+          ${tournamentLabel}
           <div class="match-header">
             <div class="match-teams">
-              ${tournamentLabel}
               <div class="team-names">${match.teamA || 'Team A'} vs ${match.teamB || 'Team B'}</div>
             </div>
             <div class="match-badges">
@@ -1781,7 +1783,8 @@
         alert('Page URL: ' + url);
       });
     }
-    
+  </script>
+  
   <script>
     // Register Service Worker for PWA (only works on HTTP/HTTPS)
     if ('serviceWorker' in navigator && window.location.protocol !== 'file:') {
