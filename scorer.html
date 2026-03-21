@@ -20,7 +20,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 
 <!-- Primary Meta Tags -->
-<meta name="description" content="Professional cricket scorer tool - record runs, wickets, extras, and overs in real-time. Easy-to-use interface with undo, ball-by-ball tracking, and instant sharing capabilities." />
+<meta name="description" content="Simple ball-by-ball live score tool for local cricket — track team runs, wickets &amp; extras. No player names needed. Share the live link via WhatsApp instantly. Free forever." />
 <meta name="keywords" content="cricket scorer, cricket scoring tool, record cricket match, cricket ball by ball scorer, cricket wicket tracker, cricket runs tracker, cricket overs scorer, cricket match recorder, digital cricket scoring, professional cricket scorer, cricket scorekeeper app" />
 <meta name="author" content="CricketBook" />
 <meta name="robots" content="index, follow" />
@@ -33,7 +33,7 @@
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://cricketbook.digital/scorer.html" />
 <meta property="og:title" content="Cricket Scorer - Record Matches Ball-by-Ball | CricketBook" />
-<meta property="og:description" content="Professional cricket scoring tool. Record runs, wickets, extras with easy-to-use interface and instant sharing." />
+<meta property="og:description" content="Simple ball-by-ball live score tool for local cricket. Track team runs, wickets &amp; extras — no player names. Share via WhatsApp instantly." />
 <meta property="og:image" content="https://cricketbook.digital/og-image-scorer.png" />
 <meta property="og:site_name" content="CricketBook" />
 
@@ -41,7 +41,7 @@
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:url" content="https://cricketbook.digital/scorer.html" />
 <meta name="twitter:title" content="Cricket Scorer - Record Matches Ball-by-Ball" />
-<meta name="twitter:description" content="Professional cricket scoring tool with ball-by-ball tracking and instant sharing." />
+<meta name="twitter:description" content="Ball-by-ball live score tool for local cricket. No player names needed — just tap and share via WhatsApp." />
 <meta name="twitter:image" content="https://cricketbook.digital/twitter-image-scorer.png" />
 
 <!-- Additional SEO -->
@@ -3169,11 +3169,11 @@ function shareViewerLink() {
   const badgeName = matchType ? `${tournamentName} - ${matchType}` : tournamentName;
   
   // WhatsApp-specific message
-  const whatsappMessage = `🏏 *${teamA} vs ${teamB}* - LIVE MATCH! 🔥\n\n🏆 *${badgeName}*\n\n📊 Follow live score, ball-by-ball updates & real-time stats!\n\n👉 Tap here for LIVE scorecard:\n${link}\n\n⚡ Powered by CricketBook`;
+  const whatsappMessage = `🏏 *${teamA} vs ${teamB}* - LIVE! 🔥\n\n🏆 *${badgeName}*\n\n⚡ Follow the live team score, ball-by-ball!\n\n👉 Tap here for the live score:\n${link}\n\n⚡ Powered by CricketBook`;
   const whatsappLink = `https://wa.me/?text=${encodeURIComponent(whatsappMessage)}`;
   
   const shareTitle = `${teamA} vs ${teamB} - Live Score`;
-  const shareMessage = `🏏 ${teamA} vs ${teamB} - LIVE\n\n📊 Real-time Scorecard\n${link}\n\n⚡ Powered by CricketBook`;
+  const shareMessage = `🏏 ${teamA} vs ${teamB} - LIVE\n\n⚡ Live team score, ball-by-ball\n${link}\n\n⚡ Powered by CricketBook`;
   
   // Check if Web Share API is available (mobile devices)
   if (navigator.share) {
