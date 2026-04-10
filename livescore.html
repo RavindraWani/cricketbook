@@ -435,6 +435,42 @@
       letter-spacing: 0.5px;
       margin: 0 12px;
     }
+
+    /* Keep long team names readable without breaking layout */
+    #teamAName,
+    #teamBName {
+      display: block;
+      max-width: 100%;
+      line-height: 1.2;
+      white-space: normal;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+    }
+
+    #winTeam1Name,
+    #winTeam2Name {
+      display: inline-block;
+      max-width: 90px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      vertical-align: bottom;
+    }
+
+    #team1Header,
+    #team2Header,
+    #team1Stats,
+    #team2Stats {
+      overflow-wrap: anywhere;
+      word-break: break-word;
+    }
+
+    @media (max-width: 480px) {
+      #teamAName,
+      #teamBName {
+        font-size: 15px !important;
+      }
+    }
     
     /* Dark Mode Toggle */
     .theme-toggle {
@@ -462,12 +498,64 @@
     .theme-toggle:active {
       transform: scale(0.95);
     }
+
+    [data-theme="dark"] [style*="color:#1f2937"] {
+      color: var(--text-primary) !important;
+    }
+
+    [data-theme="dark"] [style*="color:#6b7280"] {
+      color: var(--text-secondary) !important;
+    }
+
+    .palette-toggle {
+      font-size: 18px;
+    }
   </style>
   <script>
+    const PALETTE_THEMES = {
+      classic: { icon: '🎨', light: ['#667eea', '#764ba2'], dark: ['#1e293b', '#0f172a'] },
+      ocean: { icon: '🌊', light: ['#0ea5e9', '#2563eb'], dark: ['#0b3a5b', '#0f172a'] },
+      sunset: { icon: '🌇', light: ['#f59e0b', '#ef4444'], dark: ['#4c1d12', '#111827'] },
+      forest: { icon: '🌿', light: ['#22c55e', '#0ea5a4'], dark: ['#134e4a', '#0b1320'] }
+    };
+
+    function getSavedPalette() {
+      const savedPalette = localStorage.getItem('cricketbook_palette') || 'classic';
+      return PALETTE_THEMES[savedPalette] ? savedPalette : 'classic';
+    }
+
+    function applyPalette(theme, paletteName) {
+      const palette = PALETTE_THEMES[paletteName] || PALETTE_THEMES.classic;
+      const shades = palette[theme] || palette.light;
+      document.documentElement.style.setProperty('--bg-gradient-start', shades[0]);
+      document.documentElement.style.setProperty('--bg-gradient-end', shades[1]);
+      document.documentElement.setAttribute('data-palette', paletteName);
+      updatePaletteIcon(paletteName);
+    }
+
+    function cyclePalette() {
+      const keys = Object.keys(PALETTE_THEMES);
+      const current = getSavedPalette();
+      const next = keys[(keys.indexOf(current) + 1) % keys.length];
+      localStorage.setItem('cricketbook_palette', next);
+      const theme = document.documentElement.getAttribute('data-theme') || 'light';
+      applyPalette(theme, next);
+    }
+
+    function updatePaletteIcon(paletteName) {
+      const paletteToggle = document.getElementById('paletteToggle');
+      if (paletteToggle) {
+        const icon = (PALETTE_THEMES[paletteName] || PALETTE_THEMES.classic).icon;
+        paletteToggle.textContent = icon;
+        paletteToggle.title = 'Change Color Theme';
+      }
+    }
+
     // Dark Mode Management (Global - works across all pages)
     function initTheme() {
       const savedTheme = localStorage.getItem('cricketbook_theme') || 'light';
       document.documentElement.setAttribute('data-theme', savedTheme);
+      applyPalette(savedTheme, getSavedPalette());
       updateThemeIcon(savedTheme);
     }
     
@@ -477,6 +565,7 @@
       
       document.documentElement.setAttribute('data-theme', newTheme);
       localStorage.setItem('cricketbook_theme', newTheme);
+      applyPalette(newTheme, getSavedPalette());
       updateThemeIcon(newTheme);
       
       // Log for debugging
@@ -519,6 +608,9 @@
     <div class="nav-header">
       <a href="index.html" class="nav-title">🏏 CricketBook</a>
       <div style="display: flex; align-items: center;">
+        <button class="theme-toggle palette-toggle" id="paletteToggle" onclick="cyclePalette()" title="Change Color Theme">
+          🎨
+        </button>
         <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Toggle Dark Mode">
           🌜
         </button>
@@ -568,7 +660,7 @@
           <!-- Team Name & Score Display (Two Column Layout) -->
           <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px;padding-bottom:12px;border-bottom:2px solid #e5e7eb;gap:12px;">
             <!-- Team A -->
-            <div style="flex:1;text-align:left;">
+            <div style="flex:1;min-width:0;text-align:left;">
               <div style="font-size:18px;font-weight:800;background:linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:4px;" id="teamAName">Team A</div>
               <div style="font-size:48px;font-weight:900;color:#3b82f6;line-height:1;margin-bottom:4px;" id="scoreA">0/0</div>
               <div style="font-size:13px;color:#6b7280;font-weight:800;" id="teamAOvers">(0.0 overs)</div>
@@ -580,7 +672,7 @@
             </div>
             
             <!-- Team B -->
-            <div style="flex:1;text-align:right;">
+            <div style="flex:1;min-width:0;text-align:right;">
               <div style="font-size:18px;font-weight:800;background:linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:4px;" id="teamBName">Team B</div>
               <div style="font-size:48px;font-weight:900;color:#8b5cf6;line-height:1;margin-bottom:4px;" id="scoreB">0/0</div>
               <div style="font-size:13px;color:#6b7280;font-weight:800;" id="teamBOvers">(0.0 overs)</div>

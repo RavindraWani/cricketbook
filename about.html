@@ -79,6 +79,14 @@
       --badge-bg: rgba(255, 255, 255, 0.15);
       --badge-border: rgba(255, 255, 255, 0.1);
       --badge-hover: rgba(255, 255, 255, 0.25);
+      --does-do-bg: #f0fdf4;
+      --does-do-border: #10b981;
+      --does-do-heading: #065f46;
+      --does-do-text: #065f46;
+      --not-do-bg: #fef3c7;
+      --not-do-border: #f59e0b;
+      --not-do-heading: #92400e;
+      --not-do-text: #78350f;
     }
     
     [data-theme="dark"] {
@@ -94,6 +102,14 @@
       --badge-bg: rgba(255, 255, 255, 0.1);
       --badge-border: rgba(255, 255, 255, 0.05);
       --badge-hover: rgba(255, 255, 255, 0.2);
+      --does-do-bg: rgba(16, 185, 129, 0.12);
+      --does-do-border: #34d399;
+      --does-do-heading: #6ee7b7;
+      --does-do-text: #a7f3d0;
+      --not-do-bg: rgba(146, 64, 14, 0.2);
+      --not-do-border: #f59e0b;
+      --not-do-heading: #fbbf24;
+      --not-do-text: #fde68a;
     }
     
     * {
@@ -219,6 +235,49 @@
         font-size: 13px;
         padding: 5px 0;
       }
+    }
+
+    .does-do-box {
+      background: var(--does-do-bg);
+      border-left: 4px solid var(--does-do-border);
+      border-radius: 10px;
+      padding: 16px 18px;
+      margin: 18px 0;
+    }
+
+    .does-do-box h3 {
+      color: var(--does-do-heading);
+      margin: 0 0 10px;
+      font-size: 16px;
+    }
+
+    .does-do-box li,
+    .does-do-box li strong {
+      color: var(--does-do-text);
+    }
+
+    .not-do-box {
+      background: var(--not-do-bg);
+      border-left: 4px solid var(--not-do-border);
+      border-radius: 10px;
+      padding: 16px 18px;
+      margin: 18px 0;
+    }
+
+    .not-do-box h3,
+    .not-do-box p,
+    .not-do-box li,
+    .not-do-box li strong {
+      color: var(--not-do-text) !important;
+    }
+
+    .not-do-box h3,
+    .not-do-box li strong {
+      color: var(--not-do-heading) !important;
+    }
+
+    .palette-toggle {
+      font-size: 18px;
     }
     
     /* Navigation */
@@ -420,10 +479,50 @@
     }
   </style>
   <script>
+    const PALETTE_THEMES = {
+      classic: { icon: '🎨', light: ['#667eea', '#764ba2'], dark: ['#1e293b', '#0f172a'] },
+      ocean: { icon: '🌊', light: ['#0ea5e9', '#2563eb'], dark: ['#0b3a5b', '#0f172a'] },
+      sunset: { icon: '🌇', light: ['#f59e0b', '#ef4444'], dark: ['#4c1d12', '#111827'] },
+      forest: { icon: '🌿', light: ['#22c55e', '#0ea5a4'], dark: ['#134e4a', '#0b1320'] }
+    };
+
+    function getSavedPalette() {
+      const savedPalette = localStorage.getItem('cricketbook_palette') || 'classic';
+      return PALETTE_THEMES[savedPalette] ? savedPalette : 'classic';
+    }
+
+    function applyPalette(theme, paletteName) {
+      const palette = PALETTE_THEMES[paletteName] || PALETTE_THEMES.classic;
+      const shades = palette[theme] || palette.light;
+      document.documentElement.style.setProperty('--bg-gradient-start', shades[0]);
+      document.documentElement.style.setProperty('--bg-gradient-end', shades[1]);
+      document.documentElement.setAttribute('data-palette', paletteName);
+      updatePaletteIcon(paletteName);
+    }
+
+    function cyclePalette() {
+      const keys = Object.keys(PALETTE_THEMES);
+      const current = getSavedPalette();
+      const next = keys[(keys.indexOf(current) + 1) % keys.length];
+      localStorage.setItem('cricketbook_palette', next);
+      const theme = document.documentElement.getAttribute('data-theme') || 'light';
+      applyPalette(theme, next);
+    }
+
+    function updatePaletteIcon(paletteName) {
+      const paletteToggle = document.getElementById('paletteToggle');
+      if (paletteToggle) {
+        const icon = (PALETTE_THEMES[paletteName] || PALETTE_THEMES.classic).icon;
+        paletteToggle.textContent = icon;
+        paletteToggle.title = 'Change Color Theme';
+      }
+    }
+
     // Dark Mode Management (Global)
     function initTheme() {
       const savedTheme = localStorage.getItem('cricketbook_theme') || 'light';
       document.documentElement.setAttribute('data-theme', savedTheme);
+      applyPalette(savedTheme, getSavedPalette());
       updateThemeIcon(savedTheme);
     }
     
@@ -432,6 +531,7 @@
       const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
       document.documentElement.setAttribute('data-theme', newTheme);
       localStorage.setItem('cricketbook_theme', newTheme);
+      applyPalette(newTheme, getSavedPalette());
       updateThemeIcon(newTheme);
       console.log('🌓 Theme switched to:', newTheme);
     }
@@ -472,6 +572,9 @@
     <div class="nav-header">
       <a href="index.html" class="nav-title">🏏 CricketBook</a>
       <div style="display: flex; align-items: center;">
+        <button class="theme-toggle palette-toggle" id="paletteToggle" onclick="cyclePalette()" title="Change Color Theme">
+          🎨
+        </button>
         <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Toggle Dark Mode">
           🌜
         </button>
@@ -497,21 +600,21 @@
     <p><strong>CricketBook is a free, real-time ball-by-ball live score sharing tool</strong> for local cricket matches. One person scores, everyone else follows along live — that's it. It's built to be fast, simple, and instant.</p>
 
     <!-- What it is NOT -->
-    <div style="background:#fef3c7;border-left:4px solid #f59e0b;border-radius:10px;padding:16px 18px;margin:18px 0;">
-      <h3 style="color:#92400e;margin:0 0 10px;font-size:16px;">❌ What CricketBook Does NOT Do</h3>
+    <div class="not-do-box">
+      <h3 style="margin:0 0 10px;font-size:16px;">❌ What CricketBook Does NOT Do</h3>
       <ul style="list-style:none;padding:0;margin:0;">
-        <li style="padding:5px 0;color:#78350f;font-size:14px;"><strong style="color:#92400e;">❌ No batsman names or batting scorecards</strong> — it does not record who scored what</li>
-        <li style="padding:5px 0;color:#78350f;font-size:14px;"><strong style="color:#92400e;">❌ No bowler names or bowling figures</strong> — it does not track who bowled which over</li>
-        <li style="padding:5px 0;color:#78350f;font-size:14px;"><strong style="color:#92400e;">❌ No individual player statistics</strong> — no runs, strike rates, wickets per bowler, averages, or maiden overs</li>
-        <li style="padding:5px 0;color:#78350f;font-size:14px;"><strong style="color:#92400e;">❌ No fall of wickets per batsman</strong> — it only tracks how many wickets the team has lost</li>
-        <li style="padding:5px 0;color:#78350f;font-size:14px;"><strong style="color:#92400e;">❌ Not a full scorecard app</strong> — you cannot produce an end-of-match player summary</li>
+        <li style="padding:5px 0;font-size:14px;"><strong>❌ No batsman names or batting scorecards</strong> — it does not record who scored what</li>
+        <li style="padding:5px 0;font-size:14px;"><strong>❌ No bowler names or bowling figures</strong> — it does not track who bowled which over</li>
+        <li style="padding:5px 0;font-size:14px;"><strong>❌ No individual player statistics</strong> — no runs, strike rates, wickets per bowler, averages, or maiden overs</li>
+        <li style="padding:5px 0;font-size:14px;"><strong>❌ No fall of wickets per batsman</strong> — it only tracks how many wickets the team has lost</li>
+        <li style="padding:5px 0;font-size:14px;"><strong>❌ Not a full scorecard app</strong> — you cannot produce an end-of-match player summary</li>
       </ul>
-      <p style="margin:12px 0 0;font-size:13px;color:#92400e;"><em>If you need full player-level scorecards (batsman runs, bowler wickets etc.), please use a dedicated scorecard app. CricketBook is intentionally team-score-only — keeping it fast and hassle-free.</em></p>
+      <p style="margin:12px 0 0;font-size:13px;"><em>If you need full player-level scorecards (batsman runs, bowler wickets etc.), please use a dedicated scorecard app. CricketBook is intentionally team-score-only — keeping it fast and hassle-free.</em></p>
     </div>
 
     <!-- What it IS -->
-    <div style="background:#f0fdf4;border-left:4px solid #10b981;border-radius:10px;padding:16px 18px;margin:18px 0;">
-      <h3 style="color:#065f46;margin:0 0 10px;font-size:16px;">✅ What CricketBook DOES Do</h3>
+    <div class="does-do-box">
+      <h3>✅ What CricketBook DOES Do</h3>
       <ul class="feature-list" style="margin:0;">
         <li>Tracks <strong>team scores ball-by-ball</strong> — runs (0–6), wickets, extras (wide, no-ball, bye, leg-bye) &amp; dots</li>
         <li>Shows <strong>live running score</strong> to spectators in real-time as each ball is entered</li>

@@ -176,6 +176,58 @@
   [data-theme="dark"] #setup select:focus {
     border-color: #8b5cf6 !important;
   }
+
+  [data-theme="dark"] [style*="color:#1f2937"] {
+    color: var(--text-primary) !important;
+  }
+
+  [data-theme="dark"] [style*="color:#6b7280"] {
+    color: var(--text-secondary) !important;
+  }
+
+  [data-theme="dark"] [style*="background:#ffffff"] {
+    background: var(--card-bg) !important;
+  }
+
+  /* Keep dynamically-created popup/modal content readable in dark mode */
+  [data-theme="dark"] [id$="ModalOverlay"] > div,
+  [data-theme="dark"] #shareModalOverlay > div {
+    background: var(--card-bg) !important;
+    border: 1px solid var(--card-border) !important;
+  }
+
+  [data-theme="dark"] [id$="ModalOverlay"] [style*="background:#e5e7eb"],
+  [data-theme="dark"] [id$="ModalOverlay"] [style*="background: #e5e7eb"],
+  [data-theme="dark"] [id$="ModalOverlay"] [style*="background:#d1d5db"],
+  [data-theme="dark"] [id$="ModalOverlay"] [style*="background: #d1d5db"],
+  [data-theme="dark"] [id$="ModalOverlay"] [style*="background: rgb(209, 213, 219)"],
+  [data-theme="dark"] [id$="ModalOverlay"] [style*="background:linear-gradient(135deg, #e5e7eb"],
+  [data-theme="dark"] #shareModalOverlay [style*="background:#e5e7eb"],
+  [data-theme="dark"] #shareModalOverlay [style*="background: #e5e7eb"],
+  [data-theme="dark"] #shareModalOverlay [style*="background:#d1d5db"],
+  [data-theme="dark"] #shareModalOverlay [style*="background: #d1d5db"],
+  [data-theme="dark"] #shareModalOverlay [style*="background: rgb(209, 213, 219)"],
+  [data-theme="dark"] #shareModalOverlay [style*="background:linear-gradient(135deg, #e5e7eb"] {
+    background: #334155 !important;
+    color: var(--text-primary) !important;
+  }
+
+  [data-theme="dark"] [id$="ModalOverlay"] [style*="background:#f8fafc"],
+  [data-theme="dark"] [id$="ModalOverlay"] [style*="background: #f8fafc"],
+  [data-theme="dark"] [id$="ModalOverlay"] [style*="background:#f3f4f6"],
+  [data-theme="dark"] [id$="ModalOverlay"] [style*="background: #f3f4f6"],
+  [data-theme="dark"] #shareModalOverlay [style*="background:#f3f4f6"],
+  [data-theme="dark"] #shareModalOverlay [style*="background: #f3f4f6"] {
+    background: #0f172a !important;
+    border-color: rgba(71,85,105,.6) !important;
+  }
+
+  [data-theme="dark"] [id$="ModalOverlay"] [style*="color:#374151"],
+  [data-theme="dark"] [id$="ModalOverlay"] [style*="color:#4b5563"],
+  [data-theme="dark"] #shareModalOverlay [style*="color:#374151"],
+  [data-theme="dark"] #shareModalOverlay [style*="color:#4b5563"] {
+    color: var(--text-secondary) !important;
+  }
   
   :root{
     --bg:#0b1220;
@@ -741,6 +793,42 @@
   }
   
   /* Saved Matches Section */
+  .saved-matches-card {
+    max-width: 520px;
+    margin: 0 auto;
+  }
+
+  .saved-match-item {
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 12px;
+    background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+    margin-bottom: 10px;
+  }
+
+  .saved-match-title,
+  .saved-match-line {
+    color: #1f2937;
+  }
+
+  .saved-match-muted {
+    color: #64748b;
+  }
+
+  [data-theme="dark"] .saved-match-item {
+    border-color: rgba(71,85,105,.55);
+    background: linear-gradient(135deg, #111827 0%, #1e293b 100%);
+  }
+
+  [data-theme="dark"] .saved-match-title,
+  [data-theme="dark"] .saved-match-line {
+    color: var(--text-primary) !important;
+  }
+
+  [data-theme="dark"] .saved-match-muted {
+    color: var(--text-secondary) !important;
+  }
+
   #savedMatchesSection code {
     background: #f1f5f9;
     padding: 2px 6px;
@@ -1352,10 +1440,50 @@
 </script>
 
 <script>
+  const PALETTE_THEMES = {
+    classic: { icon: '🎨', light: ['#667eea', '#764ba2'], dark: ['#1e293b', '#0f172a'] },
+    ocean: { icon: '🌊', light: ['#0ea5e9', '#2563eb'], dark: ['#0b3a5b', '#0f172a'] },
+    sunset: { icon: '🌇', light: ['#f59e0b', '#ef4444'], dark: ['#4c1d12', '#111827'] },
+    forest: { icon: '🌿', light: ['#22c55e', '#0ea5a4'], dark: ['#134e4a', '#0b1320'] }
+  };
+
+  function getSavedPalette() {
+    const savedPalette = localStorage.getItem('cricketbook_palette') || 'classic';
+    return PALETTE_THEMES[savedPalette] ? savedPalette : 'classic';
+  }
+
+  function applyPalette(theme, paletteName) {
+    const palette = PALETTE_THEMES[paletteName] || PALETTE_THEMES.classic;
+    const shades = palette[theme] || palette.light;
+    document.documentElement.style.setProperty('--bg-gradient-start', shades[0]);
+    document.documentElement.style.setProperty('--bg-gradient-end', shades[1]);
+    document.documentElement.setAttribute('data-palette', paletteName);
+    updatePaletteIcon(paletteName);
+  }
+
+  function cyclePalette() {
+    const keys = Object.keys(PALETTE_THEMES);
+    const current = getSavedPalette();
+    const next = keys[(keys.indexOf(current) + 1) % keys.length];
+    localStorage.setItem('cricketbook_palette', next);
+    const theme = document.documentElement.getAttribute('data-theme') || 'light';
+    applyPalette(theme, next);
+  }
+
+  function updatePaletteIcon(paletteName) {
+    const paletteToggle = document.getElementById('paletteToggle');
+    if (paletteToggle) {
+      const icon = (PALETTE_THEMES[paletteName] || PALETTE_THEMES.classic).icon;
+      paletteToggle.textContent = icon;
+      paletteToggle.title = 'Change Color Theme';
+    }
+  }
+
   // Dark Mode Management (Global)
   function initTheme() {
     const savedTheme = localStorage.getItem('cricketbook_theme') || 'light';
     document.documentElement.setAttribute('data-theme', savedTheme);
+    applyPalette(savedTheme, getSavedPalette());
     updateThemeIcon(savedTheme);
   }
   
@@ -1364,6 +1492,7 @@
     const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
     document.documentElement.setAttribute('data-theme', newTheme);
     localStorage.setItem('cricketbook_theme', newTheme);
+    applyPalette(newTheme, getSavedPalette());
     updateThemeIcon(newTheme);
     console.log('🌓 Theme switched to:', newTheme);
   }
@@ -1406,6 +1535,9 @@
   <div class="nav-header">
     <a href="index.html" class="nav-title">🏏 CricketBook</a>
     <div style="display: flex; align-items: center;">
+      <button id="paletteToggle" onclick="cyclePalette()" title="Change Color Theme" style="background: var(--badge-bg); border: 1px solid var(--badge-border); color: var(--nav-text); font-size: 18px; padding: 8px 12px; border-radius: 8px; cursor: pointer; transition: all 0.2s; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; margin-right: 8px;">
+        🎨
+      </button>
       <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Toggle Dark Mode" style="background: var(--badge-bg); border: 1px solid var(--badge-border); color: var(--nav-text); font-size: 20px; padding: 8px 12px; border-radius: 8px; cursor: pointer; transition: all 0.2s; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; margin-right: 8px;">
         🌜
       </button>
@@ -1425,7 +1557,7 @@
 
   <!-- Saved Matches Section -->
   <div id="savedMatchesSection" style="margin-bottom:14px;display:none;">
-    <div class="card" style="background:#ffffff;color:#1f2937;max-width:520px;margin:0 auto;">
+    <div class="card saved-matches-card" style="background:#ffffff;color:#1f2937;">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
         <h2 style="margin:0;font-size:20px;font-weight:700;color:#1f2937;">💾 Saved Matches</h2>
         <button class="btn" onclick="refreshSavedMatches()" style="padding:8px 16px;background:#10b981;font-size:13px;width:auto;min-width:80px;">🔄 Refresh</button>
@@ -1553,9 +1685,9 @@
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;gap:16px;">
         <!-- Team Name (Left) -->
         <div style="flex:1;min-width:0;">
-          <div id="status" style="font-size:22px;font-weight:800;background:linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:-0.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"></div>
-          <div id="bowlingTeamDisplay" style="font-size:12px;color:#64748b;font-weight:600;margin-top:4px;letter-spacing:0.3px;"></div>
-          <div id="firstInningsScore" style="font-size:13px;color:#3b82f6;font-weight:700;margin-top:6px;display:none;letter-spacing:0.3px;"></div>
+          <div id="status" style="font-size:22px;font-weight:800;background:linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:-0.5px;white-space:normal;overflow-wrap:anywhere;word-break:break-word;line-height:1.2;"></div>
+          <div id="bowlingTeamDisplay" style="font-size:12px;color:#64748b;font-weight:600;margin-top:4px;letter-spacing:0.3px;overflow-wrap:anywhere;word-break:break-word;"></div>
+          <div id="firstInningsScore" style="font-size:13px;color:#3b82f6;font-weight:700;margin-top:6px;display:none;letter-spacing:0.3px;overflow-wrap:anywhere;word-break:break-word;"></div>
         </div>
         <!-- Primary Score Display (Right) -->
         <div style="flex:0 0 auto;">
@@ -3284,9 +3416,41 @@ function copyLinkFallback(shareMessage, link) {
   }
 }
 
+function isDarkThemeEnabled() {
+  return document.documentElement.getAttribute('data-theme') === 'dark';
+}
+
+function normalizeDynamicModalTheme(modalContent) {
+  if (!modalContent || !isDarkThemeEnabled()) return;
+
+  modalContent.style.background = '#1e293b';
+  modalContent.style.border = '1px solid rgba(71,85,105,.6)';
+
+  const neutralButtons = modalContent.querySelectorAll(
+    "button[style*='background:#e5e7eb'], button[style*='background: #e5e7eb'], button[style*='background:#d1d5db'], button[style*='background: #d1d5db'], button[style*='background:#f3f4f6'], button[style*='background: #f3f4f6'], button[style*='background:#f8fafc'], button[style*='background: #f8fafc'], button[style*='background:linear-gradient(135deg, #e5e7eb']"
+  );
+
+  neutralButtons.forEach((btn) => {
+    btn.style.background = '#334155';
+    btn.style.color = '#f1f5f9';
+    if (!btn.style.border || btn.style.border === 'none') {
+      btn.style.border = '1px solid rgba(148,163,184,.35)';
+    }
+    btn.addEventListener('mouseenter', () => {
+      btn.style.background = '#475569';
+      btn.style.color = '#f8fafc';
+    });
+    btn.addEventListener('mouseleave', () => {
+      btn.style.background = '#334155';
+      btn.style.color = '#f1f5f9';
+    });
+  });
+}
+
 function showShareModal(link, shareMessage) {
   // Create modal overlay
   const modal = document.createElement('div');
+  modal.id = 'shareModalOverlay';
   modal.style.cssText = `
     position: fixed;
     top: 0;
@@ -3336,6 +3500,8 @@ function showShareModal(link, shareMessage) {
       </button>
     </div>
   `;
+
+  normalizeDynamicModalTheme(modalContent);
   
   modal.appendChild(modalContent);
   document.body.appendChild(modal);
@@ -3361,6 +3527,7 @@ function closeShareModal() {
 function showShareModalWithWhatsApp(link, shareMessage, whatsappLink) {
   // Create modal overlay
   const modal = document.createElement('div');
+  modal.id = 'shareModalOverlay';
   modal.style.cssText = `
     position: fixed;
     top: 0;
@@ -3413,6 +3580,8 @@ function showShareModalWithWhatsApp(link, shareMessage, whatsappLink) {
       </button>
     </div>
   `;
+
+  normalizeDynamicModalTheme(modalContent);
   
   modal.appendChild(modalContent);
   document.body.appendChild(modal);
@@ -3679,6 +3848,7 @@ function showExtraModal(extraType) {
   `;
   
   modalContent.innerHTML = contentHTML;
+  normalizeDynamicModalTheme(modalContent);
   modalOverlay.appendChild(modalContent);
   document.body.appendChild(modalOverlay);
 }
@@ -4496,7 +4666,7 @@ function openWicketDropdown(btn) {
     wicketDropdownEl.id = 'wicketDropdownGlobal';
     wicketDropdownEl.style.position = 'absolute';
     wicketDropdownEl.style.zIndex = '1000';
-    wicketDropdownEl.style.background = '#fff';
+    wicketDropdownEl.style.background = isDarkThemeEnabled() ? '#1e293b' : '#fff';
     wicketDropdownEl.style.border = '1.5px solid #f59e0b';
     wicketDropdownEl.style.borderRadius = '8px';
     wicketDropdownEl.style.boxShadow = '0 4px 16px rgba(0,0,0,0.13)';
@@ -4599,7 +4769,7 @@ function showRunOutModal() {
   
   // Add run buttons (3, 2, 1, 0)
   [3, 2, 1, 0].forEach(r => {
-    contentHTML += `<button onclick="document.getElementById('runOutRuns').value=${r}" style="padding:10px;background:#e5e7eb;border:none;border-radius:8px;font-size:15px;font-weight:700;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.background='#d1d5db'" onmouseout="this.style.background='#e5e7eb'">${r}</button>`;
+    contentHTML += `<button onclick="document.getElementById('runOutRuns').value=${r}" style="padding:10px;background:#e5e7eb;border:none;border-radius:8px;font-size:15px;font-weight:700;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.background=(document.documentElement.getAttribute('data-theme')==='dark'?'#475569':'#d1d5db')" onmouseout="this.style.background=(document.documentElement.getAttribute('data-theme')==='dark'?'#334155':'#e5e7eb')">${r}</button>`;
   });
   
   contentHTML += `
@@ -4614,6 +4784,7 @@ function showRunOutModal() {
   `;
   
   modalContent.innerHTML = contentHTML;
+  normalizeDynamicModalTheme(modalContent);
   modalOverlay.appendChild(modalContent);
   document.body.appendChild(modalOverlay);
 }
@@ -4701,6 +4872,7 @@ function showByeModal() {
     <button onclick="closeByeModal()" style="width:100%;padding:12px;background:#e5e7eb;color:#1f2937;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;">Cancel</button>
   `;
   
+  normalizeDynamicModalTheme(modalContent);
   modalOverlay.appendChild(modalContent);
   document.body.appendChild(modalOverlay);
 }
@@ -4768,6 +4940,7 @@ function showHelpModal() {
     <button onclick="closeHelpModal()" style="width:100%;margin-top:12px;padding:10px;background:linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);color:white;border:none;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;box-shadow:0 4px 12px rgba(59,130,246,0.3);">Got it!</button>
   `;
   
+  normalizeDynamicModalTheme(modalContent);
   modalOverlay.appendChild(modalContent);
   document.body.appendChild(modalOverlay);
 }
@@ -4823,6 +4996,7 @@ function showSetupFAQ() {
     <button onclick="closeSetupFAQ()" style="width:100%;margin-top:12px;padding:10px;background:linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);color:white;border:none;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;box-shadow:0 4px 12px rgba(59,130,246,0.3);">Got it!</button>
   `;
   
+  normalizeDynamicModalTheme(modalContent);
   modalOverlay.appendChild(modalContent);
   document.body.appendChild(modalOverlay);
 }
@@ -4855,11 +5029,11 @@ function showCustomRunsModal() {
     
     <div style="margin-bottom:12px;">
       <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;">
-        <button onclick="document.getElementById('customRunsInput').value=5" style="padding:10px;background:#e5e7eb;border:none;border-radius:8px;font-size:15px;font-weight:700;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.background='#d1d5db'" onmouseout="this.style.background='#e5e7eb'">5</button>
-        <button onclick="document.getElementById('customRunsInput').value=7" style="padding:10px;background:#e5e7eb;border:none;border-radius:8px;font-size:15px;font-weight:700;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.background='#d1d5db'" onmouseout="this.style.background='#e5e7eb'">7</button>
-        <button onclick="document.getElementById('customRunsInput').value=8" style="padding:10px;background:#e5e7eb;border:none;border-radius:8px;font-size:15px;font-weight:700;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.background='#d1d5db'" onmouseout="this.style.background='#e5e7eb'">8</button>
-        <button onclick="document.getElementById('customRunsInput').value=9" style="padding:10px;background:#e5e7eb;border:none;border-radius:8px;font-size:15px;font-weight:700;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.background='#d1d5db'" onmouseout="this.style.background='#e5e7eb'">9</button>
-        <button onclick="document.getElementById('customRunsInput').value=10" style="padding:10px;background:#e5e7eb;border:none;border-radius:8px;font-size:15px;font-weight:700;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.background='#d1d5db'" onmouseout="this.style.background='#e5e7eb'">10</button>
+        <button onclick="document.getElementById('customRunsInput').value=5" style="padding:10px;background:#e5e7eb;border:none;border-radius:8px;font-size:15px;font-weight:700;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.background=(document.documentElement.getAttribute('data-theme')==='dark'?'#475569':'#d1d5db')" onmouseout="this.style.background=(document.documentElement.getAttribute('data-theme')==='dark'?'#334155':'#e5e7eb')">5</button>
+        <button onclick="document.getElementById('customRunsInput').value=7" style="padding:10px;background:#e5e7eb;border:none;border-radius:8px;font-size:15px;font-weight:700;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.background=(document.documentElement.getAttribute('data-theme')==='dark'?'#475569':'#d1d5db')" onmouseout="this.style.background=(document.documentElement.getAttribute('data-theme')==='dark'?'#334155':'#e5e7eb')">7</button>
+        <button onclick="document.getElementById('customRunsInput').value=8" style="padding:10px;background:#e5e7eb;border:none;border-radius:8px;font-size:15px;font-weight:700;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.background=(document.documentElement.getAttribute('data-theme')==='dark'?'#475569':'#d1d5db')" onmouseout="this.style.background=(document.documentElement.getAttribute('data-theme')==='dark'?'#334155':'#e5e7eb')">8</button>
+        <button onclick="document.getElementById('customRunsInput').value=9" style="padding:10px;background:#e5e7eb;border:none;border-radius:8px;font-size:15px;font-weight:700;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.background=(document.documentElement.getAttribute('data-theme')==='dark'?'#475569':'#d1d5db')" onmouseout="this.style.background=(document.documentElement.getAttribute('data-theme')==='dark'?'#334155':'#e5e7eb')">9</button>
+        <button onclick="document.getElementById('customRunsInput').value=10" style="padding:10px;background:#e5e7eb;border:none;border-radius:8px;font-size:15px;font-weight:700;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.background=(document.documentElement.getAttribute('data-theme')==='dark'?'#475569':'#d1d5db')" onmouseout="this.style.background=(document.documentElement.getAttribute('data-theme')==='dark'?'#334155':'#e5e7eb')">10</button>
       </div>
     </div>
         
@@ -4875,6 +5049,7 @@ function showCustomRunsModal() {
   `;
   
   modalContent.innerHTML = modalContent.innerHTML;
+  normalizeDynamicModalTheme(modalContent);
   modalOverlay.appendChild(modalContent);
   document.body.appendChild(modalOverlay);
   
@@ -4952,7 +5127,7 @@ function showWicketExtraModal(extraType) {
   
   // Add run buttons (always 3, 2, 1, 0)
   [3, 2, 1, 0].forEach(r => {
-    contentHTML += `<button onclick="document.getElementById('wicketExtraRuns').value=${r}" style="padding:10px;background:#e5e7eb;border:none;border-radius:8px;font-size:15px;font-weight:700;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.background='#d1d5db'" onmouseout="this.style.background='#e5e7eb'">${r}</button>`;
+    contentHTML += `<button onclick="document.getElementById('wicketExtraRuns').value=${r}" style="padding:10px;background:#e5e7eb;border:none;border-radius:8px;font-size:15px;font-weight:700;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.background=(document.documentElement.getAttribute('data-theme')==='dark'?'#475569':'#d1d5db')" onmouseout="this.style.background=(document.documentElement.getAttribute('data-theme')==='dark'?'#334155':'#e5e7eb')">${r}</button>`;
   });
   
   contentHTML += `
@@ -4988,6 +5163,7 @@ function showWicketExtraModal(extraType) {
   `;
   
   modalContent.innerHTML = contentHTML;
+  normalizeDynamicModalTheme(modalContent);
   modalOverlay.appendChild(modalContent);
   document.body.appendChild(modalOverlay);
 }
@@ -5326,19 +5502,19 @@ async function refreshSavedMatches() {
     const secondOvers = match.second?.legalBalls ? `${Math.floor(match.second.legalBalls / 6)}.${match.second.legalBalls % 6}` : '0.0';
     
     return `
-      <div style="border:2px solid #e2e8f0;border-radius:12px;padding:12px;background:linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);margin-bottom:10px;">
+      <div class="saved-match-item">
         <div style="display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;margin-bottom:10px;">
           <div>
-            <div style="font-size:15px;font-weight:700;color:#1f2937;margin-bottom:6px;">
+            <div class="saved-match-title" style="font-size:15px;font-weight:700;margin-bottom:6px;line-height:1.3;overflow-wrap:anywhere;word-break:break-word;">
               ${match.teamA} <span style="color:#3b82f6;font-size:13px;">vs</span> ${match.teamB}
             </div>
-            <div style="font-size:12px;color:#1f2937;margin-bottom:2px;">
-              <span style="font-weight:600;">${match.teamA}:</span> ${firstScore} <span style="color:#64748b;font-size:11px;">(${firstOvers})</span>
+            <div class="saved-match-line" style="font-size:12px;margin-bottom:2px;line-height:1.35;overflow-wrap:anywhere;word-break:break-word;">
+              <span style="font-weight:600;">${match.teamA}:</span> ${firstScore} <span class="saved-match-muted" style="font-size:11px;">(${firstOvers})</span>
             </div>
-            <div style="font-size:12px;color:#1f2937;margin-bottom:4px;">
-              <span style="font-weight:600;">${match.teamB}:</span> ${secondScore} <span style="color:#64748b;font-size:11px;">(${secondOvers})</span>
+            <div class="saved-match-line" style="font-size:12px;margin-bottom:4px;line-height:1.35;overflow-wrap:anywhere;word-break:break-word;">
+              <span style="font-weight:600;">${match.teamB}:</span> ${secondScore} <span class="saved-match-muted" style="font-size:11px;">(${secondOvers})</span>
             </div>
-            <div style="font-size:11px;color:#64748b;">
+            <div class="saved-match-muted" style="font-size:11px;">
               📅 ${timeAgo}
             </div>
           </div>

@@ -938,6 +938,25 @@
     }
   </style>
   <script>
+    const PALETTE_THEMES = {
+      classic: { light: ['#667eea', '#764ba2'], dark: ['#1f2937', '#111827'] },
+      ocean: { light: ['#0ea5e9', '#2563eb'], dark: ['#0b3a5b', '#0f172a'] },
+      sunset: { light: ['#f59e0b', '#ef4444'], dark: ['#4c1d12', '#111827'] },
+      forest: { light: ['#22c55e', '#0ea5a4'], dark: ['#134e4a', '#0b1320'] }
+    };
+
+    function initAdminTheme() {
+      const savedTheme = localStorage.getItem('cricketbook_theme') || 'dark';
+      const savedPalette = localStorage.getItem('cricketbook_palette') || 'classic';
+      const palette = PALETTE_THEMES[savedPalette] || PALETTE_THEMES.classic;
+      const shades = palette[savedTheme] || palette.dark;
+      document.documentElement.setAttribute('data-theme', savedTheme);
+      document.documentElement.style.setProperty('--bg-gradient-start', shades[0]);
+      document.documentElement.style.setProperty('--bg-gradient-end', shades[1]);
+    }
+
+    initAdminTheme();
+
     // Toggle mobile navigation
     function toggleNav() {
       const navLinks = document.getElementById('navLinks');
