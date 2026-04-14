@@ -18,6 +18,10 @@
       --bg-gradient-end: #111827;
       --card-bg: rgba(255, 255, 255, 0.05);
       --text-primary: #f3f4f6;
+      --nav-text: #f1f5f9;
+      --badge-bg: rgba(255, 255, 255, 0.1);
+      --badge-border: rgba(255, 255, 255, 0.05);
+      --badge-hover: rgba(255, 255, 255, 0.2);
     }
     
     [data-theme="light"] {
@@ -25,6 +29,10 @@
       --bg-gradient-end: #764ba2;
       --card-bg: #ffffff;
       --text-primary: #1f2937;
+      --nav-text: #ffffff;
+      --badge-bg: rgba(255, 255, 255, 0.15);
+      --badge-border: rgba(255, 255, 255, 0.1);
+      --badge-hover: rgba(255, 255, 255, 0.25);
     }
     
     * {
@@ -946,11 +954,11 @@
     };
 
     function initAdminTheme() {
-      const savedTheme = localStorage.getItem('cricketbook_theme') || 'dark';
+      // Admin panel is always dark regardless of the user's theme preference on other pages
       const savedPalette = localStorage.getItem('cricketbook_palette') || 'classic';
       const palette = PALETTE_THEMES[savedPalette] || PALETTE_THEMES.classic;
-      const shades = palette[savedTheme] || palette.dark;
-      document.documentElement.setAttribute('data-theme', savedTheme);
+      const shades = palette.dark;
+      document.documentElement.setAttribute('data-theme', 'dark');
       document.documentElement.style.setProperty('--bg-gradient-start', shades[0]);
       document.documentElement.style.setProperty('--bg-gradient-end', shades[1]);
     }

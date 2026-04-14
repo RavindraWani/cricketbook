@@ -898,6 +898,7 @@
   let canEditMatch = false;  // Whether current user can edit
   let isLoadingFromFirebase = false;  // Flag to prevent save loop when loading
   let matchStartTime = null;  // Store match start time (set once, never changes)
+  let matchLastUpdated = null; // Store last updated time (tracks match end time)
   
   // ========== Password Hashing Utility ==========
   // Simple SHA-256 hashing for password security
@@ -1907,7 +1908,12 @@
 
   <!-- Live Stats Comparison -->
   <div id="liveStatsComparison" style="margin-top:20px;display:none;">
-    <!-- Row 1: Sixes, Fours, Threes, Twos -->
+    <!-- Row 1: Match Timing -->
+    <div id="matchTimingRow" style="background:var(--card-bg);border:1px solid var(--card-border,rgba(0,0,0,0.07));border-radius:10px;padding:7px 14px;display:flex;align-items:center;justify-content:center;overflow:hidden;margin-bottom:8px;">
+      <span id="matchTimingDisplay" style="font-size:12px;color:var(--text-secondary);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"></span>
+    </div>
+
+    <!-- Row 2: Sixes, Fours, Threes, Twos -->
     <div style="background:var(--card-bg);border-radius:10px;padding:10px 12px;box-shadow:0 2px 6px rgba(0,0,0,0.08);margin-bottom:8px;display:flex;justify-content:space-around;align-items:center;gap:6px;">
       <!-- Sixes -->
       <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;">
@@ -1950,7 +1956,7 @@
       </div>
     </div>
     
-    <!-- Row 2: Singles, Wickets, Dots, Extras -->
+    <!-- Row 3: Singles, Wickets, Dots, Extras -->
     <div style="background:var(--card-bg);border-radius:10px;padding:10px 12px;box-shadow:0 2px 6px rgba(0,0,0,0.08);margin-bottom:12px;display:flex;justify-content:space-around;align-items:center;gap:6px;">
       <!-- Singles -->
       <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;">
@@ -1992,6 +1998,7 @@
         </div>
       </div>
     </div>
+
   </div>
 
   <!-- Match Summary -->
@@ -2323,7 +2330,25 @@ function updateLiveStats() {
   document.getElementById('team2Dots').textContent = team2Stats.dots;
   document.getElementById('team1ExtrasDisplay').textContent = team1Extras;
   document.getElementById('team2ExtrasDisplay').textContent = team2Extras;
-  
+
+  // Update Match Timing
+  const timingEl = document.getElementById('matchTimingDisplay');
+  const isCompleted = matchCompleted || (first.done && second.done);
+  const startDate = matchStartTime ? new Date(matchStartTime) : null;
+  const endDate = (isCompleted && matchLastUpdated) ? new Date(matchLastUpdated) : null;
+
+  if (startDate && timingEl) {
+    const fmt = d => `${d.getDate()}/${d.getMonth()+1} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+    const parts = [`📅 ${fmt(startDate)}`];
+    if (isCompleted && endDate) parts.push(`🏁 ${fmt(endDate)}`);
+    const refDate = (isCompleted && endDate) ? endDate : new Date();
+    const totalMins = Math.floor((refDate - startDate) / 60000);
+    const hrs = Math.floor(totalMins / 60);
+    const mins = totalMins % 60;
+    parts.push(`⏱️ ${hrs > 0 ? `${hrs}h ${mins}m` : `${totalMins}m`}${!isCompleted ? ' (🔴 Live)' : ''}`);
+    timingEl.textContent = parts.join('  ·  ');
+  }
+
   // Update Win Probability
   updateWinProbability();
 }
@@ -2868,6 +2893,7 @@ function saveMatchState() {
     organizationId: organizationId,  // Store org ID with match data
     editToken: editToken  // Store edit token for protection
   };
+  matchLastUpdated = matchData.lastUpdated;
   
   // Determine the Firebase path based on whether it's a tournament or quick match
   const tournamentName = matchData.tournamentName;
@@ -2993,6 +3019,11 @@ function listenForUpdates() {
       if (data.timestamp && !matchStartTime) {
         matchStartTime = data.timestamp;
         console.log("⏰ Loaded match start time from Firebase:", matchStartTime);
+      }
+
+      // Store last updated time
+      if (data.lastUpdated) {
+        matchLastUpdated = data.lastUpdated;
       }
       
       // Restore tournament name and match type to input fields (for display purposes)
