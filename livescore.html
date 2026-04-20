@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+﻿﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <!-- Resource hints for faster loading -->
@@ -510,6 +510,320 @@
     .palette-toggle {
       font-size: 18px;
     }
+
+    .big-score-btn {
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      color: #ffffff;
+      border: 2px solid rgba(255, 255, 255, 0.18);
+      padding: 10px 14px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.3px;
+      cursor: pointer;
+      box-shadow: 0 5px 14px rgba(15, 23, 42, 0.35);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      text-transform: uppercase;
+    }
+
+    .big-score-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.45);
+    }
+
+    .big-score-btn:active {
+      transform: translateY(0);
+    }
+
+    #bigScoreboardOverlay {
+      position: fixed;
+      inset: 0;
+      z-index: 99999;
+      background: #05080f;
+      color: #ffffff;
+      display: none;
+      align-items: stretch;
+      justify-content: center;
+      overflow: hidden;
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: manipulation;
+    }
+
+    #bigScoreboardOverlay.active {
+      display: flex;
+    }
+
+    .big-scoreboard-inner {
+      width: 100%;
+      height: 100%;
+      padding: max(8px, env(safe-area-inset-top)) max(8px, env(safe-area-inset-right)) max(8px, env(safe-area-inset-bottom)) max(8px, env(safe-area-inset-left));
+      display: grid;
+      grid-template-rows: auto auto 1fr auto auto;
+      gap: 8px;
+      background:
+        radial-gradient(1200px 600px at 12% 8%, rgba(59, 130, 246, 0.23), transparent 60%),
+        radial-gradient(1000px 550px at 88% 92%, rgba(16, 185, 129, 0.16), transparent 60%),
+        #05080f;
+    }
+
+    .big-score-status {
+      text-align: center;
+      font-size: clamp(14px, 2.4vw, 30px);
+      font-weight: 900;
+      letter-spacing: 1px;
+      color: #f8fafc;
+      text-transform: uppercase;
+      opacity: 0.96;
+      padding-top: 2px;
+      line-height: 1.15;
+      overflow-wrap: anywhere;
+    }
+
+    .big-score-matchup {
+      text-align: center;
+      color: #cbd5e1;
+      font-size: clamp(13px, 2vw, 24px);
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      line-height: 1.1;
+      overflow-wrap: anywhere;
+    }
+
+    .big-score-main {
+      background: rgba(15, 23, 42, 0.82);
+      border: 2px solid rgba(148, 163, 184, 0.36);
+      border-radius: 20px;
+      padding: clamp(8px, 1.8vw, 12px);
+      position: relative;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      align-items: center;
+      text-align: center;
+      min-height: 0;
+      box-shadow: inset 0 0 28px rgba(30, 41, 59, 0.55);
+    }
+
+    .big-first-innings-mini {
+      position: absolute;
+      right: 10px;
+      bottom: 8px;
+      font-size: clamp(12px, 1.8vw, 20px);
+      font-weight: 800;
+      color: #cbd5e1;
+      background: rgba(30, 41, 59, 0.72);
+      border: 1px solid rgba(148, 163, 184, 0.38);
+      border-radius: 8px;
+      padding: 5px 9px;
+      line-height: 1.1;
+      max-width: 65%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: none;
+    }
+
+    .big-score-main.batting {
+      border-color: #22d3ee;
+      box-shadow: 0 0 0 2px rgba(34, 211, 238, 0.2), inset 0 0 30px rgba(34, 211, 238, 0.1);
+    }
+
+    .big-team-name {
+      font-size: clamp(18px, 3.8vw, 50px);
+      font-weight: 900;
+      letter-spacing: 0.8px;
+      line-height: 1.1;
+      word-break: break-word;
+      color: #e2e8f0;
+      text-transform: uppercase;
+    }
+
+    .big-team-score {
+      font-size: clamp(70px, 24vw, 320px);
+      line-height: 0.95;
+      font-weight: 900;
+      letter-spacing: -2px;
+      color: #ffffff;
+      text-shadow: 0 10px 34px rgba(0, 0, 0, 0.6);
+      margin: 8px 0;
+      overflow-wrap: anywhere;
+    }
+
+    .big-team-overs {
+      font-size: clamp(24px, 6.2vw, 80px);
+      font-weight: 800;
+      color: #cbd5e1;
+      line-height: 1.1;
+    }
+
+    .big-over-strip {
+      background: rgba(15, 23, 42, 0.88);
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      border-radius: 14px;
+      padding: 8px;
+      display: grid;
+      gap: 6px;
+    }
+
+    .big-over-title {
+      font-size: clamp(11px, 1.8vw, 18px);
+      font-weight: 800;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: #cbd5e1;
+      text-align: center;
+      opacity: 0.95;
+    }
+
+    .big-over-balls {
+      display: flex;
+      flex-wrap: nowrap;
+      justify-content: center;
+      align-items: center;
+      gap: 6px;
+      overflow: hidden;
+      min-height: 40px;
+    }
+
+    .big-over-ball {
+      min-width: clamp(34px, 5vw, 58px);
+      height: clamp(34px, 5vw, 58px);
+      padding: 0 4px;
+      border-radius: 10px;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      font-size: clamp(16px, 2.8vw, 30px);
+      font-weight: 900;
+      line-height: 1;
+      color: #ffffff;
+      background: #3b82f6;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    }
+
+    .big-over-ball.wicket { background: #e31d1d; }
+    .big-over-ball.boundary4 { background: #10b981; }
+    .big-over-ball.boundary6 { background: #f59e0b; }
+    .big-over-ball.dot { background: #64748b; }
+    .big-over-ball.extra { background: #f59e0b; }
+
+    .big-over-empty {
+      color: #94a3b8;
+      font-size: clamp(14px, 2.3vw, 24px);
+      font-weight: 700;
+    }
+
+    .big-score-hint {
+      text-align: center;
+      font-size: clamp(11px, 1.8vw, 18px);
+      color: rgba(226, 232, 240, 0.75);
+      font-weight: 600;
+      letter-spacing: 0.2px;
+      min-height: 18px;
+      transition: opacity 0.3s ease;
+    }
+
+    @media (max-width: 430px) {
+      .big-scoreboard-inner {
+        gap: 6px;
+      }
+
+      .big-score-status {
+        font-size: clamp(13px, 3.4vw, 18px);
+      }
+
+      .big-score-matchup {
+        font-size: clamp(12px, 3vw, 16px);
+      }
+
+      .big-team-name {
+        font-size: clamp(16px, 5.3vw, 24px);
+      }
+
+      .big-team-score {
+        font-size: clamp(62px, 22vw, 130px);
+        letter-spacing: -1px;
+      }
+
+      .big-team-overs {
+        font-size: clamp(21px, 7vw, 36px);
+      }
+
+      .big-first-innings-mini {
+        right: 7px;
+        bottom: 6px;
+        font-size: clamp(11px, 3.1vw, 15px);
+        padding: 4px 7px;
+        max-width: 80%;
+      }
+
+      .big-over-strip {
+        padding: 7px;
+      }
+
+      .big-over-balls {
+        gap: 4px;
+      }
+
+      .big-over-ball {
+        min-width: clamp(29px, 9vw, 38px);
+        height: clamp(29px, 9vw, 38px);
+        font-size: clamp(14px, 4vw, 18px);
+      }
+    }
+
+    @media (orientation: landscape) and (max-height: 470px) {
+      .big-scoreboard-inner {
+        gap: 5px;
+      }
+
+      .big-score-status {
+        font-size: clamp(12px, 2.1vh, 16px);
+      }
+
+      .big-score-matchup {
+        font-size: clamp(11px, 1.8vh, 14px);
+      }
+
+      .big-team-name {
+        font-size: clamp(16px, 3.2vh, 22px);
+      }
+
+      .big-team-score {
+        font-size: clamp(56px, 22vh, 112px);
+      }
+
+      .big-team-overs {
+        font-size: clamp(18px, 5.2vh, 32px);
+      }
+
+      .big-over-title {
+        font-size: clamp(10px, 1.6vh, 13px);
+      }
+
+      .big-over-ball {
+        min-width: clamp(26px, 6.5vh, 34px);
+        height: clamp(26px, 6.5vh, 34px);
+        font-size: clamp(12px, 3.2vh, 16px);
+      }
+
+      .big-score-hint {
+        font-size: clamp(10px, 1.8vh, 12px);
+      }
+    }
+
+    @media (orientation: portrait) {
+      .big-team-score {
+        font-size: clamp(84px, 29vw, 280px);
+      }
+
+      .big-team-overs {
+        font-size: clamp(28px, 9vw, 70px);
+      }
+    }
   </style>
   <script>
     const PALETTE_THEMES = {
@@ -647,11 +961,14 @@
           </a>
         </div>
         
-        <!-- Share Button -->
-        <div style="text-align:center;margin-bottom:16px;">
-          <button onclick="shareOnWhatsApp()" style="background:linear-gradient(135deg, #25D366 0%, #128C7E 100%);color:white;border:none;padding:6px 12px;border-radius:10px;font-size:12px;font-weight:600;cursor:pointer;box-shadow:0 3px 8px rgba(37,211,102,0.25);transition:all 0.2s;display:inline-flex;align-items:center;gap:5px;">
+        <!-- Action Buttons Row -->
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:nowrap;margin-bottom:16px;width:100%;">
+          <button onclick="shareOnWhatsApp()" style="background:linear-gradient(135deg, #25D366 0%, #128C7E 100%);color:white;border:none;padding:10px 12px;border-radius:10px;font-size:12px;font-weight:600;cursor:pointer;box-shadow:0 3px 8px rgba(37,211,102,0.25);transition:all 0.2s;display:inline-flex;align-items:center;justify-content:center;gap:5px;min-height:40px;flex:1;white-space:nowrap;">
             <span style="font-size:16px;">📱</span>
             Share on WhatsApp
+          </button>
+          <button onclick="enterBigScoreboardMode()" class="big-score-btn" aria-label="Open Big Scoreboard Mode" style="flex:1;justify-content:center;white-space:nowrap;">
+            📺 Big Scoreboard Mode
           </button>
         </div>
         
@@ -852,6 +1169,27 @@
     </div>
   </div>
 
+  <!-- Big Scoreboard Full-Screen Overlay -->
+  <div id="bigScoreboardOverlay" aria-hidden="true">
+    <div class="big-scoreboard-inner" id="bigScoreboardInner">
+      <div class="big-score-status" id="bigScoreStatus">Live Match</div>
+      <div class="big-score-matchup" id="bigScoreMatchup">TEAM A vs TEAM B</div>
+      <section class="big-score-main" id="bigScoreMainCard">
+        <div class="big-team-name" id="bigInningsTeamName">TEAM A</div>
+        <div class="big-team-score" id="bigInningsScore">0/0</div>
+        <div class="big-team-overs" id="bigInningsOvers">0.0 overs</div>
+        <div class="big-first-innings-mini" id="bigFirstInningsMini">1st: 0/0 (0.0/20)</div>
+      </section>
+      <div class="big-over-strip">
+        <div class="big-over-title" id="bigOverTitle">Current Over</div>
+        <div class="big-over-balls" id="bigOverBalls">
+          <span class="big-over-empty">Waiting for first ball...</span>
+        </div>
+      </div>
+      <div class="big-score-hint" id="bigScoreHint">Double tap anywhere to exit</div>
+    </div>
+  </div>
+
   <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/11.1.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/11.1.0/firebase-database-compat.js"></script>
@@ -883,6 +1221,9 @@
     let pollingInterval = null; // For polling instead of continuous listeners
     let lastActivityTime = Date.now(); // Track last user activity
     let isPollingPaused = false; // Track if polling is paused
+    let latestMatchData = null;
+    let bigScoreboardHintTimer = null;
+    let bigScoreboardTouchTime = 0;
 
     // Organization ID for multi-user isolation
     let organizationId = localStorage.getItem('cricketbook_org_id');
@@ -1160,8 +1501,10 @@
     // Update UI with match data
     function updateUI(data) {
       console.log('🎨 Updating UI with data:', data);
+      latestMatchData = data;
       const inn = data.inSecond ? data.second : data.first;
       const isBattingFirst = !data.inSecond;
+      const hasResultText = !!(data.resultText && data.resultText.trim() !== '');
       
       // Update page title with team names
       if (data.teamA && data.teamB) {
@@ -1180,7 +1523,8 @@
       // Determine if match is completed - compute once
       const isMatchCompleted = data.matchCompleted === true || 
                                (data.first && data.first.done && data.second && data.second.done) ||
-                               (data.inSecond && data.second && data.second.done);
+                               (data.inSecond && data.second && data.second.done) ||
+                               hasResultText;
       
       // Update tournament header if tournament name exists
       const tournamentHeader = document.getElementById('tournamentHeader');
@@ -1272,7 +1616,7 @@
       }
       
       // Result - only show if match is actually completed
-      if (data.resultText && data.resultText.trim() !== '' && isMatchCompleted) {
+      if (hasResultText && isMatchCompleted) {
         document.getElementById('result').textContent = data.resultText;
         document.getElementById('result').classList.add('show');
         // Hide live match elements when result is displayed
@@ -1311,6 +1655,185 @@
       
       // Update Live Stats Comparison
       updateLiveStats(data);
+
+      // Keep big scoreboard synced if enabled
+      updateBigScoreboard(data);
+    }
+
+    function updateBigScoreboard(data) {
+      if (!data) return;
+
+      const oversLimit = data.oversLimit || 20;
+      const teamA = data.teamA || 'Team A';
+      const teamB = data.teamB || 'Team B';
+      const hasResultText = !!(data.resultText && data.resultText.trim() !== '');
+      const activeInnings = data.inSecond ? data.second : data.first;
+      const battingTeamName = data.inSecond ? teamB : teamA;
+      const activeRuns = activeInnings?.runs || 0;
+      const activeWkts = activeInnings?.wkts || 0;
+      const activeOvers = calculateOvers(activeInnings?.legalBalls || 0);
+      const firstRuns = data.first?.runs || 0;
+      const firstWkts = data.first?.wkts || 0;
+      const firstOvers = calculateOvers(data.first?.legalBalls || 0);
+
+      const isMatchCompleted = data.matchCompleted === true ||
+                               (data.first && data.first.done && data.second && data.second.done) ||
+                               (data.inSecond && data.second && data.second.done) ||
+                               hasResultText;
+
+      const statusEl = document.getElementById('bigScoreStatus');
+      const mainCard = document.getElementById('bigScoreMainCard');
+      const matchupEl = document.getElementById('bigScoreMatchup');
+      const overTitleEl = document.getElementById('bigOverTitle');
+      const firstInningsMiniEl = document.getElementById('bigFirstInningsMini');
+
+      document.getElementById('bigInningsTeamName').textContent = battingTeamName.toUpperCase();
+      document.getElementById('bigInningsScore').textContent = `${activeRuns}/${activeWkts}`;
+      document.getElementById('bigInningsOvers').textContent = `${activeOvers}/${oversLimit} overs`;
+      matchupEl.textContent = `${teamA.toUpperCase()} vs ${teamB.toUpperCase()}`;
+
+      if (data.inSecond || isMatchCompleted) {
+        firstInningsMiniEl.textContent = `1st: ${firstRuns}/${firstWkts} (${firstOvers}/${oversLimit})`;
+        firstInningsMiniEl.style.display = 'block';
+      } else {
+        firstInningsMiniEl.style.display = 'none';
+      }
+
+      mainCard.classList.remove('batting');
+
+      if (!isMatchCompleted) {
+        mainCard.classList.add('batting');
+        statusEl.textContent = data.inSecond ? 'Live: 2nd Innings' : 'Live: 1st Innings';
+      } else if (hasResultText) {
+        statusEl.textContent = data.resultText;
+      } else {
+        statusEl.textContent = 'Match Completed';
+      }
+
+      overTitleEl.textContent = data.inSecond ? 'Current Over (2nd Innings)' : 'Current Over (1st Innings)';
+      renderBigOverBalls(activeInnings);
+    }
+
+    function renderBigOverBalls(innings) {
+      const container = document.getElementById('bigOverBalls');
+      if (!container) return;
+
+      let overBalls = [];
+      if (innings?.curOver && innings.curOver.length > 0) {
+        overBalls = innings.curOver;
+      } else if (innings?.overs && innings.overs.length > 0) {
+        const lastOver = innings.overs[innings.overs.length - 1];
+        if (lastOver && lastOver.length > 0) {
+          overBalls = lastOver;
+        }
+      }
+
+      if (!overBalls || overBalls.length === 0) {
+        container.innerHTML = '<span class="big-over-empty">Waiting for first ball...</span>';
+        return;
+      }
+
+      const ballsHtml = overBalls.map((ball) => {
+        const symbol = String(ball);
+        const isWicket = /W$/.test(symbol) || /\+W$/.test(symbol);
+        const isSix = symbol === '6';
+        const isFour = symbol === '4';
+        const isDot = symbol === '0';
+        const isExtra = /WD|NB|B\+|LB\+/.test(symbol);
+
+        let classes = 'big-over-ball';
+        if (isWicket) classes += ' wicket';
+        else if (isSix) classes += ' boundary6';
+        else if (isFour) classes += ' boundary4';
+        else if (isDot) classes += ' dot';
+        else if (isExtra) classes += ' extra';
+
+        return `<span class="${classes}">${symbol}</span>`;
+      }).join('');
+
+      container.innerHTML = ballsHtml;
+    }
+
+    async function requestBigScreenFullscreen() {
+      const el = document.getElementById('bigScoreboardOverlay');
+      if (!el) return;
+
+      try {
+        if (document.fullscreenElement) return;
+        if (el.requestFullscreen) {
+          await el.requestFullscreen({ navigationUI: 'hide' });
+        } else if (el.webkitRequestFullscreen) {
+          el.webkitRequestFullscreen();
+        } else if (el.msRequestFullscreen) {
+          el.msRequestFullscreen();
+        }
+      } catch (err) {
+        console.log('Fullscreen not available:', err?.message || err);
+      }
+    }
+
+    async function tryLandscapeLock() {
+      try {
+        if (screen.orientation && screen.orientation.lock) {
+          await screen.orientation.lock('landscape');
+        }
+      } catch (err) {
+        console.log('Orientation lock unavailable:', err?.message || err);
+      }
+    }
+
+    function showBigScoreboardHint() {
+      const hint = document.getElementById('bigScoreHint');
+      if (!hint) return;
+      hint.style.opacity = '1';
+      if (bigScoreboardHintTimer) clearTimeout(bigScoreboardHintTimer);
+      bigScoreboardHintTimer = setTimeout(() => {
+        hint.style.opacity = '0.2';
+      }, 4500);
+    }
+
+    async function enterBigScoreboardMode() {
+      const overlay = document.getElementById('bigScoreboardOverlay');
+      if (!overlay) return;
+
+      overlay.classList.add('active');
+      overlay.setAttribute('aria-hidden', 'false');
+
+      if (latestMatchData) {
+        updateBigScoreboard(latestMatchData);
+      }
+
+      await requestBigScreenFullscreen();
+      await tryLandscapeLock();
+      showBigScoreboardHint();
+    }
+
+    async function exitBigScoreboardMode() {
+      const overlay = document.getElementById('bigScoreboardOverlay');
+      if (!overlay) return;
+
+      overlay.classList.remove('active');
+      overlay.setAttribute('aria-hidden', 'true');
+
+      try {
+        if (screen.orientation && screen.orientation.unlock) {
+          screen.orientation.unlock();
+        }
+      } catch (err) {
+        console.log('Orientation unlock unavailable:', err?.message || err);
+      }
+
+      try {
+        if (document.fullscreenElement && document.exitFullscreen) {
+          await document.exitFullscreen();
+        } else if (document.webkitFullscreenElement && document.webkitExitFullscreen) {
+          document.webkitExitFullscreen();
+        } else if (document.msFullscreenElement && document.msExitFullscreen) {
+          document.msExitFullscreen();
+        }
+      } catch (err) {
+        console.log('Fullscreen exit unavailable:', err?.message || err);
+      }
     }
 
     // Calculate overs from legal balls
@@ -1976,6 +2499,29 @@
       
       // Open in new window
       window.open(whatsappUrl, '_blank');
+    }
+
+    // Big Scoreboard gestures: double tap/double click to exit without adding buttons.
+    document.addEventListener('keydown', (event) => {
+      const overlay = document.getElementById('bigScoreboardOverlay');
+      if (event.key === 'Escape' && overlay && overlay.classList.contains('active')) {
+        exitBigScoreboardMode();
+      }
+    });
+
+    const bigScoreboardOverlayEl = document.getElementById('bigScoreboardOverlay');
+    if (bigScoreboardOverlayEl) {
+      bigScoreboardOverlayEl.addEventListener('dblclick', () => {
+        exitBigScoreboardMode();
+      });
+
+      bigScoreboardOverlayEl.addEventListener('touchstart', () => {
+        const now = Date.now();
+        if (now - bigScoreboardTouchTime < 320) {
+          exitBigScoreboardMode();
+        }
+        bigScoreboardTouchTime = now;
+      }, { passive: true });
     }
     
     // Clean up connections when leaving page
