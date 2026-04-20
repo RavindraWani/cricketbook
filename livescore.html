@@ -1,4 +1,4 @@
-﻿﻿<!DOCTYPE html>
+﻿﻿﻿﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <!-- Resource hints for faster loading -->
@@ -562,12 +562,20 @@
       height: 100%;
       padding: 10px;
       display: grid;
-      grid-template-rows: auto auto auto 1fr auto auto;
-      gap: 8px;
+      grid-template-rows: auto minmax(0, 1fr);
+      gap: 12px;
       background:
         radial-gradient(1200px 600px at 12% 8%, rgba(59, 130, 246, 0.23), transparent 60%),
         radial-gradient(1000px 550px at 88% 92%, rgba(16, 185, 129, 0.16), transparent 60%),
         #05080f;
+      transition: background 0.3s ease;
+    }
+
+    .big-scoreboard-inner.batting {
+      background:
+        radial-gradient(1100px 620px at 18% 18%, rgba(34, 211, 238, 0.26), transparent 58%),
+        radial-gradient(900px 520px at 82% 86%, rgba(16, 185, 129, 0.2), transparent 56%),
+        linear-gradient(180deg, rgba(8, 47, 73, 0.96) 0%, rgba(5, 8, 15, 1) 100%);
     }
 
     .big-score-status {
@@ -640,15 +648,20 @@
     }
 
     .big-score-main {
+      grid-row: 2;
       background: rgba(15, 23, 42, 0.82);
       border: 2px solid rgba(148, 163, 184, 0.36);
       border-radius: 20px;
       padding: 12px;
       display: grid;
-      grid-template-rows: auto 1fr auto;
-      align-items: center;
+      grid-template-rows: minmax(0, 1fr) auto;
+      align-items: stretch;
+      gap: 12px;
       text-align: center;
       min-height: 0;
+      overflow: visible;
+      position: relative;
+      z-index: 3;
       box-shadow: inset 0 0 28px rgba(30, 41, 59, 0.55);
     }
 
@@ -678,30 +691,37 @@
       overflow-wrap: anywhere;
     }
 
-    .big-team-overs {
-      font-size: clamp(28px, 7vw, 88px);
+    .big-score-overs {
+      font-size: 0.32em;
       font-weight: 800;
       color: #cbd5e1;
-      line-height: 1.1;
+      margin-left: 6px;
+      white-space: nowrap;
+      vertical-align: baseline;
     }
 
     .big-over-strip {
+      align-self: end;
       background: rgba(15, 23, 42, 0.88);
       border: 1px solid rgba(148, 163, 184, 0.4);
       border-radius: 14px;
       padding: 8px;
-      display: grid;
-      gap: 6px;
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
     }
 
-    .big-over-title {
-      font-size: clamp(11px, 1.8vw, 18px);
-      font-weight: 800;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      color: #cbd5e1;
-      text-align: center;
-      opacity: 0.95;
+    .big-score-result {
+      display: none;
+      margin: 0;
+      align-self: end;
+    }
+
+    .big-score-result.show {
+      display: block;
     }
 
     .big-over-balls {
@@ -710,6 +730,7 @@
       justify-content: center;
       align-items: center;
       gap: 6px;
+      margin: 0 auto;
       overflow-x: auto;
       overflow-y: hidden;
       min-height: 40px;
@@ -751,6 +772,7 @@
     }
 
     .big-score-hint {
+      grid-row: 1;
       text-align: center;
       font-size: clamp(11px, 1.8vw, 18px);
       color: rgba(226, 232, 240, 0.75);
@@ -764,16 +786,19 @@
       .big-team-score {
         font-size: clamp(84px, 29vw, 280px);
       }
-
-      .big-team-overs {
-        font-size: clamp(28px, 9vw, 70px);
-      }
     }
 
     @media (max-width: 640px) {
       .big-scoreboard-inner {
         padding: 8px;
-        gap: 6px;
+        gap: 10px;
+        grid-template-rows: auto minmax(0, 1fr);
+      }
+
+      .big-score-status,
+      .big-score-matchup,
+      .big-meta-row {
+        display: none;
       }
 
       .big-score-status {
@@ -802,7 +827,12 @@
 
       .big-score-main {
         border-radius: 16px;
-        padding: 8px;
+        padding: 8px 8px 12px;
+        display: grid;
+        grid-template-rows: minmax(0, 1fr) auto;
+        align-items: stretch;
+        gap: 10px;
+        text-align: center;
       }
 
       .big-team-name {
@@ -810,12 +840,16 @@
       }
 
       .big-team-score {
-        font-size: clamp(72px, 24vw, 176px);
+        font-size: clamp(46px, 16vw, 96px);
         letter-spacing: -1px;
+        line-height: 0.92;
+        margin: 0;
+        white-space: nowrap;
       }
 
-      .big-team-overs {
-        font-size: clamp(24px, 7.2vw, 44px);
+      .big-score-overs {
+        font-size: 0.28em;
+        margin-left: 4px;
       }
 
       .big-over-strip {
@@ -1185,25 +1219,16 @@
   <!-- Big Scoreboard Full-Screen Overlay -->
   <div id="bigScoreboardOverlay" aria-hidden="true">
     <div class="big-scoreboard-inner" id="bigScoreboardInner">
-      <div class="big-score-status" id="bigScoreStatus">Live Match</div>
-      <div class="big-score-matchup" id="bigScoreMatchup">TEAM A vs TEAM B</div>
-      <div class="big-meta-row">
-        <div class="big-mini-card" id="bigFirstInningsMini">1st Inn: 0/0 (0.0)</div>
-        <div class="big-live-chip" id="bigLiveChip">LIVE</div>
-        <div class="big-mini-card right" id="bigRightMini">Now: Team A</div>
-      </div>
-      <section class="big-score-main" id="bigScoreMainCard">
-        <div class="big-team-name" id="bigInningsTeamName">TEAM A</div>
-        <div class="big-team-score" id="bigInningsScore">0/0</div>
-        <div class="big-team-overs" id="bigInningsOvers">0.0 overs</div>
-      </section>
-      <div class="big-over-strip">
-        <div class="big-over-title" id="bigOverTitle">Current Over</div>
-        <div class="big-over-balls" id="bigOverBalls">
-          <span class="big-over-empty">Waiting for first ball...</span>
-        </div>
-      </div>
       <div class="big-score-hint" id="bigScoreHint">Double tap anywhere to exit</div>
+      <section class="big-score-main" id="bigScoreMainCard">
+        <div class="big-team-score" id="bigInningsScore">0/0</div>
+        <div class="big-over-strip">
+          <div class="big-over-balls" id="bigOverBalls">
+            <span class="big-over-empty">Waiting for first ball...</span>
+          </div>
+        </div>
+        <div id="bigResultBanner" class="result-banner big-score-result"></div>
+      </section>
     </div>
   </div>
 
@@ -1695,42 +1720,42 @@
                                (data.first && data.first.done && data.second && data.second.done) ||
                                (data.inSecond && data.second && data.second.done);
 
-      const statusEl = document.getElementById('bigScoreStatus');
+      const scoreboardInner = document.getElementById('bigScoreboardInner');
       const mainCard = document.getElementById('bigScoreMainCard');
-      const matchupEl = document.getElementById('bigScoreMatchup');
-      const overTitleEl = document.getElementById('bigOverTitle');
-      const firstInningsMiniEl = document.getElementById('bigFirstInningsMini');
-      const liveChipEl = document.getElementById('bigLiveChip');
-      const rightMiniEl = document.getElementById('bigRightMini');
+      const scoreEl = document.getElementById('bigInningsScore');
+      const overStripEl = mainCard.querySelector('.big-over-strip');
+      const bigResultBannerEl = document.getElementById('bigResultBanner');
+      const pageResultEl = document.getElementById('result');
 
-      document.getElementById('bigInningsTeamName').textContent = battingTeamName.toUpperCase();
-      document.getElementById('bigInningsScore').textContent = `${activeRuns}/${activeWkts}`;
-      document.getElementById('bigInningsOvers').textContent = `${activeOvers}/${oversLimit} overs`;
-      matchupEl.textContent = `${teamA.toUpperCase()} vs ${teamB.toUpperCase()}`;
-      firstInningsMiniEl.textContent = `1st Inn: ${firstRuns}/${firstWkts} (${firstOvers})`;
+      const scoreText = `${activeRuns}/${activeWkts}`;
+      scoreEl.innerHTML = `${scoreText} <span class="big-score-overs">${activeOvers}/${oversLimit}</span>`;
 
+      scoreboardInner.classList.remove('batting');
       mainCard.classList.remove('batting');
 
       if (!isMatchCompleted) {
+        scoreboardInner.classList.add('batting');
         mainCard.classList.add('batting');
-        statusEl.textContent = data.inSecond ? 'Live: 2nd Innings' : 'Live: 1st Innings';
-        liveChipEl.textContent = 'Live';
-        liveChipEl.style.background = 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)';
-        rightMiniEl.textContent = data.inSecond ? `Target: ${targetScore}` : `Now: ${teamA.toUpperCase()}`;
-      } else if (data.resultText && data.resultText.trim() !== '') {
-        statusEl.textContent = data.resultText;
-        liveChipEl.textContent = 'Final';
-        liveChipEl.style.background = 'linear-gradient(135deg, #0ea5e9 0%, #2563eb 100%)';
-        rightMiniEl.textContent = 'Match Completed';
+        if (overStripEl) overStripEl.style.display = 'flex';
+        if (bigResultBannerEl) {
+          bigResultBannerEl.classList.remove('show');
+          bigResultBannerEl.textContent = '';
+        }
       } else {
-        statusEl.textContent = 'Match Completed';
-        liveChipEl.textContent = 'Final';
-        liveChipEl.style.background = 'linear-gradient(135deg, #0ea5e9 0%, #2563eb 100%)';
-        rightMiniEl.textContent = 'Match Completed';
+        const resultText = (data.resultText && data.resultText.trim() !== '')
+          ? data.resultText
+          : (pageResultEl?.textContent || 'Match Completed');
+
+        if (overStripEl) overStripEl.style.display = 'none';
+        if (bigResultBannerEl) {
+          bigResultBannerEl.textContent = resultText;
+          bigResultBannerEl.classList.add('show');
+        }
       }
 
-      overTitleEl.textContent = data.inSecond ? 'Current Over (2nd Innings)' : 'Current Over (1st Innings)';
-      renderBigOverBalls(activeInnings);
+      if (!isMatchCompleted) {
+        renderBigOverBalls(activeInnings);
+      }
     }
 
     function renderBigOverBalls(innings) {
