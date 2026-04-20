@@ -517,7 +517,7 @@
       border: 2px solid rgba(255, 255, 255, 0.18);
       padding: 10px 14px;
       border-radius: 12px;
-      font-size: 12px;
+      font-size: 10px;
       font-weight: 800;
       letter-spacing: 0.3px;
       cursor: pointer;
@@ -688,7 +688,14 @@
       color: #ffffff;
       text-shadow: 0 10px 34px rgba(0, 0, 0, 0.6);
       margin: 8px 0;
-      overflow-wrap: anywhere;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+    .big-team-score.big-score--md {
+      font-size: clamp(72px, 21vw, 260px);
+    }
+    .big-team-score.big-score--lg {
+      font-size: clamp(60px, 17vw, 200px);
     }
 
     .big-score-overs {
@@ -845,6 +852,12 @@
         line-height: 0.92;
         margin: 0;
         white-space: nowrap;
+      }
+      .big-team-score.big-score--md {
+        font-size: clamp(36px, 12vw, 72px);
+      }
+      .big-team-score.big-score--lg {
+        font-size: clamp(28px, 9vw, 58px);
       }
 
       .big-score-overs {
@@ -1729,6 +1742,8 @@
 
       const scoreText = `${activeRuns}/${activeWkts}`;
       scoreEl.innerHTML = `${scoreText} <span class="big-score-overs">${activeOvers}/${oversLimit}</span>`;
+      scoreEl.classList.remove('big-score--md', 'big-score--lg');
+      if (activeRuns >= 100) scoreEl.classList.add(activeWkts >= 10 ? 'big-score--lg' : 'big-score--md');
 
       scoreboardInner.classList.remove('batting');
       mainCard.classList.remove('batting');
