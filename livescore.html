@@ -512,30 +512,40 @@
     }
 
     .big-score-btn {
-      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-      color: #ffffff;
-      border: 2px solid rgba(255, 255, 255, 0.18);
-      padding: 10px 14px;
-      border-radius: 12px;
+      background: transparent;
+      color: #2563eb;
+      border: none;
+      padding: 4px 2px;
+      border-radius: 6px;
       font-size: 12px;
       font-weight: 800;
-      letter-spacing: 0.3px;
+      letter-spacing: 0.2px;
       cursor: pointer;
-      box-shadow: 0 5px 14px rgba(15, 23, 42, 0.35);
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      box-shadow: none;
+      transition: color 0.2s ease, transform 0.2s ease;
       display: inline-flex;
       align-items: center;
-      gap: 6px;
-      text-transform: uppercase;
+      gap: 4px;
+      text-transform: none;
+      text-decoration: underline;
+      text-decoration-thickness: 1.5px;
+      text-underline-offset: 2px;
+      white-space: nowrap;
     }
 
     .big-score-btn:hover {
       transform: translateY(-1px);
-      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.45);
+      color: #1d4ed8;
     }
 
     .big-score-btn:active {
       transform: translateY(0);
+    }
+
+    @media (max-width: 430px) {
+      .big-score-btn {
+        font-size: 11px;
+      }
     }
 
     #bigScoreboardOverlay {
@@ -593,40 +603,27 @@
       overflow-wrap: anywhere;
     }
 
-    .big-score-main {
+    .big-score-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      min-height: 0;
+    }
+
+    .big-innings-card {
       background: rgba(15, 23, 42, 0.82);
       border: 2px solid rgba(148, 163, 184, 0.36);
       border-radius: 20px;
       padding: clamp(8px, 1.8vw, 12px);
-      position: relative;
       display: grid;
       grid-template-rows: auto 1fr auto;
-      align-items: center;
-      text-align: center;
+      align-items: start;
+      text-align: left;
       min-height: 0;
       box-shadow: inset 0 0 28px rgba(30, 41, 59, 0.55);
     }
 
-    .big-first-innings-mini {
-      position: absolute;
-      right: 10px;
-      bottom: 8px;
-      font-size: clamp(12px, 1.8vw, 20px);
-      font-weight: 800;
-      color: #cbd5e1;
-      background: rgba(30, 41, 59, 0.72);
-      border: 1px solid rgba(148, 163, 184, 0.38);
-      border-radius: 8px;
-      padding: 5px 9px;
-      line-height: 1.1;
-      max-width: 65%;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      display: none;
-    }
-
-    .big-score-main.batting {
+    .big-innings-card.batting {
       border-color: #22d3ee;
       box-shadow: 0 0 0 2px rgba(34, 211, 238, 0.2), inset 0 0 30px rgba(34, 211, 238, 0.1);
     }
@@ -639,24 +636,28 @@
       word-break: break-word;
       color: #e2e8f0;
       text-transform: uppercase;
+      text-align: left;
     }
 
     .big-team-score {
-      font-size: clamp(70px, 24vw, 320px);
+      font-size: clamp(56px, 17vw, 220px);
       line-height: 0.95;
       font-weight: 900;
       letter-spacing: -2px;
       color: #ffffff;
       text-shadow: 0 10px 34px rgba(0, 0, 0, 0.6);
-      margin: 8px 0;
+      margin: 10px 0;
       overflow-wrap: anywhere;
+      text-align: left;
     }
 
     .big-team-overs {
-      font-size: clamp(24px, 6.2vw, 80px);
+      font-size: clamp(17px, 3.2vw, 44px);
       font-weight: 800;
       color: #cbd5e1;
       line-height: 1.1;
+      text-align: left;
+      align-self: end;
     }
 
     .big-over-strip {
@@ -740,24 +741,16 @@
       }
 
       .big-team-name {
-        font-size: clamp(16px, 5.3vw, 24px);
+        font-size: clamp(15px, 4.8vw, 22px);
       }
 
       .big-team-score {
-        font-size: clamp(62px, 22vw, 130px);
+        font-size: clamp(50px, 20vw, 112px);
         letter-spacing: -1px;
       }
 
       .big-team-overs {
-        font-size: clamp(21px, 7vw, 36px);
-      }
-
-      .big-first-innings-mini {
-        right: 7px;
-        bottom: 6px;
-        font-size: clamp(11px, 3.1vw, 15px);
-        padding: 4px 7px;
-        max-width: 80%;
+        font-size: clamp(15px, 4.8vw, 26px);
       }
 
       .big-over-strip {
@@ -789,15 +782,15 @@
       }
 
       .big-team-name {
-        font-size: clamp(16px, 3.2vh, 22px);
+        font-size: clamp(13px, 2.8vh, 20px);
       }
 
       .big-team-score {
-        font-size: clamp(56px, 22vh, 112px);
+        font-size: clamp(48px, 18vh, 104px);
       }
 
       .big-team-overs {
-        font-size: clamp(18px, 5.2vh, 32px);
+        font-size: clamp(14px, 4vh, 22px);
       }
 
       .big-over-title {
@@ -816,12 +809,16 @@
     }
 
     @media (orientation: portrait) {
+      .big-score-grid {
+        gap: 6px;
+      }
+
       .big-team-score {
-        font-size: clamp(84px, 29vw, 280px);
+        font-size: clamp(52px, 21vw, 120px);
       }
 
       .big-team-overs {
-        font-size: clamp(28px, 9vw, 70px);
+        font-size: clamp(15px, 5.2vw, 28px);
       }
     }
   </style>
@@ -962,13 +959,13 @@
         </div>
         
         <!-- Action Buttons Row -->
-        <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:nowrap;margin-bottom:16px;width:100%;">
-          <button onclick="shareOnWhatsApp()" style="background:linear-gradient(135deg, #25D366 0%, #128C7E 100%);color:white;border:none;padding:10px 12px;border-radius:10px;font-size:12px;font-weight:600;cursor:pointer;box-shadow:0 3px 8px rgba(37,211,102,0.25);transition:all 0.2s;display:inline-flex;align-items:center;justify-content:center;gap:5px;min-height:40px;flex:1;white-space:nowrap;">
+        <div style="display:flex;justify-content:center;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:16px;width:100%;">
+          <button onclick="shareOnWhatsApp()" style="background:linear-gradient(135deg, #25D366 0%, #128C7E 100%);color:white;border:none;padding:10px 12px;border-radius:10px;font-size:12px;font-weight:600;cursor:pointer;box-shadow:0 3px 8px rgba(37,211,102,0.25);transition:all 0.2s;display:inline-flex;align-items:center;justify-content:center;gap:5px;min-height:40px;white-space:nowrap;">
             <span style="font-size:16px;">📱</span>
             Share on WhatsApp
           </button>
-          <button onclick="enterBigScoreboardMode()" class="big-score-btn" aria-label="Open Big Scoreboard Mode" style="flex:1;justify-content:center;white-space:nowrap;">
-            📺 Big Scoreboard Mode
+          <button onclick="enterBigScoreboardMode()" class="big-score-btn" aria-label="Open Big Scoreboard Mode" style="flex:0 0 auto;justify-content:center;">
+            Open Big Scoreboard →
           </button>
         </div>
         
@@ -1174,11 +1171,17 @@
     <div class="big-scoreboard-inner" id="bigScoreboardInner">
       <div class="big-score-status" id="bigScoreStatus">Live Match</div>
       <div class="big-score-matchup" id="bigScoreMatchup">TEAM A vs TEAM B</div>
-      <section class="big-score-main" id="bigScoreMainCard">
-        <div class="big-team-name" id="bigInningsTeamName">TEAM A</div>
-        <div class="big-team-score" id="bigInningsScore">0/0</div>
-        <div class="big-team-overs" id="bigInningsOvers">0.0 overs</div>
-        <div class="big-first-innings-mini" id="bigFirstInningsMini">1st: 0/0 (0.0/20)</div>
+      <section class="big-score-grid">
+        <article class="big-innings-card" id="bigFirstCard">
+          <div class="big-team-name" id="bigFirstTeamName">TEAM A</div>
+          <div class="big-team-score" id="bigFirstScore">0/0</div>
+          <div class="big-team-overs" id="bigFirstOvers">0.0/20 overs</div>
+        </article>
+        <article class="big-innings-card" id="bigSecondCard">
+          <div class="big-team-name" id="bigSecondTeamName">TEAM B</div>
+          <div class="big-team-score" id="bigSecondScore">0/0</div>
+          <div class="big-team-overs" id="bigSecondOvers">0.0/20 overs</div>
+        </article>
       </section>
       <div class="big-over-strip">
         <div class="big-over-title" id="bigOverTitle">Current Over</div>
@@ -1667,14 +1670,13 @@
       const teamA = data.teamA || 'Team A';
       const teamB = data.teamB || 'Team B';
       const hasResultText = !!(data.resultText && data.resultText.trim() !== '');
-      const activeInnings = data.inSecond ? data.second : data.first;
-      const battingTeamName = data.inSecond ? teamB : teamA;
-      const activeRuns = activeInnings?.runs || 0;
-      const activeWkts = activeInnings?.wkts || 0;
-      const activeOvers = calculateOvers(activeInnings?.legalBalls || 0);
       const firstRuns = data.first?.runs || 0;
       const firstWkts = data.first?.wkts || 0;
       const firstOvers = calculateOvers(data.first?.legalBalls || 0);
+      const secondRuns = data.second?.runs || 0;
+      const secondWkts = data.second?.wkts || 0;
+      const secondOvers = calculateOvers(data.second?.legalBalls || 0);
+      const activeInnings = data.inSecond ? data.second : data.first;
 
       const isMatchCompleted = data.matchCompleted === true ||
                                (data.first && data.first.done && data.second && data.second.done) ||
@@ -1682,27 +1684,30 @@
                                hasResultText;
 
       const statusEl = document.getElementById('bigScoreStatus');
-      const mainCard = document.getElementById('bigScoreMainCard');
       const matchupEl = document.getElementById('bigScoreMatchup');
       const overTitleEl = document.getElementById('bigOverTitle');
-      const firstInningsMiniEl = document.getElementById('bigFirstInningsMini');
+      const firstCard = document.getElementById('bigFirstCard');
+      const secondCard = document.getElementById('bigSecondCard');
 
-      document.getElementById('bigInningsTeamName').textContent = battingTeamName.toUpperCase();
-      document.getElementById('bigInningsScore').textContent = `${activeRuns}/${activeWkts}`;
-      document.getElementById('bigInningsOvers').textContent = `${activeOvers}/${oversLimit} overs`;
+      document.getElementById('bigFirstTeamName').textContent = teamA.toUpperCase();
+      document.getElementById('bigFirstScore').textContent = `${firstRuns}/${firstWkts}`;
+      document.getElementById('bigFirstOvers').textContent = `${firstOvers}/${oversLimit} overs`;
+
+      document.getElementById('bigSecondTeamName').textContent = teamB.toUpperCase();
+      document.getElementById('bigSecondScore').textContent = `${secondRuns}/${secondWkts}`;
+      document.getElementById('bigSecondOvers').textContent = `${secondOvers}/${oversLimit} overs`;
+
       matchupEl.textContent = `${teamA.toUpperCase()} vs ${teamB.toUpperCase()}`;
 
-      if (data.inSecond || isMatchCompleted) {
-        firstInningsMiniEl.textContent = `1st: ${firstRuns}/${firstWkts} (${firstOvers}/${oversLimit})`;
-        firstInningsMiniEl.style.display = 'block';
-      } else {
-        firstInningsMiniEl.style.display = 'none';
-      }
-
-      mainCard.classList.remove('batting');
+      firstCard.classList.remove('batting');
+      secondCard.classList.remove('batting');
 
       if (!isMatchCompleted) {
-        mainCard.classList.add('batting');
+        if (data.inSecond) {
+          secondCard.classList.add('batting');
+        } else {
+          firstCard.classList.add('batting');
+        }
         statusEl.textContent = data.inSecond ? 'Live: 2nd Innings' : 'Live: 1st Innings';
       } else if (hasResultText) {
         statusEl.textContent = data.resultText;
