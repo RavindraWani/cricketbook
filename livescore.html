@@ -470,6 +470,14 @@
       #teamBName {
         font-size: 15px !important;
       }
+      
+      #scoreA,
+      #scoreB {
+        font-size: 32px !important;
+        line-height: 1 !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+      }
     }
     
     /* Dark Mode Toggle */
@@ -681,7 +689,7 @@
     }
 
     .big-team-score {
-      font-size: clamp(88px, 27vw, 340px);
+      font-size: clamp(88px, 27vw, 500px);
       line-height: 0.95;
       font-weight: 900;
       letter-spacing: -2px;
@@ -692,10 +700,10 @@
       overflow: hidden;
     }
     .big-team-score.big-score--md {
-      font-size: clamp(72px, 21vw, 260px);
+      font-size: clamp(72px, 21vw, 400px);
     }
     .big-team-score.big-score--lg {
-      font-size: clamp(60px, 17vw, 200px);
+      font-size: clamp(60px, 17vw, 320px);
     }
 
     .big-score-overs {
