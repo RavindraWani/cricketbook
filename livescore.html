@@ -514,18 +514,18 @@
     .big-score-btn {
       background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
       color: #ffffff;
-      border: 2px solid rgba(255, 255, 255, 0.18);
-      padding: 10px 14px;
-      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      padding: 5px 10px;
+      border-radius: 8px;
       font-size: 10px;
-      font-weight: 800;
+      font-weight: 700;
       letter-spacing: 0.3px;
       cursor: pointer;
-      box-shadow: 0 5px 14px rgba(15, 23, 42, 0.35);
+      box-shadow: 0 2px 6px rgba(15, 23, 42, 0.25);
       transition: transform 0.2s ease, box-shadow 0.2s ease;
       display: inline-flex;
       align-items: center;
-      gap: 6px;
+      gap: 4px;
       text-transform: uppercase;
     }
 
@@ -560,10 +560,10 @@
     .big-scoreboard-inner {
       width: 100%;
       height: 100%;
-      padding: 10px;
+      padding: 4px 10px 10px;
       display: grid;
       grid-template-rows: auto minmax(0, 1fr);
-      gap: 12px;
+      gap: 4px;
       background:
         radial-gradient(1200px 600px at 12% 8%, rgba(59, 130, 246, 0.23), transparent 60%),
         radial-gradient(1000px 550px at 88% 92%, rgba(16, 185, 129, 0.16), transparent 60%),
@@ -778,14 +778,78 @@
       font-weight: 700;
     }
 
+    #bigBoundaryFlash {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+      z-index: 20;
+      font-size: clamp(56px, 14vw, 160px);
+      font-weight: 900;
+      letter-spacing: -1px;
+      opacity: 0;
+      border-radius: 18px;
+      overflow: hidden;
+      backdrop-filter: blur(0px);
+      -webkit-backdrop-filter: blur(0px);
+      transition: backdrop-filter 0.2s ease;
+    }
+
+    #bigBoundaryFlash.flash-four,
+    #bigBoundaryFlash.flash-six,
+    #bigBoundaryFlash.flash-wicket {
+      backdrop-filter: blur(3px);
+      -webkit-backdrop-filter: blur(3px);
+    }
+
+    #bigBoundaryFlash.flash-four {
+      color: #10b981;
+      text-shadow: 0 0 60px rgba(16, 185, 129, 0.9), 0 0 120px rgba(16, 185, 129, 0.5);
+      animation: bigBoundaryPop 1.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+
+    #bigBoundaryFlash.flash-six {
+      color: #fbbf24;
+      text-shadow: 0 0 60px rgba(251, 191, 36, 0.9), 0 0 120px rgba(251, 191, 36, 0.5);
+      animation: bigBoundaryPop 1.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+
+    #bigBoundaryFlash.flash-wicket {
+      color: #ef4444;
+      text-shadow: 0 0 60px rgba(239, 68, 68, 0.95), 0 0 130px rgba(239, 68, 68, 0.55);
+      animation: bigWicketPop 1.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+
+    @keyframes bigWicketPop {
+      0%   { opacity: 0; transform: scale(0.4) translateX(0); }
+      18%  { opacity: 1; transform: scale(1.18) translateX(0); }
+      26%  { opacity: 1; transform: scale(1.1) translateX(-8px); }
+      34%  { opacity: 1; transform: scale(1.1) translateX(8px); }
+      42%  { opacity: 1; transform: scale(1.1) translateX(-5px); }
+      50%  { opacity: 1; transform: scale(1.05) translateX(0); }
+      80%  { opacity: 1; transform: scale(1) translateX(0); }
+      100% { opacity: 0; transform: scale(1.25) translateX(0); }
+    }
+
+    @keyframes bigBoundaryPop {
+      0%   { opacity: 0; transform: scale(0.4); }
+      18%  { opacity: 1; transform: scale(1.18); }
+      35%  { opacity: 1; transform: scale(0.96); }
+      55%  { opacity: 1; transform: scale(1); }
+      80%  { opacity: 1; transform: scale(1); }
+      100% { opacity: 0; transform: scale(1.25); }
+    }
+
     .big-score-hint {
       grid-row: 1;
       text-align: center;
-      font-size: clamp(11px, 1.8vw, 18px);
+      font-size: clamp(10px, 1.5vw, 14px);
       color: rgba(226, 232, 240, 0.75);
       font-weight: 600;
       letter-spacing: 0.2px;
-      min-height: 18px;
+      min-height: 14px;
       transition: opacity 0.3s ease;
     }
 
@@ -1234,6 +1298,7 @@
     <div class="big-scoreboard-inner" id="bigScoreboardInner">
       <div class="big-score-hint" id="bigScoreHint">Double tap anywhere to exit</div>
       <section class="big-score-main" id="bigScoreMainCard">
+        <div id="bigBoundaryFlash"></div>
         <div class="big-team-score" id="bigInningsScore">0/0</div>
         <div class="big-over-strip">
           <div class="big-over-balls" id="bigOverBalls">
@@ -1279,6 +1344,8 @@
     let latestMatchData = null;
     let bigScoreboardHintTimer = null;
     let bigScoreboardTouchTime = 0;
+    let wakeLock = null;
+    let lastBigBoardBall = null;
 
     // Organization ID for multi-user isolation
     let organizationId = localStorage.getItem('cricketbook_org_id');
@@ -1724,10 +1791,6 @@
       const activeRuns = activeInnings?.runs || 0;
       const activeWkts = activeInnings?.wkts || 0;
       const activeOvers = calculateOvers(activeInnings?.legalBalls || 0);
-      const firstRuns = data.first?.runs || 0;
-      const firstWkts = data.first?.wkts || 0;
-      const firstOvers = calculateOvers(data.first?.legalBalls || 0);
-      const targetScore = data.target || ((data.first?.runs || 0) + 1);
 
       const isMatchCompleted = data.matchCompleted === true ||
                                (data.first && data.first.done && data.second && data.second.done) ||
@@ -1741,7 +1804,7 @@
       const pageResultEl = document.getElementById('result');
 
       const scoreText = `${activeRuns}/${activeWkts}`;
-      scoreEl.innerHTML = `${scoreText} <span class="big-score-overs">${activeOvers}/${oversLimit}</span>`;
+      scoreEl.innerHTML = `${scoreText} <span class="big-score-overs">${activeOvers}</span>`;
       scoreEl.classList.remove('big-score--md', 'big-score--lg');
       if (activeRuns >= 100) scoreEl.classList.add(activeWkts >= 10 ? 'big-score--lg' : 'big-score--md');
 
@@ -1789,7 +1852,20 @@
 
       if (!overBalls || overBalls.length === 0) {
         container.innerHTML = '<span class="big-over-empty">Waiting for first ball...</span>';
+        lastBigBoardBall = null;
         return;
+      }
+
+      const latestBall = String(overBalls[overBalls.length - 1]);
+      const ballKey = `${overBalls.length}:${latestBall}`;
+      if (ballKey !== lastBigBoardBall) {
+        lastBigBoardBall = ballKey;
+        const isWicketBall = /W$/.test(latestBall) || /\+W$/.test(latestBall);
+        if (latestBall === '4' || latestBall === '6') {
+          triggerBoundaryFlash(latestBall);
+        } else if (isWicketBall) {
+          triggerBoundaryFlash('W');
+        }
       }
 
       const ballsHtml = overBalls.map((ball) => {
@@ -1811,6 +1887,23 @@
       }).join('');
 
       container.innerHTML = ballsHtml;
+    }
+
+    function triggerBoundaryFlash(ball) {
+      const el = document.getElementById('bigBoundaryFlash');
+      if (!el) return;
+      el.className = '';
+      if (ball === '6')      { el.textContent = '🚀 SIX!'; }
+      else if (ball === '4') { el.textContent = '⚡ FOUR!'; }
+      else                   { el.textContent = '🎯 WICKET!'; }
+      void el.offsetWidth; // force reflow to restart animation
+      if (ball === '6')      el.className = 'flash-six';
+      else if (ball === '4') el.className = 'flash-four';
+      else                   el.className = 'flash-wicket';
+      // Clean up backdrop-filter once animation finishes
+      el.addEventListener('animationend', () => {
+        el.className = '';
+      }, { once: true });
     }
 
     async function requestBigScreenFullscreen() {
@@ -1865,7 +1958,40 @@
       await requestBigScreenFullscreen();
       await tryLandscapeLock();
       showBigScoreboardHint();
+      await requestWakeLock();
     }
+
+    async function requestWakeLock() {
+      if ('wakeLock' in navigator) {
+        try {
+          wakeLock = await navigator.wakeLock.request('screen');
+          wakeLock.addEventListener('release', () => { wakeLock = null; });
+        } catch (err) {
+          console.log('Wake lock unavailable:', err?.message || err);
+        }
+      }
+    }
+
+    async function releaseWakeLock() {
+      if (wakeLock) {
+        try {
+          await wakeLock.release();
+        } catch (err) {
+          console.log('Wake lock release failed:', err?.message || err);
+        }
+        wakeLock = null;
+      }
+    }
+
+    // Re-acquire wake lock if page becomes visible again while scoreboard is active
+    document.addEventListener('visibilitychange', async () => {
+      if (document.visibilityState === 'visible') {
+        const overlay = document.getElementById('bigScoreboardOverlay');
+        if (overlay && overlay.classList.contains('active')) {
+          await requestWakeLock();
+        }
+      }
+    });
 
     async function exitBigScoreboardMode() {
       const overlay = document.getElementById('bigScoreboardOverlay');
@@ -1873,6 +1999,7 @@
 
       overlay.classList.remove('active');
       overlay.setAttribute('aria-hidden', 'true');
+      await releaseWakeLock();
 
       try {
         if (screen.orientation && screen.orientation.unlock) {
