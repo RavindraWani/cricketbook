@@ -1,4 +1,5 @@
-﻿﻿﻿﻿<!DOCTYPE html>
+﻿﻿
+﻿﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <!-- Resource hints for faster loading -->
@@ -725,170 +726,6 @@
       display: flex;
     }
 
-    .big-scoreboard-inner {
-      width: 100%;
-      height: 100%;
-      padding: 4px 10px 10px;
-      display: grid;
-      grid-template-rows: auto minmax(0, 1fr);
-      gap: 4px;
-      background:
-        radial-gradient(1200px 600px at 12% 8%, rgba(59, 130, 246, 0.23), transparent 60%),
-        radial-gradient(1000px 550px at 88% 92%, rgba(16, 185, 129, 0.16), transparent 60%),
-        #05080f;
-      transition: background 0.3s ease;
-    }
-
-    .big-scoreboard-inner.batting {
-      background:
-        radial-gradient(1100px 620px at 18% 18%, rgba(34, 211, 238, 0.26), transparent 58%),
-        radial-gradient(900px 520px at 82% 86%, rgba(16, 185, 129, 0.2), transparent 56%),
-        linear-gradient(180deg, rgba(8, 47, 73, 0.96) 0%, rgba(5, 8, 15, 1) 100%);
-    }
-
-    .big-score-status {
-      text-align: center;
-      font-size: clamp(14px, 2.4vw, 30px);
-      font-weight: 900;
-      letter-spacing: 1px;
-      color: #f8fafc;
-      text-transform: uppercase;
-      opacity: 0.96;
-      padding-top: 2px;
-      line-height: 1.15;
-      overflow-wrap: anywhere;
-    }
-
-    .big-score-matchup {
-      text-align: center;
-      color: #cbd5e1;
-      font-size: clamp(13px, 2vw, 24px);
-      font-weight: 700;
-      letter-spacing: 0.5px;
-      line-height: 1.1;
-      overflow-wrap: anywhere;
-    }
-
-    .big-meta-row {
-      display: grid;
-      grid-template-columns: 1fr auto 1fr;
-      align-items: center;
-      gap: 8px;
-      min-height: 0;
-    }
-
-    .big-mini-card {
-      min-height: 34px;
-      padding: 5px 8px;
-      border-radius: 10px;
-      background: rgba(15, 23, 42, 0.82);
-      border: 1px solid rgba(148, 163, 184, 0.35);
-      color: #e2e8f0;
-      font-size: clamp(11px, 1.7vw, 18px);
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .big-mini-card.right {
-      justify-content: center;
-    }
-
-    .big-live-chip {
-      min-height: 32px;
-      padding: 5px 10px;
-      border-radius: 999px;
-      background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-      border: 1px solid rgba(254, 202, 202, 0.5);
-      color: #ffffff;
-      font-size: clamp(11px, 1.8vw, 18px);
-      font-weight: 900;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 4px 12px rgba(220, 38, 38, 0.35);
-    }
-
-    .big-score-main {
-      grid-row: 2;
-      background: rgba(15, 23, 42, 0.82);
-      border: 2px solid rgba(148, 163, 184, 0.36);
-      border-radius: 20px;
-      padding: 12px;
-      display: grid;
-      grid-template-rows: minmax(0, 1fr) auto;
-      align-items: stretch;
-      gap: 12px;
-      text-align: center;
-      min-height: 0;
-      overflow: visible;
-      position: relative;
-      z-index: 3;
-      box-shadow: inset 0 0 28px rgba(30, 41, 59, 0.55);
-    }
-
-    .big-score-main.batting {
-      border-color: #22d3ee;
-      box-shadow: 0 0 0 2px rgba(34, 211, 238, 0.2), inset 0 0 30px rgba(34, 211, 238, 0.1);
-    }
-
-    .big-team-name {
-      font-size: clamp(20px, 4vw, 50px);
-      font-weight: 900;
-      letter-spacing: 0.8px;
-      line-height: 1.1;
-      word-break: break-word;
-      color: #e2e8f0;
-      text-transform: uppercase;
-    }
-
-    .big-team-score {
-      font-size: clamp(88px, 27vw, 500px);
-      line-height: 0.95;
-      font-weight: 900;
-      letter-spacing: -2px;
-      color: #ffffff;
-      text-shadow: 0 10px 34px rgba(0, 0, 0, 0.6);
-      margin: 8px 0;
-      white-space: nowrap;
-      overflow: hidden;
-    }
-    .big-team-score.big-score--md {
-      font-size: clamp(72px, 21vw, 400px);
-    }
-    .big-team-score.big-score--lg {
-      font-size: clamp(60px, 17vw, 320px);
-    }
-
-    .big-score-overs {
-      font-size: 0.32em;
-      font-weight: 800;
-      color: #cbd5e1;
-      margin-left: 6px;
-      white-space: nowrap;
-      vertical-align: baseline;
-    }
-
-    .big-over-strip {
-      align-self: end;
-      background: rgba(15, 23, 42, 0.88);
-      border: 1px solid rgba(148, 163, 184, 0.4);
-      border-radius: 14px;
-      padding: 8px;
-      position: relative;
-      z-index: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 100%;
-    }
-
     .big-score-result {
       display: none;
       margin: 0;
@@ -1010,97 +847,7 @@
       100% { opacity: 0; transform: scale(1.25); }
     }
 
-    .big-score-hint {
-      grid-row: 1;
-      text-align: center;
-      font-size: clamp(10px, 1.5vw, 14px);
-      color: rgba(226, 232, 240, 0.75);
-      font-weight: 600;
-      letter-spacing: 0.2px;
-      min-height: 14px;
-      transition: opacity 0.3s ease;
-    }
-
-    @media (orientation: portrait) {
-      .big-team-score {
-        font-size: clamp(84px, 29vw, 280px);
-      }
-    }
-
     @media (max-width: 640px) {
-      .big-scoreboard-inner {
-        padding: 8px;
-        gap: 10px;
-        grid-template-rows: auto minmax(0, 1fr);
-      }
-
-      .big-score-status,
-      .big-score-matchup,
-      .big-meta-row {
-        display: none;
-      }
-
-      .big-score-status {
-        font-size: clamp(12px, 4.2vw, 20px);
-      }
-
-      .big-score-matchup {
-        font-size: clamp(11px, 3.8vw, 16px);
-      }
-
-      .big-meta-row {
-        gap: 6px;
-      }
-
-      .big-mini-card {
-        min-height: 30px;
-        font-size: 11px;
-        padding: 4px 6px;
-      }
-
-      .big-live-chip {
-        min-height: 30px;
-        font-size: 11px;
-        padding: 4px 8px;
-      }
-
-      .big-score-main {
-        border-radius: 16px;
-        padding: 8px 8px 12px;
-        display: grid;
-        grid-template-rows: minmax(0, 1fr) auto;
-        align-items: stretch;
-        gap: 10px;
-        text-align: center;
-      }
-
-      .big-team-name {
-        font-size: clamp(16px, 6.2vw, 28px);
-      }
-
-      .big-team-score {
-        font-size: clamp(46px, 16vw, 96px);
-        letter-spacing: -1px;
-        line-height: 0.92;
-        margin: 0;
-        white-space: nowrap;
-      }
-      .big-team-score.big-score--md {
-        font-size: clamp(36px, 12vw, 72px);
-      }
-      .big-team-score.big-score--lg {
-        font-size: clamp(28px, 9vw, 58px);
-      }
-
-      .big-score-overs {
-        font-size: 0.28em;
-        margin-left: 4px;
-      }
-
-      .big-over-strip {
-        padding: 6px;
-      }
-
       .big-over-balls {
         justify-content: flex-start;
       }
@@ -1110,6 +857,157 @@
         height: 34px;
         font-size: 16px;
         border-radius: 8px;
+      }
+    }
+
+    /* TV scoreboard: use the whole landscape viewport instead of a centered table. */
+    .tv-scoreboard {
+      width: 100%;
+      height: 100%;
+      padding: clamp(14px, 2.2vw, 34px);
+      display: grid;
+      grid-template-rows: auto minmax(0, 1fr) auto auto;
+      gap: clamp(12px, 2vw, 28px);
+      background: #07111f;
+      color: #f8fafc;
+    }
+
+    .tv-scoreboard-top { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 20px; }
+    .tv-team-short { min-width: 0; color: #67e8f9; font-size: clamp(22px, 4vw, 64px); font-weight: 950; letter-spacing: 2px; line-height: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .tv-team-short.right { text-align: right; color: #c4b5fd; }
+    .tv-match-heading { text-align: center; min-width: 0; }
+    .tv-status { color: #fbbf24; font-size: clamp(11px, 1.4vw, 22px); font-weight: 900; letter-spacing: 1.5px; text-transform: uppercase; }
+    .tv-match-name { color: #cbd5e1; font-size: clamp(11px, 1.5vw, 22px); font-weight: 700; margin-top: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .tv-scoreboard-body { min-height: 0; display: grid; grid-template-columns: minmax(220px, 0.8fr) minmax(360px, 1.8fr); gap: clamp(10px, 2vw, 30px); align-items: stretch; }
+    .tv-innings-card, .tv-live-card { min-width: 0; border: 1px solid rgba(148, 163, 184, 0.3); border-radius: 18px; background: rgba(15, 23, 42, 0.88); }
+    .tv-innings-card { display: flex; flex-direction: column; justify-content: center; padding: clamp(16px, 2.5vw, 40px); }
+    .tv-innings-card.active { border-color: #22d3ee; box-shadow: 0 0 0 2px rgba(34, 211, 238, 0.15); }
+    .tv-card-label { color: #94a3b8; font-size: clamp(11px, 1.3vw, 18px); font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
+    .tv-card-team { color: #e2e8f0; font-size: clamp(18px, 2.3vw, 38px); font-weight: 900; margin: 8px 0; overflow-wrap: anywhere; }
+    .tv-card-score { color: #ffffff; font-size: clamp(38px, 6vw, 100px); font-weight: 950; line-height: 0.95; white-space: nowrap; }
+    .tv-card-overs { color: #94a3b8; font-size: clamp(13px, 1.5vw, 23px); font-weight: 800; margin-top: 10px; }
+    .tv-live-card { display: grid; grid-template-rows: auto minmax(0, 1fr) auto; align-items: center; padding: clamp(14px, 2vw, 30px); text-align: center; border-color: rgba(34, 211, 238, 0.65); background: linear-gradient(145deg, rgba(8, 47, 73, 0.96), rgba(15, 23, 42, 0.96)); }
+    .tv-live-score { align-self: center; color: #ffffff; font-size: clamp(84px, 15vw, 260px); font-weight: 950; line-height: 0.85; letter-spacing: -4px; white-space: nowrap; text-shadow: 0 10px 30px rgba(0, 0, 0, 0.55); }
+    .tv-live-overs { color: #cbd5e1; font-size: clamp(18px, 2.5vw, 38px); font-weight: 800; }
+    .tv-chase-bar { display: none; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 12px; border: 2px solid #22d3ee; border-radius: 14px; background: rgba(8, 47, 73, 0.9); text-align: center; }
+    .tv-chase-bar.show { display: grid; }
+    .tv-chase-label { color: #a5f3fc; font-size: clamp(10px, 1.2vw, 17px); font-weight: 900; text-transform: uppercase; letter-spacing: 0.7px; }
+    .tv-chase-value { color: #ffffff; font-size: clamp(24px, 3.8vw, 62px); font-weight: 950; line-height: 1; margin-top: 4px; white-space: nowrap; }
+    .tv-over-bar { min-width: 0; display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; gap: 16px; padding: 10px 14px; border-radius: 14px; background: rgba(15, 23, 42, 0.94); }
+    .tv-over-label { color: #94a3b8; font-size: clamp(11px, 1.4vw, 20px); font-weight: 900; text-transform: uppercase; white-space: nowrap; }
+    .tv-over-bar .big-over-balls { justify-content: flex-start; }
+
+    @keyframes tvScoreboardEnter {
+      from { opacity: 0; transform: scale(0.985); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    @keyframes tvScorePulse {
+      0% { transform: scale(1); color: #ffffff; }
+      45% { transform: scale(1.08); color: #67e8f9; }
+      100% { transform: scale(1); color: #ffffff; }
+    }
+
+    @keyframes tvChasePulse {
+      0% { box-shadow: 0 0 0 0 rgba(34, 211, 238, 0.7); }
+      100% { box-shadow: 0 0 0 14px rgba(34, 211, 238, 0); }
+    }
+
+    #bigScoreboardOverlay.active .tv-scoreboard { animation: tvScoreboardEnter 0.35s ease-out both; }
+    .tv-live-score.score-updated { animation: tvScorePulse 0.65s ease-out; }
+    .tv-chase-bar.chase-updated { animation: tvChasePulse 0.75s ease-out; }
+
+    @media (max-width: 700px), (orientation: portrait) {
+      .tv-scoreboard { display: flex; flex-direction: column; min-height: 100%; height: auto; padding: 10px; gap: 10px; overflow-y: auto; }
+      .tv-scoreboard-top { gap: 8px; }
+      .tv-team-short { font-size: clamp(18px, 7vw, 32px); }
+      .tv-match-name { display: none; }
+      .tv-scoreboard-body { display: contents; }
+      .tv-live-card { flex: 0 0 auto; min-height: 260px; height: clamp(260px, 42vh, 360px); order: 1; }
+      .tv-chase-bar { flex: 0 0 auto; min-height: 78px; order: 2; position: relative; z-index: 2; }
+      .tv-innings-card { flex: 0 0 auto; min-height: 105px; padding: 12px 16px; order: 3; }
+      .tv-card-team { margin: 3px 0; font-size: 17px; }
+      .tv-card-score { font-size: 40px; }
+      .tv-card-overs { margin-top: 4px; font-size: 13px; }
+      .tv-over-bar { grid-template-columns: 1fr; gap: 5px; order: 4; }
+      .big-score-result { order: 5; }
+    }
+
+    @media (max-width: 900px) and (orientation: landscape) {
+      .tv-scoreboard {
+        padding: 8px;
+        gap: 8px;
+      }
+
+      .tv-scoreboard-top {
+        gap: 10px;
+      }
+
+      .tv-team-short {
+        font-size: clamp(18px, 4vw, 30px);
+      }
+
+      .tv-status {
+        font-size: clamp(10px, 1.8vw, 16px);
+      }
+
+      .tv-scoreboard-body {
+        grid-template-columns: minmax(150px, 0.75fr) minmax(280px, 1.8fr);
+        gap: 8px;
+      }
+
+      .tv-innings-card {
+        padding: 12px;
+      }
+
+      .tv-card-team {
+        font-size: clamp(15px, 2.4vw, 24px);
+        margin: 4px 0;
+      }
+
+      .tv-card-score {
+        font-size: clamp(32px, 5vw, 58px);
+      }
+
+      .tv-card-overs {
+        font-size: clamp(11px, 1.8vw, 16px);
+        margin-top: 5px;
+      }
+
+      .tv-live-card {
+        padding: 10px;
+      }
+
+      .tv-live-score {
+        font-size: clamp(58px, 13vw, 130px);
+      }
+
+      .tv-live-overs {
+        font-size: clamp(15px, 2.5vw, 24px);
+      }
+
+      .tv-chase-bar {
+        gap: 6px;
+        padding: 7px 10px;
+      }
+
+      .tv-chase-label {
+        font-size: clamp(9px, 1.4vw, 13px);
+      }
+
+      .tv-chase-value {
+        font-size: clamp(20px, 3.5vw, 36px);
+      }
+
+      .tv-over-bar {
+        padding: 6px 10px;
+        gap: 8px;
+      }
+
+      .big-over-ball {
+        min-width: 30px;
+        height: 30px;
+        font-size: 14px;
       }
     }
   </style>
@@ -1255,9 +1153,9 @@
             <span aria-hidden="true">📱</span>
             Share on WhatsApp
           </button>
-          <button onclick="enterBigScoreboardMode()" class="quick-action-btn big-score-btn" aria-label="Open Big Screen Score View">
+          <button onclick="enterBigScoreboardMode()" class="quick-action-btn big-score-btn" aria-label="Open TV Scoreboard">
             <span aria-hidden="true">📺</span>
-            Big Screen
+            TV Scoreboard
           </button>
         </div>
         
@@ -1433,18 +1331,20 @@
 
   <!-- Big Scoreboard Full-Screen Overlay -->
   <div id="bigScoreboardOverlay" aria-hidden="true">
-    <div class="big-scoreboard-inner" id="bigScoreboardInner">
-      <div class="big-score-hint" id="bigScoreHint">Double tap anywhere to exit</div>
-      <section class="big-score-main" id="bigScoreMainCard">
-        <div id="bigBoundaryFlash"></div>
-        <div class="big-team-score" id="bigInningsScore">0/0</div>
-        <div class="big-over-strip">
-          <div class="big-over-balls" id="bigOverBalls">
-            <span class="big-over-empty">Waiting for first ball...</span>
-          </div>
-        </div>
-        <div id="bigResultBanner" class="result-banner big-score-result"></div>
-      </section>
+    <div class="tv-scoreboard" id="bigScoreboardInner">
+      <div id="bigBoundaryFlash"></div>
+      <header class="tv-scoreboard-top">
+        <div class="tv-team-short" id="bigTeamAName">TEAM A</div>
+        <div class="tv-match-heading"><div class="tv-status" id="bigScoreStatus">LIVE</div><div class="tv-match-name" id="bigScoreMatchup">TEAM A vs TEAM B</div></div>
+        <div class="tv-team-short right" id="bigTeamBName">TEAM B</div>
+      </header>
+      <main class="tv-scoreboard-body">
+        <section class="tv-innings-card" id="bigTeamACard"><div class="tv-card-label">1st innings</div><div class="tv-card-team" id="bigTeamAFullName">Team A</div><div class="tv-card-score" id="bigFirstScore">0/0</div><div class="tv-card-overs" id="bigFirstOvers">0.0 / 20 overs</div></section>
+        <section class="tv-live-card"><div class="tv-live-score" id="bigInningsScore">0/0</div><div class="tv-live-overs" id="bigBattingOvers">0.0 / 20 overs</div></section>
+      </main>
+      <section class="tv-chase-bar" id="bigChasePanel"><div><div class="tv-chase-label">Runs needed</div><div class="tv-chase-value" id="bigRunsNeeded">-</div></div><div><div class="tv-chase-label">Balls remaining</div><div class="tv-chase-value" id="bigBallsLeft">-</div></div><div><div class="tv-chase-label">Required rate</div><div class="tv-chase-value" id="bigRequiredRate">-</div></div></section>
+      <section class="tv-over-bar"><div class="tv-over-label">Current over</div><div class="big-over-balls" id="bigOverBalls"><span class="big-over-empty">Waiting for first ball...</span></div></section>
+      <div id="bigResultBanner" class="result-banner big-score-result"></div>
     </div>
   </div>
 
@@ -1480,7 +1380,6 @@
     let lastActivityTime = Date.now(); // Track last user activity
     let isPollingPaused = false; // Track if polling is paused
     let latestMatchData = null;
-    let bigScoreboardHintTimer = null;
     let bigScoreboardTouchTime = 0;
     let wakeLock = null;
     let lastBigBoardBall = null;
@@ -1901,58 +1800,79 @@
       updateBigScoreboard(data);
     }
 
+    function getBigTeamShortName(teamName) {
+      const cleanName = String(teamName || '').trim();
+      if (!cleanName) return 'TEAM';
+      const words = cleanName.split(/\s+/).filter(Boolean);
+      if (words.length > 1) return words.map(word => word[0]).join('').slice(0, 4).toUpperCase();
+      return cleanName.replace(/[^a-z0-9]/gi, '').slice(0, 4).toUpperCase() || 'TEAM';
+    }
+
     function updateBigScoreboard(data) {
       if (!data) return;
 
       const oversLimit = data.oversLimit || 20;
       const teamA = data.teamA || 'Team A';
       const teamB = data.teamB || 'Team B';
-      const activeInnings = data.inSecond ? data.second : data.first;
-      const battingTeamName = data.inSecond ? teamB : teamA;
-      const activeRuns = activeInnings?.runs || 0;
-      const activeWkts = activeInnings?.wkts || 0;
-      const activeOvers = calculateOvers(activeInnings?.legalBalls || 0);
-
+      const first = data.first || {};
+      const second = data.second || {};
+      const isSecondInnings = data.inSecond === true;
+      const activeInnings = isSecondInnings ? second : first;
+      const activeRuns = activeInnings.runs || 0;
+      const activeWkts = activeInnings.wkts || 0;
+      const activeOvers = calculateOvers(activeInnings.legalBalls || 0);
+      const firstOvers = calculateOvers(first.legalBalls || 0);
       const isMatchCompleted = data.matchCompleted === true ||
-                               (data.first && data.first.done && data.second && data.second.done) ||
-                               (data.inSecond && data.second && data.second.done);
+        (first.done && second.done) || (isSecondInnings && second.done);
 
-      const scoreboardInner = document.getElementById('bigScoreboardInner');
-      const mainCard = document.getElementById('bigScoreMainCard');
-      const scoreEl = document.getElementById('bigInningsScore');
-      const overStripEl = mainCard.querySelector('.big-over-strip');
-      const bigResultBannerEl = document.getElementById('bigResultBanner');
+      const target = Number(data.target || (first.runs || 0) + 1);
+      const ballsLeft = Math.max((oversLimit * 6) - (second.legalBalls || 0), 0);
+      const runsNeeded = Math.max(target - (second.runs || 0), 0);
+      const requiredRate = runsNeeded > 0 && ballsLeft > 0 ? (runsNeeded * 6 / ballsLeft).toFixed(2) : '0.00';
       const pageResultEl = document.getElementById('result');
+      const resultBannerEl = document.getElementById('bigResultBanner');
 
-      const scoreText = `${activeRuns}/${activeWkts}`;
-      scoreEl.innerHTML = `${scoreText} <span class="big-score-overs">${activeOvers}</span>`;
-      scoreEl.classList.remove('big-score--md', 'big-score--lg');
-      if (activeRuns >= 100) scoreEl.classList.add(activeWkts >= 10 ? 'big-score--lg' : 'big-score--md');
+      document.getElementById('bigTeamAName').textContent = getBigTeamShortName(teamA);
+      document.getElementById('bigTeamBName').textContent = getBigTeamShortName(teamB);
+      document.getElementById('bigTeamAFullName').textContent = teamA;
+      document.getElementById('bigScoreMatchup').textContent = `${teamA} vs ${teamB}`;
+      document.getElementById('bigFirstScore').textContent = `${first.runs || 0}/${first.wkts || 0}`;
+      document.getElementById('bigFirstOvers').textContent = `${firstOvers} / ${oversLimit} overs`;
+      const liveScoreEl = document.getElementById('bigInningsScore');
+      const nextScore = `${activeRuns}/${activeWkts}`;
+      const scoreChanged = liveScoreEl.textContent !== nextScore;
+      liveScoreEl.textContent = nextScore;
+      if (scoreChanged) {
+        liveScoreEl.classList.remove('score-updated');
+        void liveScoreEl.offsetWidth;
+        liveScoreEl.classList.add('score-updated');
+      }
+      document.getElementById('bigBattingOvers').textContent = `${activeOvers} / ${oversLimit} overs`;
 
-      scoreboardInner.classList.remove('batting');
-      mainCard.classList.remove('batting');
+      document.getElementById('bigTeamACard').classList.toggle('active', !isSecondInnings);
+      document.getElementById('bigScoreStatus').textContent = isMatchCompleted ? 'MATCH COMPLETED' : (isSecondInnings ? 'SECOND INNINGS' : 'FIRST INNINGS');
 
-      if (!isMatchCompleted) {
-        scoreboardInner.classList.add('batting');
-        mainCard.classList.add('batting');
-        if (overStripEl) overStripEl.style.display = 'flex';
-        if (bigResultBannerEl) {
-          bigResultBannerEl.classList.remove('show');
-          bigResultBannerEl.textContent = '';
-        }
-      } else {
-        const resultText = (data.resultText && data.resultText.trim() !== '')
-          ? data.resultText
-          : (pageResultEl?.textContent || 'Match Completed');
-
-        if (overStripEl) overStripEl.style.display = 'none';
-        if (bigResultBannerEl) {
-          bigResultBannerEl.textContent = resultText;
-          bigResultBannerEl.classList.add('show');
-        }
+      const chasePanel = document.getElementById('bigChasePanel');
+      const chaseState = `${runsNeeded}:${ballsLeft}:${requiredRate}`;
+      const chaseChanged = chasePanel.dataset.state !== chaseState;
+      chasePanel.classList.toggle('show', isSecondInnings && !isMatchCompleted);
+      chasePanel.dataset.state = chaseState;
+      document.getElementById('bigRunsNeeded').textContent = runsNeeded;
+      document.getElementById('bigBallsLeft').textContent = ballsLeft;
+      document.getElementById('bigRequiredRate').textContent = requiredRate;
+      if (chaseChanged && isSecondInnings && !isMatchCompleted) {
+        chasePanel.classList.remove('chase-updated');
+        void chasePanel.offsetWidth;
+        chasePanel.classList.add('chase-updated');
       }
 
-      if (!isMatchCompleted) {
+      if (isMatchCompleted) {
+        const resultText = data.resultText && data.resultText.trim() !== '' ? data.resultText : (pageResultEl?.textContent || 'Match Completed');
+        resultBannerEl.textContent = resultText;
+        resultBannerEl.classList.add('show');
+      } else {
+        resultBannerEl.textContent = '';
+        resultBannerEl.classList.remove('show');
         renderBigOverBalls(activeInnings);
       }
     }
@@ -2055,16 +1975,6 @@
       }
     }
 
-    function showBigScoreboardHint() {
-      const hint = document.getElementById('bigScoreHint');
-      if (!hint) return;
-      hint.style.opacity = '1';
-      if (bigScoreboardHintTimer) clearTimeout(bigScoreboardHintTimer);
-      bigScoreboardHintTimer = setTimeout(() => {
-        hint.style.opacity = '0.2';
-      }, 4500);
-    }
-
     async function enterBigScoreboardMode() {
       const overlay = document.getElementById('bigScoreboardOverlay');
       if (!overlay) return;
@@ -2078,7 +1988,6 @@
 
       await requestBigScreenFullscreen();
       await tryLandscapeLock();
-      showBigScoreboardHint();
       await requestWakeLock();
     }
 

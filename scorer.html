@@ -1,4 +1,4 @@
-﻿﻿﻿﻿<!DOCTYPE html>
+﻿﻿﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <!-- Resource hints for faster loading -->
@@ -899,6 +899,7 @@
   let isLoadingFromFirebase = false;  // Flag to prevent save loop when loading
   let matchStartTime = null;  // Store match start time (set once, never changes)
   let matchLastUpdated = null; // Store last updated time (tracks match end time)
+  let matchStorageType = null; // 'tournament' or 'quick'
   
   // ========== Password Hashing Utility ==========
   // Simple SHA-256 hashing for password security
@@ -1238,6 +1239,10 @@
   
   // Check for edit token in URL
   const urlEditToken = urlParams.get('edit');
+  const urlStorageType = urlParams.get('store');
+  if (urlStorageType === 'tournament' || urlStorageType === 'quick') {
+    matchStorageType = urlStorageType;
+  }
   
   // Generate a secure random edit token
   function generateEditToken() {
@@ -1263,14 +1268,23 @@
     }
     
     try {
-      // Check both tournament and quick match paths
-      let snapshot = await db.ref('tournaments/' + organizationId + '/matches/' + matchId).once('value');
+      const preferredPath = matchStorageType === 'quick'
+        ? 'quickMatches/' + organizationId + '/matches/' + matchId
+        : 'tournaments/' + organizationId + '/matches/' + matchId;
+      const alternatePath = matchStorageType === 'quick'
+        ? 'tournaments/' + organizationId + '/matches/' + matchId
+        : 'quickMatches/' + organizationId + '/matches/' + matchId;
+      let snapshot = await db.ref(preferredPath).once('value');
       let matchData = snapshot.val();
-      
+
       if (!matchData) {
-        // Try quick matches path
-        snapshot = await db.ref('quickMatches/' + organizationId + '/matches/' + matchId).once('value');
+        snapshot = await db.ref(alternatePath).once('value');
         matchData = snapshot.val();
+        if (matchData) {
+          matchStorageType = alternatePath.startsWith('tournaments/') ? 'tournament' : 'quick';
+        }
+      } else if (!matchStorageType) {
+        matchStorageType = preferredPath.startsWith('tournaments/') ? 'tournament' : 'quick';
       }
       
       console.log("📦 Match data retrieved:", matchData ? "exists" : "null");
@@ -1305,7 +1319,8 @@
             updateMatchInHistory(savedMatch);
             
             // Redirect with correct token
-            const correctUrl = `scorer.html?org=${organizationId}&match=${matchId}&edit=${matchData.editToken}`;
+            const correctedStore = matchData.tournamentName && matchData.tournamentName.trim() !== '' ? 'tournament' : 'quick';
+            const correctUrl = `scorer.html?org=${encodeURIComponent(organizationId)}&match=${encodeURIComponent(matchId)}&edit=${encodeURIComponent(matchData.editToken)}&store=${correctedStore}`;
             console.log("↪️ Redirecting with correct token:", correctUrl);
             window.location.href = correctUrl;
             return;
@@ -2668,12 +2683,11 @@ function updateUI(){
   
   // Show match summary and live stats if match has started
   const hasStarted = (first && first.legalBalls > 0) || (second && second.legalBalls > 0);
+  const matchSummary = document.getElementById('matchSummary');
   if (hasStarted) {
-    document.getElementById('matchSummary').style.display = 'block';
-    document.getElementById('winProbabilityCompact').style.display = 'block';
+    if (matchSummary) matchSummary.style.display = 'block';
   } else {
-    document.getElementById('matchSummary').style.display = 'none';
-    document.getElementById('winProbabilityCompact').style.display = 'none';
+    if (matchSummary) matchSummary.style.display = 'none';
   }
 }
 
@@ -2709,7 +2723,10 @@ function saveMatchState() {
   
   // Determine the Firebase path based on whether it's a tournament or quick match
   const tournamentName = matchData.tournamentName;
-  const matchPath = (tournamentName && tournamentName.trim() !== '') 
+  if (!matchStorageType) {
+    matchStorageType = tournamentName && tournamentName.trim() !== '' ? 'tournament' : 'quick';
+  }
+  const matchPath = matchStorageType === 'tournament'
     ? 'tournaments/' + organizationId + '/matches/' + matchId
     : 'quickMatches/' + organizationId + '/matches/' + matchId;
   
@@ -2757,12 +2774,13 @@ function listenForUpdates() {
   }
   
   // Determine the Firebase path based on whether it's a tournament or quick match
-  const primaryPath = (tournamentName && tournamentName.trim() !== '') 
+  const storageType = matchStorageType || (tournamentName && tournamentName.trim() !== '' ? 'tournament' : 'quick');
+  const primaryPath = storageType === 'tournament'
     ? 'tournaments/' + organizationId + '/matches/' + matchId
     : 'quickMatches/' + organizationId + '/matches/' + matchId;
   
   // Fallback path (opposite of primary)
-  const fallbackPath = (tournamentName && tournamentName.trim() !== '') 
+  const fallbackPath = storageType === 'tournament'
     ? 'quickMatches/' + organizationId + '/matches/' + matchId
     : 'tournaments/' + organizationId + '/matches/' + matchId;
   
@@ -2788,6 +2806,7 @@ function listenForUpdates() {
       }
       
       console.log("📡 Received update from Firebase at:", matchPath);
+      matchStorageType = matchPath.startsWith('tournaments/') ? 'tournament' : 'quick';
     
       // Set flag to prevent save loop
       isLoadingFromFirebase = true;
@@ -2826,6 +2845,9 @@ function listenForUpdates() {
       resultText = data.resultText;
       matchCompleted = data.matchCompleted || false;
       matchStarted = true;
+      if (data.editToken && !editToken) {
+        editToken = data.editToken;
+      }
       
       // Preserve the original match start time from Firebase
       if (data.timestamp && !matchStartTime) {
@@ -3117,11 +3139,14 @@ function getViewerLink() {
 }
 
 function getScorerLink() {
-  const pathParts = window.location.pathname.split('/');
-  pathParts.pop(); // Remove the current file (scorer.html)
-  const basePath = pathParts.join('/');
-  const baseUrl = window.location.origin + basePath + '/';
-  return `${baseUrl}scorer.html?org=${organizationId}&match=${matchId}&edit=${editToken}`;
+  const storeParam = matchStorageType || (document.getElementById('tournamentName')?.value.trim() ? 'tournament' : 'quick');
+  const scorerUrl = new URL('scorer.html', window.location.href);
+  scorerUrl.search = '';
+  scorerUrl.searchParams.set('org', organizationId);
+  scorerUrl.searchParams.set('match', matchId);
+  scorerUrl.searchParams.set('edit', editToken);
+  scorerUrl.searchParams.set('store', storeParam);
+  return scorerUrl.href;
 }
 
 function getTournamentLink() {
@@ -3181,39 +3206,43 @@ function shareScorerLink() {
   }
   
   const link = getScorerLink();
-  const shareTitle = `${teamA} vs ${teamB} - Scorer Access`;
-  const shareMessage = `⚡ ${teamA} vs ${teamB}\n✏️ Scorer Link (Keep Private!): ${link}`;
-  
-  // Always show a warning about keeping this link private
-  const confirmation = confirm(`🔐 SCORER LINK - KEEP PRIVATE!\n\nThis link allows EDITING the match score.\nOnly share with trusted co-scorers.\n\nShare viewer link for spectators instead.\n\nContinue to copy scorer link?`);
-  
-  if (!confirmation) return;
-  
-  // Check if Web Share API is available (mobile devices)
-  if (navigator.share) {
-    navigator.share({
-      title: shareTitle,
-      text: `✏️ ${teamA} vs ${teamB} - Scorer access (private)`,
-      url: link
-    }).then(() => {
-      console.log('Scorer link share successful');
-    }).catch((error) => {
-      // If user cancels share, fallback to copy
-      if (error.name !== 'AbortError') {
-        copyLinkFallback(shareMessage, link);
-      }
-    });
-  } else {
-    // Fallback: Copy to clipboard with warning
-    if (navigator.clipboard) {
-      navigator.clipboard.writeText(link).then(() => {
-        alert('✏️ Scorer link copied!\n\n⚠️ Keep this private - only share with trusted scorers.\n\n' + link);
-      }).catch(() => {
-        showShareModal(link, shareMessage);
-      });
-    } else {
-      showShareModal(link, shareMessage);
-    }
+  copyScorerLinkToClipboard(link);
+}
+
+function copyScorerLinkToClipboard(link) {
+  const showCopiedToast = (message) => {
+    const existingToast = document.getElementById('scorerLinkCopiedToast');
+    if (existingToast) existingToast.remove();
+
+    const toast = document.createElement('div');
+    toast.id = 'scorerLinkCopiedToast';
+    toast.textContent = message;
+    toast.style.cssText = 'position:fixed;left:50%;bottom:24px;transform:translateX(-50%);z-index:10001;max-width:calc(100vw - 32px);padding:12px 16px;background:rgba(15,23,42,0.96);color:#fff;border:1px solid rgba(52,211,153,0.7);border-radius:10px;font-size:13px;font-weight:700;text-align:center;box-shadow:0 8px 24px rgba(0,0,0,0.25);';
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 3200);
+  };
+
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(link)
+      .then(() => showCopiedToast('✅ Private scorer link copied. Paste it wherever you need.'))
+      .catch(() => showCopiedToast('⚠️ Copy failed. Please copy the link manually.'));
+    return;
+  }
+
+  const textArea = document.createElement('textarea');
+  textArea.value = link;
+  textArea.style.position = 'fixed';
+  textArea.style.opacity = '0';
+  document.body.appendChild(textArea);
+  textArea.select();
+
+  try {
+    const copied = document.execCommand('copy');
+    showCopiedToast(copied ? '✅ Private scorer link copied. Paste it wherever you need.' : '⚠️ Copy failed. Please copy the link manually.');
+  } catch (error) {
+    showCopiedToast('⚠️ Copy failed. Please copy the link manually.');
+  } finally {
+    textArea.remove();
   }
 }
 
@@ -4079,6 +4108,7 @@ async function startMatch(){
   
   teamA = document.getElementById("teamA").value || "Team A";
   teamB = document.getElementById("teamB").value || "Team B";
+  matchStorageType = tournamentName ? 'tournament' : 'quick';
   oversLimit = Math.max(1, parseInt(document.getElementById("overs").value || "4"));
   wicketsLimit = Math.max(1, Math.min(20, parseInt(document.getElementById("wicketsLimit").value || "10")));
   

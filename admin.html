@@ -568,6 +568,85 @@
       margin-bottom: 16px;
       opacity: 0.5;
     }
+
+    .tournament-admin-section {
+      margin-bottom: 24px;
+      padding: 20px;
+      border: 1px solid rgba(99, 102, 241, 0.35);
+      border-radius: 16px;
+      background: rgba(99, 102, 241, 0.08);
+    }
+
+    .tournament-admin-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+
+    .tournament-admin-header h3 {
+      margin: 0 0 4px;
+      color: #c4b5fd;
+      font-size: 16px;
+    }
+
+    .tournament-admin-header p {
+      margin: 0;
+      color: #9ca3af;
+      font-size: 13px;
+    }
+
+    .tournament-admin-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .tournament-admin-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 14px 16px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 12px;
+      background: rgba(15, 23, 42, 0.5);
+    }
+
+    .tournament-admin-name {
+      color: #f8fafc;
+      font-weight: 800;
+      overflow-wrap: anywhere;
+    }
+
+    .tournament-admin-meta {
+      margin-top: 4px;
+      color: #9ca3af;
+      font-size: 12px;
+    }
+
+    .tournament-delete-btn {
+      flex: 0 0 auto;
+      padding: 8px 12px;
+      border: 0;
+      border-radius: 8px;
+      background: #b91c1c;
+      color: #ffffff;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    @media (max-width: 600px) {
+      .tournament-admin-row {
+        align-items: stretch;
+        flex-direction: column;
+      }
+
+      .tournament-delete-btn {
+        width: 100%;
+      }
+    }
     
     /* Modal */
     .modal {
@@ -612,6 +691,7 @@
       color: #d1d5db;
       margin-bottom: 24px;
       line-height: 1.6;
+      white-space: pre-line;
     }
     
     .modal-actions {
@@ -1060,6 +1140,7 @@
           <button class="filter-btn" data-filter="stalled">⚠️ Stalled</button>
           <button class="filter-btn" data-filter="live">🔴 Live</button>
           <button class="filter-btn" data-filter="completed">✅ Completed</button>
+          <button class="filter-btn select-visible-btn" type="button" onclick="selectFilteredMatches()">Select Visible</button>
         </div>
         <div class="date-filters">
           <div class="date-input-group">
@@ -1096,6 +1177,19 @@
           <button class="btn-bulk-delete" onclick="deleteOldMatches()" style="background:linear-gradient(135deg, #f59e0b 0%, #d97706 100%);"><span style="font-size:14px;">⏳</span> Delete 3M Old Matches</button>
         </div>
       </div>
+
+      <section class="tournament-admin-section">
+        <div class="tournament-admin-header">
+          <div>
+            <h3>🏆 Tournament Cleanup</h3>
+            <p>Delete a tournament and all matches stored inside it.</p>
+          </div>
+          <button class="btn-cancel" type="button" onclick="loadTournaments()">↻ Refresh Tournaments</button>
+        </div>
+        <div id="tournamentList" class="tournament-admin-list">
+          <div class="loading">Loading tournaments...</div>
+        </div>
+      </section>
       
       <div class="loading" id="loading">Loading matches...</div>
       
@@ -1113,7 +1207,7 @@
       </div>
       <div class="modal-actions">
         <button class="btn-cancel" onclick="closeModal()">Cancel</button>
-        <button class="btn-bulk-delete" onclick="confirmDelete()">Delete Permanently</button>
+        <button id="confirmDeleteBtn" class="btn-bulk-delete" onclick="confirmDelete()">Delete Permanently</button>
       </div>
     </div>
   </div>
@@ -1151,6 +1245,9 @@
     let searchQuery = '';
     let dateFrom = null;
     let dateTo = null;
+    let pendingOldMatches = null;
+    let pendingTournamentDelete = null;
+    const tournamentRecords = new Map();
     
     // Check if already logged in
     const isLoggedIn = sessionStorage.getItem('admin_logged_in') === 'true';
@@ -1215,6 +1312,7 @@
       document.getElementById('loginScreen').style.display = 'none';
       document.getElementById('adminDashboard').style.display = 'block';
       loadMatches();
+      loadTournaments();
     }
     
     // Logout
@@ -1281,6 +1379,58 @@
         document.getElementById('loading').innerHTML = '<div class="empty-state"><div class="empty-icon">⚠️</div><div>Error loading matches: ' + error.message + '</div></div>';
       });
     }
+
+    async function loadTournaments() {
+      const container = document.getElementById('tournamentList');
+      container.innerHTML = '<div class="loading">Loading tournaments...</div>';
+
+      try {
+        const snapshot = await database.ref('tournaments').once('value');
+        const tournaments = [];
+        tournamentRecords.clear();
+
+        snapshot.forEach(orgSnap => {
+          const tournament = orgSnap.val() || {};
+          const matches = tournament.matches || {};
+          const matchValues = Object.values(matches);
+          const firstNamedMatch = matchValues.find(match => match && match.tournamentName);
+          const name = tournament.name || firstNamedMatch?.tournamentName || orgSnap.key;
+          const record = { organizationId: orgSnap.key, name, matchCount: matchValues.length };
+          tournaments.push(record);
+          tournamentRecords.set(orgSnap.key, record);
+        });
+
+        tournaments.sort((a, b) => a.name.localeCompare(b.name));
+
+        if (tournaments.length === 0) {
+          container.innerHTML = '<div class="empty-state">No tournaments found.</div>';
+          return;
+        }
+
+        container.innerHTML = tournaments.map(tournament => `
+          <div class="tournament-admin-row">
+            <div>
+              <div class="tournament-admin-name">${escapeAdminText(tournament.name)}</div>
+              <div class="tournament-admin-meta">${tournament.matchCount} match${tournament.matchCount === 1 ? '' : 'es'} · ID: ${escapeAdminText(tournament.organizationId)}</div>
+            </div>
+            <button class="tournament-delete-btn" type="button" onclick="showTournamentDelete('${encodeURIComponent(tournament.organizationId)}')">Delete Tournament</button>
+          </div>
+        `).join('');
+      } catch (error) {
+        console.error('❌ Error loading tournaments:', error);
+        container.innerHTML = '<div class="empty-state">Unable to load tournaments.</div>';
+      }
+    }
+
+    function escapeAdminText(value) {
+      return String(value || '').replace(/[&<>'"]/g, character => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        "'": '&#39;',
+        '"': '&quot;'
+      })[character]);
+    }
     
     // Update statistics
     function updateStats() {
@@ -1296,6 +1446,23 @@
     }
     
     // Check if match is live
+    function normalizeTimestamp(rawTimestamp) {
+      if (typeof rawTimestamp === 'number' && Number.isFinite(rawTimestamp)) {
+        return rawTimestamp > 0 && rawTimestamp < 100000000000 ? rawTimestamp * 1000 : rawTimestamp;
+      }
+
+      const parsedTimestamp = Date.parse(rawTimestamp);
+      return Number.isNaN(parsedTimestamp) ? 0 : parsedTimestamp;
+    }
+
+    function getMatchTimestamp(match) {
+      return normalizeTimestamp(match.timestamp || match.lastUpdated || 0);
+    }
+
+    function getLastUpdateTimestamp(match) {
+      return normalizeTimestamp(match.lastUpdated || match.timestamp || 0);
+    }
+
     function isLiveMatch(match) {
       if (match.matchCompleted) return false;
       if (match.resultText && match.resultText.trim() !== '') return false;
@@ -1312,7 +1479,7 @@
       if (!isLiveMatch(match)) return false;
       
       const currentTime = Date.now();
-      const lastUpdate = match.lastUpdated || match.timestamp || 0;
+      const lastUpdate = getLastUpdateTimestamp(match);
       const minutesSinceUpdate = (currentTime - lastUpdate) / (1000 * 60);
       
       return minutesSinceUpdate >= 15;
@@ -1343,7 +1510,7 @@
         
         // Date range filter
         if (dateFrom || dateTo) {
-          const matchDate = match.timestamp || match.lastUpdated || 0;
+          const matchDate = getMatchTimestamp(match);
           if (matchDate === 0) return false; // Skip matches without dates
           
           const matchDateOnly = new Date(matchDate);
@@ -1397,7 +1564,8 @@
         const secondScore = `${match.second?.runs || 0}/${match.second?.wkts || 0}`;
         const secondOvers = calculateOvers(match.second?.legalBalls || 0);
         
-        const dateStr = match.timestamp ? new Date(match.timestamp).toLocaleString('en-US', { 
+        const matchTimestamp = getMatchTimestamp(match);
+        const dateStr = matchTimestamp ? new Date(matchTimestamp).toLocaleString('en-US', { 
           month: 'short', 
           day: 'numeric',
           year: 'numeric',
@@ -1405,14 +1573,15 @@
           minute: '2-digit'
         }) : '';
         
-        const lastUpdateStr = match.lastUpdated ? new Date(match.lastUpdated).toLocaleString('en-US', { 
+        const lastUpdateTimestamp = getLastUpdateTimestamp(match);
+        const lastUpdateStr = lastUpdateTimestamp ? new Date(lastUpdateTimestamp).toLocaleString('en-US', { 
           month: 'short', 
           day: 'numeric',
           hour: '2-digit',
           minute: '2-digit'
         }) : '';
         
-        const inactiveMinutes = match.lastUpdated ? Math.floor((Date.now() - match.lastUpdated) / (1000 * 60)) : 0;
+        const inactiveMinutes = lastUpdateTimestamp ? Math.floor((Date.now() - lastUpdateTimestamp) / (1000 * 60)) : 0;
         
         return `
           <div class="match-card ${isStalled ? 'stalled' : ''} ${isSelected ? 'selected' : ''}">
@@ -1465,6 +1634,12 @@
       updateBulkActions();
       displayMatches();
     }
+
+    function selectFilteredMatches() {
+      filteredMatches.forEach(match => selectedMatches.add(match.matchId));
+      updateBulkActions();
+      displayMatches();
+    }
     
     // Clear selection
     function clearSelection() {
@@ -1490,6 +1665,10 @@
     // Show delete confirmation
     function showDeleteConfirmation() {
       const count = selectedMatches.size;
+      pendingOldMatches = null;
+      pendingTournamentDelete = null;
+      document.querySelector('#deleteModal .modal-header').textContent = '⚠️ Confirm Deletion';
+      document.getElementById('confirmDeleteBtn').textContent = 'Delete Permanently';
       const message = `Are you sure you want to delete ${count} match${count > 1 ? 'es' : ''}? This action cannot be undone and will permanently remove the match${count > 1 ? 'es' : ''} from Firebase.`;
       document.getElementById('deleteMessage').textContent = message;
       document.getElementById('deleteModal').classList.add('show');
@@ -1498,10 +1677,26 @@
     // Close modal
     function closeModal() {
       document.getElementById('deleteModal').classList.remove('show');
+      pendingOldMatches = null;
+      pendingTournamentDelete = null;
     }
     
     // Confirm delete
     async function confirmDelete() {
+      if (pendingTournamentDelete) {
+        const tournament = pendingTournamentDelete;
+        pendingTournamentDelete = null;
+        await deleteTournamentNode(tournament);
+        return;
+      }
+
+      if (pendingOldMatches) {
+        const matchesToDelete = pendingOldMatches;
+        pendingOldMatches = null;
+        await deleteOldMatchPaths(matchesToDelete);
+        return;
+      }
+
       const matchesToDelete = Array.from(selectedMatches);
       const count = matchesToDelete.length;
       
@@ -1530,6 +1725,62 @@
         
       } catch (error) {
         console.error('❌ Error deleting matches:', error);
+        alert('❌ Error deleting matches: ' + error.message);
+      }
+    }
+
+    function showTournamentDelete(encodedOrganizationId) {
+      const organizationId = decodeURIComponent(encodedOrganizationId);
+      const tournament = tournamentRecords.get(organizationId);
+      if (!tournament) return;
+
+      pendingOldMatches = null;
+      pendingTournamentDelete = tournament;
+      document.querySelector('#deleteModal .modal-header').textContent = '⚠️ Delete Tournament?';
+      document.getElementById('confirmDeleteBtn').textContent = 'Delete Tournament';
+      document.getElementById('deleteMessage').textContent = `This will permanently delete "${tournament.name}" and all ${tournament.matchCount} match${tournament.matchCount === 1 ? '' : 'es'} inside it.\n\nThis action cannot be undone.`;
+      document.getElementById('deleteModal').classList.add('show');
+    }
+
+    async function deleteTournamentNode(tournament) {
+      const loading = document.getElementById('loading');
+      loading.textContent = `🗑️ Deleting tournament "${tournament.name}"...`;
+      loading.style.display = 'block';
+
+      try {
+        await database.ref(`tournaments/${tournament.organizationId}`).remove();
+        loading.style.display = 'none';
+        closeModal();
+        alert(`✅ Tournament "${tournament.name}" and ${tournament.matchCount} match${tournament.matchCount === 1 ? '' : 'es'} deleted.`);
+        loadMatches();
+        loadTournaments();
+      } catch (error) {
+        loading.style.display = 'none';
+        console.error('❌ Error deleting tournament:', error);
+        alert('❌ Error deleting tournament: ' + error.message);
+      }
+    }
+
+    async function deleteOldMatchPaths(oldMatches) {
+      const loading = document.getElementById('loading');
+      loading.textContent = `🗑️ Deleting ${oldMatches.length} matches...`;
+      loading.style.display = 'block';
+
+      try {
+        let deleted = 0;
+        for (const match of oldMatches) {
+          await database.ref(match.path).remove();
+          deleted++;
+          loading.textContent = `🗑️ Deleting ${deleted}/${oldMatches.length} matches...`;
+        }
+
+        loading.style.display = 'none';
+        closeModal();
+        alert(`✅ Successfully deleted ${deleted} matches older than 3 months!`);
+        loadMatches();
+      } catch (error) {
+        loading.style.display = 'none';
+        console.error('❌ Error deleting old matches:', error);
         alert('❌ Error deleting matches: ' + error.message);
       }
     }
@@ -1569,9 +1820,9 @@
         tournaments.forEach(orgSnap => {
           orgSnap.child('matches').forEach(matchSnap => {
             const match = matchSnap.val();
-            const matchTime = match.timestamp || match.lastUpdated || 0;
+            const matchTime = getMatchTimestamp(match);
             
-            if (matchTime < cutoffDate) {
+            if (matchTime > 0 && matchTime < cutoffDate) {
               oldMatches.push({
                 path: `tournaments/${orgSnap.key}/matches/${matchSnap.key}`,
                 date: new Date(matchTime).toLocaleDateString(),
@@ -1585,9 +1836,9 @@
         quickMatches.forEach(orgSnap => {
           orgSnap.child('matches').forEach(matchSnap => {
             const match = matchSnap.val();
-            const matchTime = match.timestamp || match.lastUpdated || 0;
+            const matchTime = getMatchTimestamp(match);
             
-            if (matchTime < cutoffDate) {
+            if (matchTime > 0 && matchTime < cutoffDate) {
               oldMatches.push({
                 path: `quickMatches/${orgSnap.key}/matches/${matchSnap.key}`,
                 date: new Date(matchTime).toLocaleDateString(),
@@ -1604,29 +1855,14 @@
           return;
         }
         
-        // Show confirmation
-        const confirmMsg = `Found ${oldMatches.length} matches older than 3 months. Delete all?\\n\\nMatches to delete:\\n${oldMatches.slice(0, 5).map(m => `• ${m.name} (${m.date})`).join('\\n')}${oldMatches.length > 5 ? `\\n... and ${oldMatches.length - 5} more` : ''}`;
-        
-        if (!confirm(confirmMsg)) {
-          return;
-        }
-        
-        // Delete matches
-        loading.textContent = `🗑️ Deleting ${oldMatches.length} matches...`;
-        loading.style.display = 'block';
-        
-        let deleted = 0;
-        for (const match of oldMatches) {
-          await database.ref(match.path).remove();
-          deleted++;
-          loading.textContent = `🗑️ Deleting ${deleted}/${oldMatches.length} matches...`;
-        }
-        
-        loading.style.display = 'none';
-        alert(`✅ Successfully deleted ${deleted} matches older than 3 months!`);
-        
-        // Reload matches
-        loadMatches();
+        pendingTournamentDelete = null;
+        pendingOldMatches = oldMatches;
+        document.querySelector('#deleteModal .modal-header').textContent = '⚠️ Delete 3-Month-Old Matches?';
+        document.getElementById('confirmDeleteBtn').textContent = 'Delete Old Matches';
+        const preview = oldMatches.slice(0, 5).map(match => `• ${match.name} (${match.date})`).join('\n');
+        const remaining = oldMatches.length > 5 ? `\n... and ${oldMatches.length - 5} more` : '';
+        document.getElementById('deleteMessage').textContent = `Found ${oldMatches.length} matches older than 3 months.\n\n${preview}${remaining}\n\nThis action cannot be undone.`;
+        document.getElementById('deleteModal').classList.add('show');
         
       } catch (error) {
         console.error('❌ Error deleting old matches:', error);
@@ -1654,7 +1890,7 @@
       applyFilters();
     });
     
-    document.querySelectorAll('.filter-btn').forEach(btn => {
+    document.querySelectorAll('.filter-btn:not(.select-visible-btn)').forEach(btn => {
       btn.addEventListener('click', () => {
         document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
